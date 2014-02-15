@@ -1,3 +1,6 @@
+
+Warning: Gocal is pre-alpha and released here in good faith. Don't use it to control nuclear power plants.
+
 Gocal
 =====
 
@@ -22,4 +25,6 @@ handwritten notes to it.
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screenshot.png?raw=true)
 
+Known bugs:
 
+* Sometimes the sunrise/sunset times are negative.
