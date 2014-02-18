@@ -1,4 +1,3 @@
-
 Warning: Gocal is pre-alpha and released here in good faith. Don't use it to control nuclear power plants.
 
 Gocal
@@ -12,7 +11,7 @@ Features:
 
 * PDF generation
 * Week number on every Monday
-* Sunrise/Sunset for every Sunday
+* Sunrise/Sunset for every Sunday (if you happen to live in Boston, MA)
 * No other languages than English currently
 * No other 'first day of the week' than Monday
 * No adding of events to days yet.
