@@ -20,93 +20,50 @@ package main
 
 import (
 	"code.google.com/p/gofpdf"
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"github.com/soniakeys/meeus/base"
-	"github.com/soniakeys/meeus/globe"
 	"github.com/soniakeys/meeus/julian"
 	"github.com/soniakeys/meeus/moonillum"
 	"github.com/soniakeys/meeus/moonphase"
-	"github.com/soniakeys/meeus/rise"
-	"github.com/soniakeys/meeus/sidereal"
-	"github.com/soniakeys/meeus/solar"
-	"math"
+	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
-// Absolute path needed for gocov tool; relative OK for test
 const (
-	CONFIGFILE = ".gocal.json"
-
-	LINES       = 6
-	cnGofpdfDir = "."
-	cnFontDir   = cnGofpdfDir + "/font"
-	COLUMNS     = 7
-	darkgrey    = 120
-	lightgrey   = 170
-	black       = 0
-	moonSize    = 4.0
-	MARGIN      = 10.0
-	MAINFONT    = "Times"
-)
-
-var (
-	// USNO gives the coordiates it uses in decimal degrees, so I do a simple
-	// conversion to radians like this rather than use base.NewAngle as in
-	// examples in the package doc.
-	bostonLon = 71.1 * math.Pi / 180
-	bostonLat = 42.3 * math.Pi / 180
-
-	h0 = rise.Stdh0Solar // events of interest are sunrise, sunset
-
-	tz = -5 * 3600. // EST time zone correction, in seconds
+	CONFIGFILE    = "gocal.xml"
+	LINES         = 6
+	cnGofpdfDir   = "."
+	cnFontDir     = cnGofpdfDir + "/font"
+	COLUMNS       = 7
+	darkgrey      = 150
+	lightgrey     = 170
+	black         = 0
+	moonSize      = 4.0
+	MARGIN        = 10.0
+	MAINFONT      = "Times"
+	eventFontsize = 10
 )
 
 var orientation = flag.String("p", "L", "Orientation (L)andscape/(P)ortrait")
 var outfilename = flag.String("o", "output.pdf", "Output filename")
+var footer = flag.String("f", "Gocal", "Footer note")
 
-var entryDates = map[string]string{
-	"January":      "Winter",
-	"1.1.":         "New Year",
-	"15. January":  "Jule",
-	"14. February": "Enno",
-	"1/6":          "Allerheiligen",
-	"5/23":         "Geburtstag",
-	"5/20":         "Birgit",
-	"9/18":         "Tomke",
-	"Sunday":       "Flea market",
+type gocalDate struct {
+	Month   time.Month
+	Day     int
+	Text    string
+	Weekday string
 }
 
 type pdfWriter struct {
 	pdf *gofpdf.Fpdf
 	fl  *os.File
-}
-
-type calDate struct {
-	day  string
-	text string
-}
-
-func printSunrise(y, m, d int) (sunrise_sunset string) {
-	p := globe.Coord{bostonLat, bostonLon}
-	jd := julian.CalendarGregorianToJD(y, m, float64(d)) // date of interest
-	Th0 := sidereal.Apparent0UT(jd)
-	ra, dec := solar.ApparentEquatorial(jd) // position of sun
-	mRise, _, mSet, err := rise.ApproxTimes(p, h0, Th0, ra, dec)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	rise := fmt.Sprintf("%02d", int(base.NewFmtTime(mRise+tz).Hour())) + ":" +
-		fmt.Sprintf("%02d", int(base.NewFmtTime(mRise+tz).Min())%60) + "\n"
-	sunset := fmt.Sprintf("%02d", int(base.NewFmtTime(mSet+tz).Hour())) + ":" +
-		fmt.Sprintf("%02d", int(base.NewFmtTime(mSet+tz).Min())%60) + "\n"
-
-	sunrise_sunset = rise + "/" + sunset
-	fmt.Println(y, m, d, base.NewFmtTime(mRise+tz))
-	return
 }
 
 func (pw *pdfWriter) Write(p []byte) (n int, err error) {
@@ -149,8 +106,71 @@ func getPhase(y, m, d int) (r float64) { // future use
 	return r
 }
 
+type Gocaldate struct {
+	Date string `xml:"date,attr"`
+	Text string `xml:"text,attr"`
+	//	Month   time.Month
+	//	Day     int
+	//	Weekday string
+}
+
+type TelegramStore struct {
+	XMLName   xml.Name `xml:"Gocal"`
+	Gocaldate []Gocaldate
+}
+
+func readConfigurationfile(filename string) (eL []gocalDate) {
+
+	var v TelegramStore
+
+	f, err := os.Open(filename)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		return
+	}
+
+	v = TelegramStore{}
+	err2 := xml.Unmarshal([]byte(data), &v)
+	if err2 != nil {
+		log.Fatal("# ERROR: when trying to unmarshal the XML configuration file: %v", err2)
+		return
+	}
+
+	for _, m := range v.Gocaldate {
+
+		if strings.Index(m.Date, "/") != -1 { // Is this Month/Day ?
+
+			textArray := strings.Split(m.Date, "/")
+
+			if textArray[0] == "*" {
+				d, _ := strconv.ParseInt(textArray[1], 10, 32)
+				for j := 1; j < 13; j++ {
+					gcd := gocalDate{time.Month(j), int(d), m.Text, ""}
+					eL = append(eL, gcd)
+				}
+			} else {
+				mo, _ := strconv.ParseInt(textArray[0], 10, 32)
+				d, _ := strconv.ParseInt(textArray[1], 10, 32)
+
+				gcd := gocalDate{time.Month(mo), int(d), m.Text, ""}
+				eL = append(eL, gcd)
+			}
+		}
+	}
+
+	return eL
+}
+
 func main() {
 	flag.Parse()
+
+	eventList := make([]gocalDate, 1000)
+
+	eventList = readConfigurationfile(CONFIGFILE)
 
 	var wantyear int = int(time.Now().Year())
 	var wantmonth int = int(time.Now().Month())
@@ -177,7 +197,7 @@ func main() {
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 	calendarTable := func(mymonth int) {
 		wantmonth = mymonth
-		for titleDay := 1; titleDay < 8; titleDay++ {
+		for titleDay := 1; titleDay < 8; titleDay++ { // Print Weekdays
 			pdf.CellFormat(cw, 7, fmt.Sprintf("%s", time.Weekday(titleDay%7)), "0", 0, "C", false, 0, "")
 		}
 		pdf.Ln(-1)
@@ -198,7 +218,7 @@ func main() {
 
 		// This is a perfect example for the difference btw. efficient and
 		// effective. It's effective, but not efficient:
-		// Look at every day and check it has any of the Moon Phases.
+		// Look at every day and check if it has any of the Moon Phases.
 		for i := 0; i < 32; i++ {
 			decimalYear := float64(wantyear) +
 				float64(julian.DayOfYearGregorian(wantyear, wantmonth, int(day)+i)-1)/float64(daysInYear)
@@ -234,6 +254,7 @@ func main() {
 				var fill bool = false
 				nd := time.Date(wantyear, time.Month(wantmonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
 
+				// Determine color
 				if nd.Month() != time.Month(wantmonth) { // GREY
 					pdf.SetTextColor(darkgrey, darkgrey, darkgrey)
 					pdf.SetFillColor(lightgrey, lightgrey, lightgrey)
@@ -244,19 +265,16 @@ func main() {
 					pdf.SetTextColor(black, black, black) // BLACK
 				}
 
-				sunrise_sunset := ""
-				if nd.Weekday() == time.Sunday {
-					sunrise_sunset = printSunrise(nd.Year(), int(nd.Month()), int(nd.Day()))
-				}
-
 				pdf.SetCellMargin(1)
 
+				// Add day-of-month number
 				cellString := fmt.Sprintf("%d", nd.Day())
-				m, ok := moon[int(day)]
-				if ok {
+
+				// Add moon icon
+				if m, ok := moon[int(day)]; ok == true {
 					// Moonphase as Text: cellString += " " + m
 					x, y := pdf.GetXY()
-					moonLocX, moonLocY := x+cw*0.8, y+ch*0.3
+					moonLocX, moonLocY := x+cw*0.82, y+ch*0.2
 
 					switch m {
 					case "Full":
@@ -269,6 +287,8 @@ func main() {
 						pdf.Arc(moonLocX, moonLocY, moonSize, moonSize, 0.0, 270.0, 270.0+180.0, "F") // Last Q
 					}
 				}
+
+				// Add week number
 				if nd.Weekday() == time.Monday {
 					x, y := pdf.GetXY()
 					pdf.SetFont(MAINFONT, "", 12)
@@ -276,11 +296,18 @@ func main() {
 					pdf.Text(x+0.02*cw, y+0.95*ch, fmt.Sprintf("Week %d", weeknr))
 				}
 
-				if nd.Weekday() == time.Sunday {
-					x, y := pdf.GetXY()
-					pdf.SetFont(MAINFONT, "", 12)
+				// Add event text
+				for _, ev := range eventList {
+					if nd.Day() == ev.Day && nd.Month() == ev.Month {
+						x, y := pdf.GetXY()
+						pdf.SetFont(MAINFONT, "", eventFontsize)
 
-					pdf.Text(x+0.02*cw, y+0.95*ch, fmt.Sprintf("%s", sunrise_sunset))
+						textArray := strings.Split(ev.Text, "\n")
+
+						for i, j := range textArray {
+							pdf.Text(x+0.02*cw, y+0.50*ch+float64(i)*eventFontsize/4.0, fmt.Sprintf("%s", j))
+						}
+					}
 				}
 
 				pdf.SetFont(MAINFONT, "B", 32)
@@ -303,6 +330,9 @@ func main() {
 		pdf.SetTextColor(black, black, black) // BLACK
 		pdf.SetFont(MAINFONT, "B", 16)
 		calendarTable(page)
+		pdf.Ln(-1)
+		pdf.SetFont(MAINFONT, "B", 12)
+		pdf.Text(0.50*PAGEWIDTH, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", *footer))
 	}
 
 	pdf.OutputAndClose(docWriter(pdf))
