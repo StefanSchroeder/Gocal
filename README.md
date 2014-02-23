@@ -11,7 +11,7 @@ Features:
 
 * PDF generation
 * Week number on every Monday
-* Sunrise/Sunset for every Sunday (if you happen to live in Boston, MA)
+* Events in XML configuration file
 * No other languages than English currently
 * No other 'first day of the week' than Monday
 * No adding of events to days yet.
@@ -26,4 +26,4 @@ handwritten notes to it.
 
 Known bugs:
 
-* Sometimes the sunrise/sunset times are negative.
+* I dropped sunrise/sunset.
