@@ -14,7 +14,6 @@ Features:
 * Events in XML configuration file
 * No other languages than English currently
 * No other 'first day of the week' than Monday
-* No adding of events to days yet.
 
 Why not using PCal? Postscript is obsolete.
 
