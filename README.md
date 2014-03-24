@@ -4,8 +4,8 @@ Gocal
 =====
 
 Gocal is a simple clone of pcal. It's a tool to create monthly calendars in PDF with a no-nonsense attitude.
-Right now it creates a 12 page PDF with one month per page. Pcal has quite a few options, that gocal will
-never support, like calculating Easter. On the other hand, adding events to days shall be added soon.
+Right now it creates a 12-page PDF with one month per page. Pcal has quite a few options, that gocal will
+never support, like calculating Easter. 
 
 Features:
 
