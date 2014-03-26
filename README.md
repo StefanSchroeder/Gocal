@@ -109,10 +109,14 @@ This option will add this image to every month.
 
   -photos="": Show photos (directory PNG JPG GIF)
 
+e.g. gocal -photos images/
+
 This option will add the twelve first files as images to the twelve month.
 If less than twelve files are found, the sequence will re-start after the last image.
 
   -wall="": Show wallpaper PNG JPG GIF
+
+e.g. gocal -wall gopher.png 
 
 This option will add this image to every month as a background. You should only 
 use images with a bright tone so that you do not obstruct the usefulness of the calendar.
