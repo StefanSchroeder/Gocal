@@ -48,7 +48,6 @@ const (
 	CONFIGFILE    = "gocal.xml"
 	LINES         = 6
 	cnGofpdfDir   = "."
-	cnFontDir     = cnGofpdfDir + "/font"
 	COLUMNS       = 7
 	darkgrey      = 150
 	lightgrey     = 170
@@ -71,11 +70,12 @@ var optWallpaper = flag.String("wall", "", "Show wallpaper PNG JPG GIF")
 var optPhoto = flag.String("photo", "", "Show photo (single image PNG JPG GIF)")
 var optPhotos = flag.String("photos", "", "Show photos (directory PNG JPG GIF)")
 var optPaper = flag.String("paper", "A4", "Paper format (A3 A4 A5 Letter Legal)")
+var optNewfont = flag.String("newfont", "", "Nothing here.")
 var moonSize = 4.0
 var photoList [13]string
-
-// This map stores all the languages we know
-// and true for those we support.
+var calFont string
+var	cnFontDir string = cnGofpdfDir + "/font"
+var fontTempdir string
 
 type gocalDate struct {
 	Month   time.Month
@@ -338,16 +338,32 @@ func main() {
 
 	paperformat := *optPaper
 
+  if *optNewfont != "" {
+    var err error
+    fontTempdir, err = ioutil.TempDir("", "")
+    err = ioutil.WriteFile(fontTempdir + string(os.PathSeparator) + "cp1252.map", []byte(codepageCP1252), 0700)
+    err = gofpdf.MakeFont(*optNewfont, fontTempdir + string(os.PathSeparator) + "cp1252.map", fontTempdir, os.Stderr, true)
+    _ = err
+    // FIXME Do some error checking here.
+    cnFontDir = fontTempdir
+    calFont = filepath.Base(*optNewfont)
+    calFont = strings.TrimSuffix(calFont , filepath.Ext(calFont))
+    fmt.Printf("Using external font: %v\n", calFont)
+  } else {
+    calFont = *optFont
+  }
+
 	pdf := gofpdf.New(*optOrientation, "mm", paperformat, cnFontDir)
 	pdf.SetTitle("Created with Gocal", true)
-	pdf.AddFont("CABALETT", "", "CABALETT.json")
+  if calFont != "times" && calFont != "arial" && calFont != "courier" && calFont != "helvetica" {
+    pdf.AddFont(calFont, "", calFont + ".json")
+  }
 
 	PAGEWIDTH, PAGEHEIGHT, _ := pdf.PageSize(0)
 	if *optOrientation != "P" {
 		PAGEWIDTH, PAGEHEIGHT = PAGEHEIGHT, PAGEWIDTH
 	}
 
-	// FIXME : Geometry is here!
 	cw := (PAGEWIDTH - 2*MARGIN) / COLUMNS // cellwidth w 20mm margin
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 
@@ -388,7 +404,7 @@ func main() {
 		if *optHideMoon == false {
 			computeMoonphases(moon, int(day), mymonth, myyear)
 		}
-		pdf.SetFont(*optFont, "", 24)
+		pdf.SetFont(calFont, "", 24)
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
 				var fill bool = false
@@ -428,14 +444,14 @@ func main() {
 				if *optHideDOY == false && int(nd.Month()) == mymonth {
 					doy := julian.DayOfYearGregorian(myyear, mymonth, int(nd.Day()))
 					x, y := pdf.GetXY()
-					pdf.SetFont(*optFont, "", 12)
+					pdf.SetFont(calFont, "", 12)
 					pdf.Text(x+0.82*cw, y+0.95*ch, fmt.Sprintf("%d", doy))
 				}
 
 				// Add week number, lower left
 				if nd.Weekday() == time.Monday && *optHideWeek == false {
 					x, y := pdf.GetXY()
-					pdf.SetFont(*optFont, "", 12)
+					pdf.SetFont(calFont, "", 12)
 					_, weeknr := nd.ISOWeek()
 					pdf.Text(x+0.02*cw, y+0.95*ch, fmt.Sprintf("W %d", weeknr))
 				}
@@ -444,7 +460,7 @@ func main() {
 				for _, ev := range eventList {
 					if nd.Day() == ev.Day && nd.Month() == ev.Month {
 						x, y := pdf.GetXY()
-						pdf.SetFont(*optFont, "", eventFontsize)
+						pdf.SetFont(calFont, "", eventFontsize)
 
 						textArray := strings.Split(ev.Text, "\n")
 
@@ -455,7 +471,7 @@ func main() {
 				}
 
 				// day of the month, big number
-				pdf.SetFont(*optFont, "", 32)
+				pdf.SetFont(calFont, "", 32)
 				pdf.CellFormat(cw, ch, fmt.Sprintf("%d", nd.Day()), "1", 0, "TL", fill, 0, "")
 				day++
 			}
@@ -474,15 +490,15 @@ func main() {
 			pdf.Image(photoList[mo-1], 0, PAGEHEIGHT*0.5, cw*8, ch*8, false, "", 0, "")
 		}
 		pdf.SetTextColor(black, black, black)
-		pdf.SetFont(*optFont, "", 32)
+		pdf.SetFont(calFont, "", 32)
 
 		pdf.CellFormat(PAGEWIDTH-10.0, YOFFSET+10, localizedMonthNames[mo]+" "+fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 		pdf.Ln(-1)
-		pdf.SetFont(*optFont, "", 16)
+		pdf.SetFont(calFont, "", 16)
 		calendarTable(mo, wantyear)
 		pdf.Ln(-1)
-		pdf.SetFont(*optFont, "", 12)
-		pdf.Text(0.50*PAGEWIDTH, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", *optFooter))
+		pdf.SetFont(calFont, "", 12)
+		pdf.Text(0.50*PAGEWIDTH, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", calFont))
 	}
 
 	pdf.OutputAndClose(docWriter(pdf))
