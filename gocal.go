@@ -349,10 +349,15 @@ func main() {
 	if *optPhotos != "" {
 		ch *= 0.5
 		moonSize *= 0.6 // make moon smaller on photopage
-		a, _ := filepath.Glob(*optPhotos + string(os.PathSeparator) + "*")
-		for i := 0; i < 13; i++ {
-			photoList[i] = a[i%len(a)]
-		}
+		a, err := filepath.Glob(*optPhotos + string(os.PathSeparator) + "*")
+    fmt.Printf("a=%v, (%v)\n", a, err)
+    if err == nil {
+      for i := 0; i < 13; i++ {
+        photoList[i] = a[i%len(a)]
+      }
+    } else {
+      fmt.Printf("# There is an error in your path to photos: %v\n", err)
+    }
 	}
 
 	calendarTable := func(mymonth int, myyear int) {
@@ -462,7 +467,10 @@ func main() {
 			pdf.Image(*optWallpaper, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
 		}
 		if *optPhoto != "" || *optPhotos != "" {
-			pdf.Image(photoList[mo-1], 0, PAGEHEIGHT*0.5, cw*8, ch*8, false, "", 0, "")
+      photo := photoList[mo-1]
+      if photo != "" {
+			  pdf.Image(photo, 0, PAGEHEIGHT*0.5, PAGEWIDTH, PAGEHEIGHT*0.5, false, "", 0, "")
+      }
 		}
 
 		pdf.SetTextColor(BLACK, BLACK, BLACK)
