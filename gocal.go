@@ -2,8 +2,13 @@
 
 This is gocal a tool to generate calendars in PDF for printing.
 
+Stefan Schroeder, 2014-03-10
+
+See LICENSE for license.
+
 * Inspired by pcal
-* Simplicity: create a nice calendar programmatically with minimum effort.
+* Simplicity: Create a nice calendar with minimum effort.
+* No argument: Creates a calendar for this year.
 * One argument: Year
 * Two argument: Month Year
 * Two argument: MonthBegin MonthEnd Year
@@ -13,11 +18,10 @@ This is gocal a tool to generate calendars in PDF for printing.
 * Set papersize
 * Choose fonts (limited)
 * Several languages
-* day of year/remaining
-* bg image
+* Day of year
+* background image
 * Photo calendar
 *
-* add month notes
 */
 
 package main
@@ -28,9 +32,7 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
-	"github.com/soniakeys/meeus/base"
 	"github.com/soniakeys/meeus/julian"
-	"github.com/soniakeys/meeus/moonillum"
 	"github.com/soniakeys/meeus/moonphase"
 	"io/ioutil"
 	"os"
@@ -61,6 +63,7 @@ const (
 	MONTHDAYFONTSIZE   = 32
 	FOOTERFONTSIZE     = 12
 	LOC                = "de_DE"
+	CELLMARGIN         = 1
 )
 
 var optFont = flag.String("font", DEFAULTFONT, "Font")
@@ -153,13 +156,6 @@ func docWriter(pdf *gofpdf.Fpdf) *pdfWriter {
 		}
 	}
 	return pw
-}
-
-func getPhase(y, m, d int) (r float64) { // future use
-	i := moonillum.PhaseAngle3(julian.CalendarGregorianToJD(y, m, float64(d)))
-	k := base.Illuminated(i)
-	r = k
-	return r
 }
 
 type Gocaldate struct {
@@ -319,15 +315,13 @@ func main() {
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage)
 
-	paperformat := *optPaper
-
 	if *optFont != "" {
 		calFont = *optFont
 	}
 
 	calFont, fontTempdir = processFont(calFont)
 
-	pdf := gofpdf.New(*optOrientation, "mm", paperformat, fontTempdir)
+	pdf := gofpdf.New(*optOrientation, "mm", *optPaper, fontTempdir)
 	pdf.SetTitle("Created with Gocal", true)
 	pdf.AddFont(calFont, "", calFont+".json")
 
@@ -336,7 +330,7 @@ func main() {
 		PAGEWIDTH, PAGEHEIGHT = PAGEHEIGHT, PAGEWIDTH
 	}
 
-	cw := (PAGEWIDTH - 2*MARGIN) / COLUMNS // cellwidth w 20mm margin
+	cw := (PAGEWIDTH - 2*MARGIN) / COLUMNS // cellwidth w margin
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 
 	if *optPhoto != "" {
@@ -349,15 +343,14 @@ func main() {
 	if *optPhotos != "" {
 		ch *= 0.5
 		moonSize *= 0.6 // make moon smaller on photopage
-		a, err := filepath.Glob(*optPhotos + string(os.PathSeparator) + "*")
-    fmt.Printf("a=%v, (%v)\n", a, err)
-    if err == nil {
-      for i := 0; i < 13; i++ {
-        photoList[i] = a[i%len(a)]
-      }
-    } else {
-      fmt.Printf("# There is an error in your path to photos: %v\n", err)
-    }
+		fileList, err := filepath.Glob(*optPhotos + string(os.PathSeparator) + "*")
+		if err == nil {
+			for i := 0; i < 13; i++ {
+				photoList[i] = fileList[i%len(fileList)]
+			}
+		} else {
+			fmt.Printf("# There is an error in your path to photos: %v\n", err)
+		}
 	}
 
 	calendarTable := func(mymonth int, myyear int) {
@@ -398,7 +391,7 @@ func main() {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)
 				}
 
-				pdf.SetCellMargin(1)
+				pdf.SetCellMargin(CELLMARGIN)
 
 				// Add moon icon
 				if m, ok := moon[int(day)]; ok == true {
@@ -440,12 +433,8 @@ func main() {
 						x, y := pdf.GetXY()
 						pdf.SetFont(calFont, "", EVENTFONTSIZE)
 
-						textArray := strings.Split(ev.Text, "\\n")
-
-						for i, j := range textArray {
+						for i, j := range strings.Split(ev.Text, "\\n") {
 							pdf.Text(x+0.02*cw, y+0.70*ch+float64(i)*EVENTFONTSIZE/4.0, fmt.Sprintf("%s", j))
-							//pdf.CellFormat(cw, ch, fmt.Sprintf("%s", j), "1", 0, "BR", fill, 0, "")
-							//pdf.SetX(pdf.GetX()-cw) // reset
 						}
 					}
 				}
@@ -457,7 +446,6 @@ func main() {
 			}
 			pdf.Ln(-1)
 		}
-
 	}
 
 	for mo := wantmonths.begin; mo <= wantmonths.end; mo++ {
@@ -467,10 +455,10 @@ func main() {
 			pdf.Image(*optWallpaper, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
 		}
 		if *optPhoto != "" || *optPhotos != "" {
-      photo := photoList[mo-1]
-      if photo != "" {
-			  pdf.Image(photo, 0, PAGEHEIGHT*0.5, PAGEWIDTH, PAGEHEIGHT*0.5, false, "", 0, "")
-      }
+			photo := photoList[mo-1]
+			if photo != "" {
+				pdf.Image(photo, 0, PAGEHEIGHT*0.5, PAGEWIDTH, PAGEHEIGHT*0.5, false, "", 0, "")
+			}
 		}
 
 		pdf.SetTextColor(BLACK, BLACK, BLACK)
