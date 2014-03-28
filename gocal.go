@@ -1,8 +1,10 @@
 /*
 
 This is gocal a tool to generate calendars in PDF for printing.
+ 
+https://github.com/StefanSchroeder/Gocal
 
-Stefan Schroeder, 2014-03-10
+Stefan Schroeder, NY, 2014-03-10
 
 See LICENSE for license.
 
@@ -152,7 +154,7 @@ func docWriter(pdf *gofpdf.Fpdf) *pdfWriter {
 		var err error
 		pw.fl, err = os.Create(*outfilename)
 		if err != nil {
-			pdf.SetErrorf("Error opening output file.")
+			pdf.SetErrorf("# Error opening output file.")
 		}
 	}
 	return pw

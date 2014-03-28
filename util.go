@@ -1,3 +1,7 @@
+// This file is part of gocal, a PDF calendar generator in Go.
+//
+// https://github.com/StefanSchroeder/Gocal
+//
 // util.go
 package main
 

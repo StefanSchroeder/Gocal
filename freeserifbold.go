@@ -4,7 +4,7 @@
 //
 package main
 
-// This is the FreeMonoSerif Truetype font, a free GPL font, downloaded from
+// This is the FreeSerif Truetype font, a free GPL font, downloaded from
 // https://www.gnu.org/software/freefont/
 
 func getFreeSerifBold() []byte {

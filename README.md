@@ -3,15 +3,15 @@ Gocal
 =====
 
 Gocal is a simple clone of pcal. It's a standalone tool to create monthly calendars in PDF with a no-nonsense attitude.
-It creates by default a 12-page PDF with one month per page for the current year. 
+By default it creates a 12-page PDF with one month per page for the current year. 
 
 Alternatively the following arguments are supported:
 
-  gocal YEAR => Create a 12-page calendar for YEAR
+  gocal YEAR => Create a 12-page calendar for YEAR, e.g. 2014
 
-  gocal MONTH YEAR => Create a 1-page calendar for the MONTH in YEAR
+  gocal MONTH YEAR => Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
 
-  gocal BEGIN-MONTH END-MONTH YEAR => Create a sequence from BEGIN-MONTH to END-MONTH in YEAR
+  gocal BEGIN-MONTH END-MONTH YEAR => Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
 
 Features
@@ -29,7 +29,7 @@ Features
 * Font selection
 
 Why not using pcal? There are several reasons. One, I couldn't build it on 
-Windows, next, I don't care about Postscript any longer, third, a calendar seems to 
+Windows, next, I don't care about Postscript, third, a calendar seems to 
 be exactly a kind of project that I am able to handle from a complexity perspective 
 as a single developer.
 
@@ -83,13 +83,13 @@ Change the string at the bottom of the page.
 		-font sans     (Arial lookalike)
 		-font path/to/font.ttf    (your favorite font)
 
-
 Set the font. Only truetype fonts are supported. Look into c:\Windows\Fonts on Windows
 and /usr/share/fonts to see what fonts you have. Gocal comes with three fonts built-in:
 The Gnu FreeMonoBold, FreeSerifBold and FreeSansBold. They look pretty similar to 
 (in that order) Courier, Times and Arial and should meet all your standard font needs.
 These fonts are licensed under the Gnu FreeFont License which accompanies this README.txt.
-Read more about them at: https://www.gnu.org/software/freefont. To use the fonts in the PDF, auxiliary files are created in a temporary directory.
+Read more about them at https://www.gnu.org/software/freefont. To use fonts gocal, 
+auxiliary files are created in a temporary directory.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
 
@@ -104,9 +104,9 @@ Although this library supports a few other languages, I found that many of the
 languages do not work with the fonts I tried. The language from the environment can be 
 overridden with this parameter. If your LANG is not recognized, we default to en_US.
 
-		-nodoy: Hide day of year (false)
+		-nodoy: Hide day of year
 
-		-noevents: Hide events from config file (false)
+		-noevents: Hide events from config file
 
 Gocal adds events from an XML file in the current directory to dates. This option
 disables this feature.
@@ -150,6 +150,14 @@ use images with a bright tone so that you do not obstruct the usefulness of the 
 Event File
 ==================
 
+Choosing a format for the configuration file was tough.
+You might think that XML is overkill and JSON or CSV or one
+of the many configuration file libraries would have been 
+more adequate. Perhaps you are right. The advantage of the
+XML package is, that I knew how to use it and also, the 
+extensibility should I ever choose to allow more complex
+configuration. The defaultname is gocal.xml.
+
 	<Gocal>
     <Gocaldate date="12/24" text="Heilig Abend" />
     <Gocaldate date="12/25" text="Weihnachten" />
@@ -175,6 +183,7 @@ also as parameters in the XML, but I think it's not really that important.
 Examples
 ========
 
+Run the samples.bat batch file to create some example calendars.
  
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen0.png?raw=true)
 
@@ -238,3 +247,5 @@ Acknowledgments
 
 I'd like to thank the developers who wrote the great libraries that **gocal** is 
 relying on, esp. Sonia Keys and Kurt Jung.
+
+
