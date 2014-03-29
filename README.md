@@ -1,5 +1,8 @@
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screenshot.png?raw=true)
 
+[![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
+
+
 Gocal
 =====
 
