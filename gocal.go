@@ -1,7 +1,7 @@
 /*
 
 This is gocal a tool to generate calendars in PDF for printing.
- 
+
 https://github.com/StefanSchroeder/Gocal
 
 Stefan Schroeder, NY, 2014-03-10

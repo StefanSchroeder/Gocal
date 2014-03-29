@@ -185,43 +185,51 @@ Examples
 
 Run the samples.bat batch file to create some example calendars.
  
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen0.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example01.png?raw=true)
 
-		gocal -wall gopher.png -lang de_DE -font cabalett.ttf
+    Gocal -o example01.pdf -p P -photos pics 1 2014
 
-German locale with font Cabaletta and gopher wallpaper.
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example02.png?raw=true)
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen1.png?raw=true)
+    Gocal -o example02.pdf -lang fr_FR -font sans 2015
 
-		gocal -lang fi_FI -plain
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example03.png?raw=true)
 
-Finnish locale with all gimmicks hidden.
+    Gocal -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:\windows\Fonts\cabalett.ttf 
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen2.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example04.png?raw=true)
 
-		gocal -font cabalett.ttf -lang en_US
+    Gocal -o example04.pdf -lang de_DE -font mono 2 2014
 
-English locale with default settings and Cabaletta font.
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example05.png?raw=true)
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen3.png?raw=true)
+    Gocal -o example05.pdf -lang nl_NL -plain 3 2014
 
-		gocal -lang en_US -photos images/
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example06.png?raw=true)
 
-English locale in photo-mode.
+    Gocal -o example06.pdf -font c:\windows\Fonts\cabalett.ttf -lang en_US 4 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen4.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example07.png?raw=true)
 
-		gocal -lang fi_FI -font serif -p L
+    Gocal -o example07.pdf -p P -lang fr_FR -photo pics\taxi.JPG  4 2014
 
-Finnish locale with serif font (landscape).
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example08.png?raw=true)
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screen5.png?raw=true)
+    Gocal -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2014
 
-		gocal -lang fi_FI -font serif -p P
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example09.png?raw=true)
 
-English locale with serif font (portrait). 
+    Gocal -o example09.pdf -lang fi_FI -font serif -p L  4 2014
 
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example10.png?raw=true)
 
+    Gocal -o example10.pdf -lang fi_FI -font serif -p L 12 2013
+
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example11.png?raw=true)
+
+    Gocal -o example11.pdf -lang de_DE -font sans -p L 6 9 2014
+
+    
 Roadmap
 =======
 
@@ -229,6 +237,9 @@ Roadmap
 but the configuration file for pcal is really complex.
 * Also, I'd love to setup a website, where you generate PDFs on the web.
 * Your feature here!
+* I have no plans to put multiple month on a single page (yearly calendar). If
+you need that, create a 12-page calendar and use the plethora of pdf-tools
+to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc. 
 
 Known bugs
 ==========
