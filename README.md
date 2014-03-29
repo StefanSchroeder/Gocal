@@ -1,3 +1,4 @@
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screenshot.png?raw=true)
 
 Gocal
 =====
@@ -38,7 +39,6 @@ an application where every single stroke is configurable, I believe that most of
 you are too busy to play around with lots of options and want a pleasant calendar
 out-of-the-box. That's what gocal provides.
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/screenshot.png?raw=true)
 
 The power of gocal is based on the cool libraries that it includes. This implies that
 several of the options are actually options of the libraries, e.g. the paper format (gofpdf) or
@@ -70,9 +70,15 @@ The BSD type license is in the LICENSE file.
 Options
 =======
 
+### Help
+
 		-h  Help: Summarizes the options.
 
+### Footer
+
 		-f="Gocal": Footer note
+
+### Font
 
 Change the string at the bottom of the page.
 
@@ -93,6 +99,8 @@ auxiliary files are created in a temporary directory.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
 
+### Language
+
 		-lang="": Language
 
 Gocal reads the LANG environment variable. If it matches one of 
@@ -103,6 +111,8 @@ the library goodsign/monday is used to translate the weekday names and month nam
 Although this library supports a few other languages, I found that many of the 
 languages do not work with the fonts I tried. The language from the environment can be 
 overridden with this parameter. If your LANG is not recognized, we default to en_US.
+
+### Hiding stuff
 
 		-nodoy: Hide day of year
 
@@ -117,13 +127,23 @@ disables this feature.
 
 The week number according to ISO-8601 is added on every Monday by default.
 
+		-plain This will hide everything that can be hidden.
+
+### Output
+
 		-o="output.pdf": Output filename
+
+### Paper orientation
 
 		-p="L": Orientation (L)andscape/(P)ortrait
 
 Typically you want landscape for calendars without image and portrait for calendars with image.
 
+### Paper format
+
 		-paper="A4": Paper format (A3 A4 A5 Letter Legal)
+
+### Photo / Photos / Wallpaper
 
 		-photo=filename: Show single photo (single image in PNG JPG GIF)
 
@@ -144,7 +164,7 @@ e.g. gocal -wall gopher.png
 This option will add this image to every month as a background. You should only 
 use images with a bright tone so that you do not obstruct the usefulness of the calendar.
 
-		-plain This will hide everything that can be hidden.
+
 
 
 Event File
@@ -185,47 +205,47 @@ Examples
 
 Run the samples.bat batch file to create some example calendars.
  
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example01.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example01.png?raw=true)
 
     Gocal -o example01.pdf -p P -photos pics 1 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example02.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example02.png?raw=true)
 
     Gocal -o example02.pdf -lang fr_FR -font sans 2015
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example03.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example03.png?raw=true)
 
     Gocal -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:\windows\Fonts\cabalett.ttf 
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example04.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example04.png?raw=true)
 
     Gocal -o example04.pdf -lang de_DE -font mono 2 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example05.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example05.png?raw=true)
 
     Gocal -o example05.pdf -lang nl_NL -plain 3 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example06.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example06.png?raw=true)
 
     Gocal -o example06.pdf -font c:\windows\Fonts\cabalett.ttf -lang en_US 4 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example07.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example07.png?raw=true)
 
     Gocal -o example07.pdf -p P -lang fr_FR -photo pics\taxi.JPG  4 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example08.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example08.png?raw=true)
 
     Gocal -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example09.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example09.png?raw=true)
 
     Gocal -o example09.pdf -lang fi_FI -font serif -p L  4 2014
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example10.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example10.png?raw=true)
 
     Gocal -o example10.pdf -lang fi_FI -font serif -p L 12 2013
 
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/example11.png?raw=true)
+![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example11.png?raw=true)
 
     Gocal -o example11.pdf -lang de_DE -font sans -p L 6 9 2014
 
