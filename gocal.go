@@ -1,10 +1,12 @@
-/*
+// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
+//
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file 
 
+/*
 This is gocal a tool to generate calendars in PDF for printing.
 
 https://github.com/StefanSchroeder/Gocal
-
-Stefan Schroeder, NY, 2014-03-10
 
 See LICENSE for license.
 
@@ -29,7 +31,6 @@ See LICENSE for license.
 package main
 
 import (
-	_ "code.google.com/p/go-charset/data"
 	"code.google.com/p/gofpdf"
 	"encoding/xml"
 	"flag"
@@ -42,21 +43,29 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	_ "code.google.com/p/go-charset/data"
 )
-
 const (
+  // Default values for cmdline parameters.
 	DEFAULTCONFIGFILE  = "gocal.xml"
 	DEFAULTFOOTER      = "Gocal"
 	DEFAULTPAPERSIZE   = "A4"
 	DEFAULTORIENTATION = "L"
 	DEFAULTOUTPUT      = "output.pdf"
 	DEFAULTFONT        = "serif"
+
+  // Layout parameters
 	LINES              = 6
 	COLUMNS            = 7
+	MARGIN             = 10.0 // MM
+	CELLMARGIN         = 1.0
+
+  // Colors
 	DARKGREY           = 150
 	LIGHTGREY          = 170
 	BLACK              = 0
-	MARGIN             = 10.0 // MM
+
+  // Font sizes
 	EVENTFONTSIZE      = 10
 	HEADERFONTSIZE     = 32
 	WEEKFONTSIZE       = 12
@@ -64,8 +73,6 @@ const (
 	DOYFONTSIZE        = 12
 	MONTHDAYFONTSIZE   = 32
 	FOOTERFONTSIZE     = 12
-	LOC                = "de_DE"
-	CELLMARGIN         = 1
 )
 
 var optFont = flag.String("font", DEFAULTFONT, "Font")
@@ -160,6 +167,7 @@ func docWriter(pdf *gofpdf.Fpdf) *pdfWriter {
 	return pw
 }
 
+// Gocaldate is a type to store single events
 type Gocaldate struct {
 	Date string `xml:"date,attr"`
 	Text string `xml:"text,attr"`
@@ -168,6 +176,7 @@ type Gocaldate struct {
 	//	Weekday string
 }
 
+// TelegramStore is a container to read XML event-list
 type TelegramStore struct {
 	XMLName   xml.Name `xml:"Gocal"`
 	Gocaldate []Gocaldate
@@ -293,7 +302,7 @@ func main() {
 		eventList = readConfigurationfile(*optConfig)
 	}
 
-	var wantyear int = int(time.Now().Year())
+	var wantyear = int(time.Now().Year())
 	wantmonths := monthRange{1, 12}
 
 	if flag.NArg() == 1 {
@@ -379,7 +388,7 @@ func main() {
 
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
-				var fill bool = false
+        fill := false
 				nd := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
 
 				// Determine color

@@ -1,11 +1,17 @@
-// This file is part of gocal, a PDF calendar generator in Go.
+// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 //
-// https://github.com/StefanSchroeder/Gocal
-//
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file 
 package main
+/*
+This file is part of gocal, a PDF calendar generator in Go.
 
 // This is the FreeSansBold Truetype font, a free GPL font, downloaded from
-// https://www.gnu.org/software/freefont/
+https://www.gnu.org/software/freefont/. See 
+gnufreefont-License.txt to learn more about the license of this font.
+
+https://github.com/StefanSchroeder/Gocal
+*/
 
 func getFreeSansBold() []byte {
  return []byte{0x00, 0x01, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x80, 0x00, 0x03, 0x00, 0x70, 0x47, 0x44, 0x45, 0x46,

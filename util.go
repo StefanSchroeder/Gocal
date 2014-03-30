@@ -1,8 +1,14 @@
+// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
+//
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file 
+// 
+// util.go
+//
 // This file is part of gocal, a PDF calendar generator in Go.
 //
 // https://github.com/StefanSchroeder/Gocal
 //
-// util.go
 package main
 
 import (
