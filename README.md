@@ -81,9 +81,9 @@ Options
 
 		-f="Gocal": Footer note
 
-### Font
-
 Change the string at the bottom of the page.
+
+### Font
 
 		-font="": font
 
@@ -101,6 +101,16 @@ Read more about them at https://www.gnu.org/software/freefont. To use fonts goca
 auxiliary files are created in a temporary directory.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
+
+### Font size
+
+While it is currently not possible to set font sizes individually, there is a 
+
+    -small
+
+option to reduce the fontsizes globally to 75% of the default size to gain more room for 
+manual notes.
+
 
 ### Language
 
@@ -129,6 +139,11 @@ disables this feature.
 		-noweek: Hide week number
 
 The week number according to ISO-8601 is added on every Monday by default.
+
+		-noother: Hide neighbormonth days
+
+This option hides the leading and trailing days of the neighbor month.
+By default these days are printed in light grey.
 
 		-plain This will hide everything that can be hidden.
 
@@ -168,6 +183,12 @@ This option will add this image to every month as a background. You should only
 use images with a bright tone so that you do not obstruct the usefulness of the calendar.
 
 
+### Maintenance
+
+    -noclear
+
+By default the temporary directory where fonts and the codepage are stored is deleted
+at the end. This option let's you keep it. It's primarily a debug help.
 
 
 Event File
@@ -269,6 +290,7 @@ but the configuration file for pcal is really complex.
 * I have no plans to put multiple month on a single page (yearly calendar). If
 you need that, create a 12-page calendar and use the plethora of pdf-tools
 to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc. 
+* Add option to clear not-this-month-days (-B in pcal)
 
 Known bugs
 ==========
