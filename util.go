@@ -83,8 +83,8 @@ func convertCP(in string) (out string) {
 }
 
 // This function reads the events XML file and returns a
-// list of gocalDate objects.
-func readConfigurationfile(filename string) (eL []gocalDate) {
+// list of gDate objects.
+func readConfigurationfile(filename string) (eL []gDate) {
 
 	var v TelegramStore
 
@@ -116,14 +116,14 @@ func readConfigurationfile(filename string) (eL []gocalDate) {
 			if textArray[0] == "*" {
 				d, _ := strconv.ParseInt(textArray[1], 10, 32)
 				for j := 1; j < 13; j++ {
-					gcd := gocalDate{time.Month(j), int(d), eventText, ""}
+					gcd := gDate{time.Month(j), int(d), eventText, ""}
 					eL = append(eL, gcd)
 				}
 			} else {
 				mo, _ := strconv.ParseInt(textArray[0], 10, 32)
 				d, _ := strconv.ParseInt(textArray[1], 10, 32)
 
-				gcd := gocalDate{time.Month(mo), int(d), eventText, ""}
+				gcd := gDate{time.Month(mo), int(d), eventText, ""}
 				eL = append(eL, gcd)
 			}
 		}

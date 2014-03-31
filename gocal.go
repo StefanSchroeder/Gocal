@@ -102,11 +102,26 @@ var calFont string
 var wallpaperFilename string
 var fontTempdir string
 
-type gocalDate struct {
+type gDate struct {
 	Month   time.Month
 	Day     int
 	Text    string
 	Weekday string
+}
+
+// Gocaldate is a type to store single events
+type Gocaldate struct {
+	Date string `xml:"date,attr"`
+	Text string `xml:"text,attr"`
+	//	Month   time.Month
+	//	Day     int
+	//	Weekday string
+}
+
+// TelegramStore is a container to read XML event-list
+type TelegramStore struct {
+	XMLName   xml.Name `xml:"Gocal"`
+	Gocaldate []Gocaldate
 }
 
 type monthRange struct {
@@ -173,20 +188,6 @@ func docWriter(pdf *gofpdf.Fpdf) *pdfWriter {
 	return pw
 }
 
-// Gocaldate is a type to store single events
-type Gocaldate struct {
-	Date string `xml:"date,attr"`
-	Text string `xml:"text,attr"`
-	//	Month   time.Month
-	//	Day     int
-	//	Weekday string
-}
-
-// TelegramStore is a container to read XML event-list
-type TelegramStore struct {
-	XMLName   xml.Name `xml:"Gocal"`
-	Gocaldate []Gocaldate
-}
 
 func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 	daysInYear := 365
@@ -315,7 +316,7 @@ func main() {
 		currentLanguage = "en_US"
 	}
 
-	eventList := make([]gocalDate, 1000)
+	eventList := make([]gDate, 1000)
 
 	if *optHideEvents == false {
 		eventList = readConfigurationfile(*optConfig)
