@@ -19,12 +19,53 @@ import (
 	"fmt"
 	"github.com/goodsign/monday"
 	"io/ioutil"
+	"path/filepath"
+	"net/http"
 	"log"
+	"io"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 )
+
+// downloadFile loads a file via http into the tempDir 
+// and returns the fullpath filename.
+func downloadFile(in string, tempDir string)(fileName string) {
+  extension := filepath.Ext(in)
+  fmt.Println("# in=%v\n", in)
+  // The filename from the URL might contain colons that are
+  // not valid characters in a filename in Windows. THerefore
+  // we simply call out image 'image'.
+	fileName = "image"  + extension
+  fmt.Printf("# in=%v\n", fileName)
+  fileName = tempDir+ string(os.PathSeparator) + fileName
+  fmt.Printf("# in=%v\n", fileName)
+
+	output, err := os.Create(fileName)
+	if err != nil {
+		fmt.Printf("# Error creating %v\n", output)
+		return
+	}
+	defer output.Close()
+
+	retrieve, err := http.Get(in)
+	if err != nil {
+		fmt.Printf("# Error downloading %v\n", in)
+		return
+	}
+	defer retrieve.Body.Close()
+
+	_, err = io.Copy(output, retrieve.Body)
+	if err != nil {
+		fmt.Printf("# Error copying %v\n", in)
+		return
+	}
+
+  return fileName
+}
+
+
 
 // This function converts a string into the required 
 // Codepage.

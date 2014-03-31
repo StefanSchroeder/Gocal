@@ -1,7 +1,7 @@
 // Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 //
 // Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file 
+// license that can be found in the LICENSE file
 
 /*
 This is gocal a tool to generate calendars in PDF for printing.
@@ -54,25 +54,27 @@ const (
 	DEFAULTOUTPUT      = "output.pdf"
 	DEFAULTFONT        = "serif"
 
-  // Layout parameters
-	LINES              = 6
-	COLUMNS            = 7
-	MARGIN             = 10.0 // MM
-	CELLMARGIN         = 1.0
+	// Layout parameters
+	LINES      = 6
+	COLUMNS    = 7
+	MARGIN     = 10.0 // MM
+	CELLMARGIN = 1.0
 
-  // Colors
-	DARKGREY           = 150
-	LIGHTGREY          = 170
-	BLACK              = 0
+	// Colors
+	DARKGREY  = 150
+	LIGHTGREY = 170
+	BLACK     = 0
+)
 
-  // Font sizes
-	EVENTFONTSIZE      = 10
-	HEADERFONTSIZE     = 32
-	WEEKFONTSIZE       = 12
-	WEEKDAYFONTSIZE    = 16
-	DOYFONTSIZE        = 12
-	MONTHDAYFONTSIZE   = 32
-	FOOTERFONTSIZE     = 12
+var (
+	// Font sizes
+	EVENTFONTSIZE    = 10.0
+	HEADERFONTSIZE   = 32.0
+	WEEKFONTSIZE     = 12.0
+	WEEKDAYFONTSIZE  = 16.0
+	DOYFONTSIZE      = 12.0
+	MONTHDAYFONTSIZE = 32.0
+	FOOTERFONTSIZE   = 12.0
 )
 
 var optFont = flag.String("font", DEFAULTFONT, "Font")
@@ -90,10 +92,14 @@ var optConfig = flag.String("config", DEFAULTCONFIGFILE, "Configuration file")
 var optPhotos = flag.String("photos", "", "Show photos (directory PNG JPG GIF)")
 var optWallpaper = flag.String("wall", "", "Show wallpaper PNG JPG GIF")
 var outfilename = flag.String("o", DEFAULTOUTPUT, "Output filename")
+var optSmall = flag.Bool("small", false, "Smaller fonts")
+var optHideOtherMonths = flag.Bool("noother", false, "Hide neighboring month days")
+var optNoclear = flag.Bool("noclear", false, "Don't delete temporary directory.")
 
 var moonSize = 4.0
 var photoList [13]string
 var calFont string
+var wallpaperFilename string
 var fontTempdir string
 
 type gocalDate struct {
@@ -220,6 +226,9 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 }
 
 func removeTempdir(d string) {
+  if *optNoclear == true {
+    return
+  }
 	os.RemoveAll(d)
 }
 
@@ -254,6 +263,16 @@ func main() {
 		*optHideMoon = true
 		*optHideDOY = true
 		*optHideWeek = true
+	}
+
+	if *optSmall == true {
+		EVENTFONTSIZE *= 0.75
+		HEADERFONTSIZE *= 0.75
+		WEEKFONTSIZE *= 0.75
+		WEEKDAYFONTSIZE *= 0.75
+		DOYFONTSIZE *= 0.75
+		MONTHDAYFONTSIZE *= 0.75
+		FOOTERFONTSIZE *= 0.75
 	}
 
 	testedLanguage := map[string]bool{
@@ -348,7 +367,11 @@ func main() {
 		ch *= 0.5
 		moonSize *= 0.6 // make moon smaller on photopage
 		for i := 0; i < 13; i++ {
-			photoList[i] = *optPhoto
+			photoname := *optPhoto
+			if strings.HasPrefix(photoname, "http://") {
+				photoname = downloadFile(photoname, fontTempdir)
+			}
+			photoList[i] = photoname
 		}
 	}
 	if *optPhotos != "" {
@@ -402,6 +425,11 @@ func main() {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)
 				}
 
+				if *optHideOtherMonths==true && nd.Month() != time.Month(mymonth) { // GREY
+					pdf.SetX(pdf.GetX() + cw)
+          day++
+          continue
+        }
 				pdf.SetCellMargin(CELLMARGIN)
 
 				// Add moon icon
@@ -463,7 +491,11 @@ func main() {
 		//fmt.Printf("Printing page %d\n", page)
 		pdf.AddPage()
 		if *optWallpaper != "" {
-			pdf.Image(*optWallpaper, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
+			wallpaperFilename = *optWallpaper
+			if strings.HasPrefix(wallpaperFilename, "http://") {
+				wallpaperFilename = downloadFile(*optWallpaper, fontTempdir)
+			}
+			pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
 		}
 		if *optPhoto != "" || *optPhotos != "" {
 			photo := photoList[mo-1]
