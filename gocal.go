@@ -31,6 +31,7 @@ See LICENSE for license.
 package main
 
 import (
+	_ "code.google.com/p/go-charset/data"
 	"code.google.com/p/gofpdf"
 	"encoding/xml"
 	"flag"
@@ -43,10 +44,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	_ "code.google.com/p/go-charset/data"
 )
+
 const (
-  // Default values for cmdline parameters.
+	// Default values for cmdline parameters.
 	DEFAULTCONFIGFILE  = "gocal.xml"
 	DEFAULTFOOTER      = "Gocal"
 	DEFAULTPAPERSIZE   = "A4"
@@ -102,17 +103,20 @@ var calFont string
 var wallpaperFilename string
 var fontTempdir string
 
+// Gocaldate is a type to store single events
 type gDate struct {
 	Month   time.Month
 	Day     int
 	Text    string
 	Weekday string
+	Image   string
 }
 
-// Gocaldate is a type to store single events
+// Gocaldate is an XML type to store single events
 type Gocaldate struct {
-	Date string `xml:"date,attr"`
-	Text string `xml:"text,attr"`
+	Date  string `xml:"date,attr"`
+	Text  string `xml:"text,attr"`
+	Image string `xml:"image,attr"`
 	//	Month   time.Month
 	//	Day     int
 	//	Weekday string
@@ -124,12 +128,13 @@ type TelegramStore struct {
 	Gocaldate []Gocaldate
 }
 
+// monthRange stores begin and end month of the year
 type monthRange struct {
 	begin int
 	end   int
 }
 
-// Anonymous struct that allows to define methods on non-local types.
+// myPdf is an anonymous struct that allows to define methods on non-local types.
 type myPdf struct {
 	*gofpdf.Fpdf
 }
@@ -188,7 +193,7 @@ func docWriter(pdf *gofpdf.Fpdf) *pdfWriter {
 	return pw
 }
 
-
+// computeMoonphases fills a map with moonphase information.
 func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 	daysInYear := 365
 	if julian.LeapYearGregorian(yr) {
@@ -227,9 +232,9 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 }
 
 func removeTempdir(d string) {
-  if *optNoclear == true {
-    return
-  }
+	if *optNoclear == true {
+		return
+	}
 	os.RemoveAll(d)
 }
 
@@ -412,7 +417,7 @@ func main() {
 
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
-        fill := false
+				fill := false
 				nd := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
 
 				// Determine color
@@ -426,11 +431,11 @@ func main() {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)
 				}
 
-				if *optHideOtherMonths==true && nd.Month() != time.Month(mymonth) { // GREY
+				if *optHideOtherMonths == true && nd.Month() != time.Month(mymonth) { // GREY
 					pdf.SetX(pdf.GetX() + cw)
-          day++
-          continue
-        }
+					day++
+					continue
+				}
 				pdf.SetCellMargin(CELLMARGIN)
 
 				// Add moon icon
@@ -473,6 +478,9 @@ func main() {
 						x, y := pdf.GetXY()
 						pdf.SetFont(calFont, "", EVENTFONTSIZE)
 
+            if ev.Image != "" {
+              pdf.Image(ev.Image, x, y, cw, ch, false, "", 0, "")
+            }
 						for i, j := range strings.Split(ev.Text, "\\n") {
 							pdf.Text(x+0.02*cw, y+0.70*ch+float64(i)*EVENTFONTSIZE/4.0, fmt.Sprintf("%s", j))
 						}

@@ -33,14 +33,12 @@ import (
 // and returns the fullpath filename.
 func downloadFile(in string, tempDir string)(fileName string) {
   extension := filepath.Ext(in)
-  fmt.Println("# in=%v\n", in)
+
   // The filename from the URL might contain colons that are
   // not valid characters in a filename in Windows. THerefore
   // we simply call out image 'image'.
 	fileName = "image"  + extension
-  fmt.Printf("# in=%v\n", fileName)
   fileName = tempDir+ string(os.PathSeparator) + fileName
-  fmt.Printf("# in=%v\n", fileName)
 
 	output, err := os.Create(fileName)
 	if err != nil {
@@ -116,14 +114,14 @@ func readConfigurationfile(filename string) (eL []gDate) {
 			if textArray[0] == "*" {
 				d, _ := strconv.ParseInt(textArray[1], 10, 32)
 				for j := 1; j < 13; j++ {
-					gcd := gDate{time.Month(j), int(d), eventText, ""}
+					gcd := gDate{time.Month(j), int(d), eventText, "", m.Image}
 					eL = append(eL, gcd)
 				}
 			} else {
 				mo, _ := strconv.ParseInt(textArray[0], 10, 32)
 				d, _ := strconv.ParseInt(textArray[1], 10, 32)
 
-				gcd := gDate{time.Month(mo), int(d), eventText, ""}
+				gcd := gDate{time.Month(mo), int(d), eventText, "", m.Image}
 				eL = append(eL, gcd)
 			}
 		}

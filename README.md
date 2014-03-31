@@ -145,7 +145,7 @@ The week number according to ISO-8601 is added on every Monday by default.
 This option hides the leading and trailing days of the neighbor month.
 By default these days are printed in light grey.
 
-		-plain This will hide everything that can be hidden.
+		-plain This will hide everything that can be hidden (but not neighbormonth days).
 
 ### Output
 
@@ -166,6 +166,7 @@ Typically you want landscape for calendars without image and portrait for calend
 		-photo=filename: Show single photo (single image in PNG JPG GIF)
 
 This option will add this image to every month.
+The filename can be a URL, and must start with http:// and must have a valid image extension.
 
 		-photos=directory: Show multiple photos (directory with PNG JPG GIF)
 
@@ -174,6 +175,7 @@ e.g. gocal -photos images/
 This option will add the twelve first files as images to the twelve month.
 If less than twelve files are found, the sequence will re-start after the last image.
 This will not work if there are non-image files in the directory (among the first twelve).
+The directory option does NOT support URLs.
 
 		-wall=filename: Show wallpaper PNG JPG GIF
 
@@ -181,6 +183,7 @@ e.g. gocal -wall gopher.png
 
 This option will add this image to every month as a background. You should only 
 use images with a bright tone so that you do not obstruct the usefulness of the calendar.
+The filename can be a URL, and must start with http:// and must have a valid image extension.
 
 
 ### Maintenance
@@ -210,7 +213,7 @@ configuration. The defaultname is gocal.xml.
 		<Gocaldate date="4/18" text="\nBirgit" />
 		<Gocaldate date="9/17" text="Tomke" />
 		<Gocaldate date="1/13" text="Enno" />
-		<Gocaldate date="2/2" text="Ottokar" />
+		<Gocaldate date="2/2" text="Otto" image="golang-gopher.png" />
 		<Gocaldate date="3/3" text="Winfried" />
 		<Gocaldate date="4/4" text="Selma" />
 		<Gocaldate date="5/5" text="Theodor" />
@@ -224,7 +227,8 @@ for gocal. It has all the supported features. date is
 in MONTH/DAY format. The text may contain a literal \n newline.
 For the month a * is permitted and it obviously means 'every month'.
 You can use a leading newline symbol to make the text wrap to the next
-line in case of overlap.
+line in case of overlap. THe optional image tag will put an image into the
+cell.
 
 I was considering to allow to configure all the options from the command line
 also as parameters in the XML, but I think it's not really that important.
