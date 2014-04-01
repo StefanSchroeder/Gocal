@@ -9,6 +9,6 @@ Gocal.exe -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2014
 Gocal.exe -o example09.pdf -lang fi_FI -font serif -p L  4 2014
 Gocal.exe -o example10.pdf -lang fi_FI -font serif -p L 12 2013
 Gocal.exe -o example11.pdf -lang de_DE -font sans -p L 6 9 2014
-Gocal.exe -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png
-Gocal.exe -o example13.pdf -font sans -noother
-Gocal.exe -o example14.pdf -small
+Gocal.exe -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2014
+Gocal.exe -o example13.pdf -font sans -noother 7 2014
+Gocal.exe -o example14.pdf -small 2 2014
