@@ -307,8 +307,9 @@ but the configuration file for pcal is really complex.
 * I have no plans to put multiple month on a single page (yearly calendar). If
 you need that, create a 12-page calendar and use the plethora of pdf-tools
 to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc. 
-* Add option to clear not-this-month-days (-B in pcal)
 * Make gocal a library
+* some nice origami dodecahedron
+* pocketmod?
 
 Known bugs
 ==========
