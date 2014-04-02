@@ -97,7 +97,7 @@ func New(b int, e int, y int) *Calendar {
 	return &Calendar{b, e, y,
 		"serif",      // OptFont
 		"",      // OptFooter
-		"P",     // OptOrientation P=portrait
+		"L",     // OptOrientation P=portrait
 		false,   // OptSmall
 		"A4",    // OptPaperformat
 		"en_US", // OptLocale

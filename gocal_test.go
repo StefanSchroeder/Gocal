@@ -8,6 +8,7 @@ package gocal_test
 import (
 	"gocal"
 	"os"
+	"runtime"
 	"testing"
 )
 
@@ -19,6 +20,7 @@ func Test_Example01(t *testing.T) {
 func Test_Example02(t *testing.T) {
   g := gocal.New(1,1,2011)
   g.SetNocolor()
+  g.SetOrientation("L")
   g.CreateCalendar("test-example02.pdf")
 }
 
@@ -53,16 +55,19 @@ func Test_Example06(t *testing.T) {
   g.CreateCalendar("test-example06.pdf")
 }
 
-// This test will fail on non-Windows platforms.
 func Test_Example07(t *testing.T) {
   g := gocal.New(3,4,2013)
-  g.SetFont("c:\\windows\\Fonts\\cabalett.ttf")
+  if runtime.GOOS == "windows" {
+    g.SetFont("c:\\windows\\Fonts\\cabalett.ttf")
+  }
+  g.SetFooter("Windows specific Font inclusion example")
   g.CreateCalendar("test-example07.pdf")
 }
 
 func Test_Example08(t *testing.T) {
   g := gocal.New(3,4,2013)
   g.SetPhoto("gocalendar" + string(os.PathSeparator) + "pics" + string(os.PathSeparator) + "taxi.JPG")
+  g.SetOrientation("P")
   g.CreateCalendar("test-example08.pdf")
 }
 
