@@ -90,6 +90,7 @@ type Calendar struct {
 	OptConfig          string
 	OptPhotos          string
 	OptFontScale          float64
+	OptNocolor         bool
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -110,6 +111,7 @@ func New(b int, e int, y int) *Calendar {
 		"",      // OptConfig
 		"",      // OptPhotos
 		1.0,      // OptFontScale
+		false,      // OptNocolor
 	}
 }
 
@@ -224,6 +226,10 @@ func (g *Calendar) SetHideMoon() {
 
 func (g *Calendar) SetHideWeek() {
 	g.OptHideWeek = true
+}
+
+func (g *Calendar) SetNocolor() {
+	g.OptNocolor = true
 }
 
 func (g *Calendar) SetSmall() {
@@ -412,7 +418,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 					pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 					fill = false // FIXME, do we want fill here?
-				} else if nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday {
+				} else if nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday  && !g.OptNocolor{
 					pdf.SetTextColor(255, 0, 0) // RED
 				} else {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)

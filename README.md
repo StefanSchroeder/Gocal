@@ -310,13 +310,14 @@ Roadmap
 =======
 
 * It would be really cool to allow gocal to be a drop-in replacement for pcal,
-but the configuration file for pcal is really complex.
+but the configuration file for pcal is really complex (=pcal allows complicated
+things, like "every second Thursday after the third moon in leap years")
 * I have no plans to put multiple month on a single page (yearly calendar). If
 you need that, create a 12-page calendar and use the plethora of pdf-tools
 to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc. 
-* Make gocal a library
 * some nice origami dodecahedron
 * pocketmod?
+* Allow setting of colors?
 
 Known bugs
 ==========

@@ -84,6 +84,9 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 	}
 }
 
+// processFont creates a font usable by gofpdf from a TTF.
+// It also sets up the temporary directory to store the 
+// intermediate files.
 func processFont(fontFile string) (fontName, tempDirname string) {
 	var err error
 	tempDirname, err = ioutil.TempDir("", "")
@@ -142,8 +145,6 @@ func downloadFile(in string, tempDir string)(fileName string) {
 
   return fileName
 }
-
-
 
 // This function converts a string into the required 
 // Codepage.
@@ -222,6 +223,8 @@ func getLocalizedMonthNames(locale string) (monthnames [13]string) {
 	return monthnames
 }
 
+/// This function returns an array of weekday names already in the
+// right locale.
 func getLocalizedWeekdayNames(locale string) (wdnames [8]string) {
 	for i := 1; i <= 7; i++ {
 		// Some arbitrary date, that allows us to pickup Weekday-Strings.
