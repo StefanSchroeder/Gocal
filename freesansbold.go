@@ -2,7 +2,7 @@
 //
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file 
-package main
+package gocal
 /*
 This file is part of gocal, a PDF calendar generator in Go.
 

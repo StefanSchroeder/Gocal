@@ -9,25 +9,105 @@
 //
 // https://github.com/StefanSchroeder/Gocal
 //
-package main
+package gocal
 
 import (
 	"bytes"
 	"code.google.com/p/go-charset/charset"
-	_ "code.google.com/p/go-charset/data"
 	"encoding/xml"
 	"fmt"
+	"code.google.com/p/gofpdf"
 	"github.com/goodsign/monday"
-	"io/ioutil"
-	"path/filepath"
-	"net/http"
-	"log"
+	"github.com/soniakeys/meeus/julian"
+	"github.com/soniakeys/meeus/moonphase"
 	"io"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+	_ "code.google.com/p/go-charset/data"
 )
+
+const (
+  CLEARTEMP = true
+)
+
+// removeTempdir removes the temoprary directory, 
+// unless we want to keep it for debugging.
+func removeTempdir(d string) {
+	if CLEARTEMP == false {
+		return
+	}
+	os.RemoveAll(d)
+}
+
+
+// computeMoonphases fills a map with moonphase information.
+func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
+	daysInYear := 365
+	if julian.LeapYearGregorian(yr) {
+		daysInYear = 366
+	}
+	// Look at every day and check if it has any of the Moon Phases.
+	for i := 0; i < 32; i++ {
+		dayOfYear := julian.DayOfYearGregorian(yr, mo, int(da)+i)
+		decimalYear := float64(yr) +
+			float64(dayOfYear-1)/float64(daysInYear)
+		jdeNew := moonphase.New(decimalYear)
+		y, m, d := julian.JDToCalendar(jdeNew)
+		if (y == yr) && (m == mo) && (int(d) == i) {
+			//fmt.Printf("New moon on %d\n", int(d))
+			moon[int(d)] = "New"
+		}
+		jdeNew = moonphase.Full(decimalYear)
+		y, m, d = julian.JDToCalendar(jdeNew)
+		if (y == yr) && (m == mo) && (int(d) == i) {
+			//fmt.Printf("Full moon on %d\n", int(d))
+			moon[int(d)] = "Full"
+		}
+		jdeNew = moonphase.First(decimalYear)
+		y, m, d = julian.JDToCalendar(jdeNew)
+		if (y == yr) && (m == mo) && (int(d) == i) {
+			//fmt.Printf("First Q moon on %d\n", int(d))
+			moon[int(d)] = "First"
+		}
+		jdeNew = moonphase.Last(decimalYear)
+		y, m, d = julian.JDToCalendar(jdeNew)
+		if (y == yr) && (m == mo) && (int(d) == i) {
+			moon[int(d)] = "Last"
+			//fmt.Printf("Last Q moon on %d\n", int(d))
+		}
+	}
+}
+
+func processFont(fontFile string) (fontName, tempDirname string) {
+	var err error
+	tempDirname, err = ioutil.TempDir("", "")
+	if fontFile == "mono" {
+		fontFile = tempDirname + string(os.PathSeparator) + "freemonobold.ttf"
+		ioutil.WriteFile(fontFile, getFreeMonoBold(), 0700)
+	} else if fontFile == "serif" {
+		fontFile = tempDirname + string(os.PathSeparator) + "freeserifbold.ttf"
+		ioutil.WriteFile(fontFile, getFreeSerifBold(), 0700)
+	} else if fontFile == "sans" {
+		fontFile = tempDirname + string(os.PathSeparator) + "freesansbold.ttf"
+		ioutil.WriteFile(fontFile, getFreeSansBold(), 0700)
+	}
+	err = ioutil.WriteFile(tempDirname+string(os.PathSeparator)+"cp1252.map", []byte(codepageCP1252), 0700)
+	err = gofpdf.MakeFont(fontFile, tempDirname+string(os.PathSeparator)+"cp1252.map", tempDirname, os.Stderr, true)
+	_ = err
+	// FIXME Do some error checking here.
+	fontName = filepath.Base(fontFile)
+	fontName = strings.TrimSuffix(fontName, filepath.Ext(fontName))
+	// fmt.Printf("Using external font: %v\n", fontName)
+	return fontName, tempDirname
+}
+
+
 
 // downloadFile loads a file via http into the tempDir 
 // and returns the fullpath filename.

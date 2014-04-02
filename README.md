@@ -6,16 +6,17 @@
 Gocal
 =====
 
-Gocal is a simple clone of pcal. It's a standalone tool to create monthly calendars in PDF with a no-nonsense attitude.
-By default it creates a 12-page PDF with one month per page for the current year. 
+Gocal is a simple clone of pcal. It's a standalone tool and a library to create monthly calendars in PDF 
+with a no-nonsense attitude. By default it creates a 12-page PDF with one month per page for the current year. 
+To avoid confusion, the library is called gocal, while the standalone tool is named gocalendar.
 
 Alternatively the following arguments are supported:
 
-  gocal YEAR => Create a 12-page calendar for YEAR, e.g. 2014
+  gocalendar YEAR => Create a 12-page calendar for YEAR, e.g. 2014
 
-  gocal MONTH YEAR => Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
+  gocalendar MONTH YEAR => Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
 
-  gocal BEGIN-MONTH END-MONTH YEAR => Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
+  gocalendar BEGIN-MONTH END-MONTH YEAR => Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
 
 Features
@@ -59,19 +60,20 @@ Run
 
 Gocal has a quite a few dependencies that go should resolve automatically.
 
-Build with
+To build the standalone tool, change into the gocalendar directory and run
 
 	go build 
-
 
 License
 =======
 
 The BSD type license is in the LICENSE file.
 
+For the API documentation of gocal the library visit the 
+auto-generated docs on godoc.org.
 
-Options
-=======
+Options of gocalendar
+=====================
 
 ### Help
 
@@ -81,7 +83,9 @@ Options
 
 		-f="Gocal": Footer note
 
-Change the string at the bottom of the page.
+Change the string at the bottom of the page. To disable the footer, simply set it to the
+empty string. There is a small deficiency, that the footer text is not centered, but starts
+in the middle of the page.
 
 ### Font
 
@@ -104,12 +108,15 @@ In addition you can provide your own TTF on the commandline if you prefer someth
 
 ### Font size
 
-While it is currently not possible to set font sizes individually, there is a 
+Font sizes relative to the default size can be set with 
+
+    -fontscale floatingpoint number
+
+The default is 1.0 and typically you shouldn't change the font size. There is a 
+shortcut to reduce the fontsizes globally to 75% of the default size to gain more room for 
+manual notes.
 
     -small
-
-option to reduce the fontsizes globally to 75% of the default size to gain more room for 
-manual notes.
 
 
 ### Language

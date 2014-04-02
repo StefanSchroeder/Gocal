@@ -12,7 +12,7 @@ gnufreefont-License.txt to learn more about the license of this font.
 
 https://github.com/StefanSchroeder/Gocal
 */
-package main
+package gocal
 
 
 func getFreeMonoBold() []byte {
