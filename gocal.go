@@ -95,7 +95,7 @@ type Calendar struct {
 
 func New(b int, e int, y int) *Calendar {
 	return &Calendar{b, e, y,
-		"",      // OptFont
+		"serif",      // OptFont
 		"",      // OptFooter
 		"P",     // OptOrientation P=portrait
 		false,   // OptSmall
@@ -418,7 +418,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 					pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 					fill = false // FIXME, do we want fill here?
-				} else if nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday  && !g.OptNocolor{
+				} else if (nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday)  && !g.OptNocolor{
 					pdf.SetTextColor(255, 0, 0) // RED
 				} else {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)

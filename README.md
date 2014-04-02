@@ -36,13 +36,12 @@ Features
 Why not using pcal? There are several reasons. One, I couldn't build it on 
 Windows, next, I don't care about Postscript, third, a calendar seems to 
 be exactly a kind of project that I am able to handle from a complexity perspective 
-as a single developer.
+as a single developer. And pcal doesn't do UTF-8.
 
 The main idea of gocal is simplicity. While it is absolutely possible to create
 an application where every single stroke is configurable, I believe that most of
 you are too busy to play around with lots of options and want a pleasant calendar
 out-of-the-box. That's what gocal provides.
-
 
 The power of gocal is based on the cool libraries that it includes. This implies that
 several of the options are actually options of the libraries, e.g. the paper format (gofpdf) or
@@ -63,6 +62,10 @@ Gocal has a quite a few dependencies that go should resolve automatically.
 To build the standalone tool, change into the gocalendar directory and run
 
 	go build 
+
+You create a bunch of sample files (and in passing test gocal) by running
+
+   go test
 
 License
 =======
