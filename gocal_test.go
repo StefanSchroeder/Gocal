@@ -37,15 +37,68 @@ func Test_Example04(t *testing.T) {
   g.CreateCalendar("test-example04.pdf")
 }
 
-    /*
-$E -o example01.pdf -p P -photos pics 1 2014
-$E -o example04.pdf -lang de_DE -font mono 2 2014
-$E -o example05.pdf -lang nl_NL -plain 3 2014
-$E -o example06.pdf -font c:/windows/Fonts/cabalett.ttf -lang en_US 4 2014
-$E -o example07.pdf -p P -lang fr_FR -photo pics/taxi.JPG  4 2014
-$E -o example09.pdf -lang fi_FI -font serif -p L  4 2014
-$E -o example10.pdf -lang fi_FI -font mono -p L 12 2013
-$E -o example11.pdf -lang de_DE -font sans -p L 6 2014
-$E -o example13.pdf -font sans -noother 7 2014
-$E -o example14.pdf -small 2 2014
-     */
+func Test_Example05(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetOrientation("P")
+  g.SetFont("mono")
+  g.SetLocale("de_DE")
+  g.CreateCalendar("test-example05.pdf")
+}
+
+func Test_Example06(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetOrientation("P")
+  g.SetPlain()
+  g.SetLocale("nl_NL")
+  g.CreateCalendar("test-example06.pdf")
+}
+
+// This test will fail on non-Windows platforms.
+func Test_Example07(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetFont("c:\\windows\\Fonts\\cabalett.ttf")
+  g.CreateCalendar("test-example07.pdf")
+}
+
+func Test_Example08(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetPhoto("gocalendar" + string(os.PathSeparator) + "pics" + string(os.PathSeparator) + "taxi.JPG")
+  g.CreateCalendar("test-example08.pdf")
+}
+
+func Test_Example09(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetLocale("fi_FI")
+  g.CreateCalendar("test-example09.pdf")
+}
+
+func Test_Example10(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetFontScale(0.5)
+  g.CreateCalendar("test-example10.pdf")
+}
+
+func Test_Example11(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetSmall()
+  g.CreateCalendar("test-example11.pdf")
+}
+
+func Test_Example12(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetHideOtherMonth()
+  g.CreateCalendar("test-example12.pdf")
+}
+
+func Test_Example13(t *testing.T) {
+  g := gocal.New(3,4,2013)
+  g.SetHideWeek()
+  g.SetHideMoon()
+  g.CreateCalendar("test-example13.pdf")
+}
+func Test_Example14(t *testing.T) {
+  g := gocal.New(1,12,2013)
+  g.SetConfig("test-gocal.xml")
+  g.CreateCalendar("test-example14.pdf")
+}
+
