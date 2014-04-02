@@ -1,0 +1,15 @@
+<Gocal>
+	<Gocaldate date="1/15"  text="Alice" />
+	<Gocaldate date="2/15"  text="Bob" />
+	<Gocaldate date="3/15"  text="Charles" />
+	<Gocaldate date="4/15"  text="Daisy" />
+	<Gocaldate date="5/15"  text="Æþelbryht" />
+	<Gocaldate date="6/15"  text="Frank" />
+	<Gocaldate date="6/15"  text="\nGeorge" />
+	<Gocaldate date="7/15"  text="Henry" />
+	<Gocaldate date="8/15"  text="Isildur" />
+	<Gocaldate date="9/15"  text="Ethelbert" />
+	<Gocaldate date="10/15"  text="Æþelbyrht" />
+	<Gocaldate date="11/15"  text="Eðilberht" />
+	<Gocaldate date="12/15"  text="Eþelbriht" />
+</Gocal>
