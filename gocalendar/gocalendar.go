@@ -74,6 +74,12 @@ func main() {
   g.SetPhotos(*optPhotos)
   g.SetPhoto(*optPhoto)
   g.SetFooter(*optFooter)
+  /*
+  g.AddEvent(31, 1, "HALLO", "")
+  g.AddEvent(28, 2, "HALLO", "")
+  g.AddEvent(31, 3, "HALLO", "")
+  g.AddEvent(30, 4, "HALLO", "")
+  */
   g.CreateCalendar(*outfilename)
 }
 

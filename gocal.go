@@ -12,10 +12,6 @@ See LICENSE for license.
 
 * Inspired by pcal
 * Simplicity: Create a nice calendar with minimum effort.
-* No argument: Creates a calendar for this year.
-* One argument: Year
-* Two argument: Month Year
-* Two argument: MonthBegin MonthEnd Year
 * Week number
 * Moonphase
 * Add events from configuration file
@@ -25,11 +21,7 @@ See LICENSE for license.
 * Day of year
 * background image
 * Photo calendar
-*
-
-Gocal.New()
-Gocal.Write()
-
+* more
 
 */
 package gocal
@@ -58,7 +50,7 @@ const (
 	LIGHTGREY = 170
 	BLACK     = 0
 
-  MOONSIZE = 4.0
+	MOONSIZE = 4.0
 
 	// Font sizes
 	EVENTFONTSIZE    = 10.0
@@ -89,13 +81,14 @@ type Calendar struct {
 	OptPlain           bool
 	OptConfig          string
 	OptPhotos          string
-	OptFontScale          float64
+	OptFontScale       float64
 	OptNocolor         bool
+	EventList          []gDate
 }
 
 func New(b int, e int, y int) *Calendar {
 	return &Calendar{b, e, y,
-		"serif",      // OptFont
+		"serif", // OptFont
 		"",      // OptFooter
 		"L",     // OptOrientation P=portrait
 		false,   // OptSmall
@@ -110,8 +103,9 @@ func New(b int, e int, y int) *Calendar {
 		false,   // OptPlain
 		"",      // OptConfig
 		"",      // OptPhotos
-		1.0,      // OptFontScale
-		false,      // OptNocolor
+		1.0,     // OptFontScale
+		false,   // OptNocolor
+		nil,
 	}
 }
 
@@ -149,7 +143,7 @@ type monthRange struct {
 // myPdf is an anonymous struct that allows to define methods on non-local type.
 type myPdf struct {
 	*gofpdf.Fpdf
-  moonSize float64
+	moonSize float64
 }
 
 func (pdf myPdf) fullMoon(x, y float64) {
@@ -169,9 +163,9 @@ func (pdf myPdf) lastQuarter(x, y float64) {
 }
 
 type pdfWriter struct {
-	pdf *gofpdf.Fpdf
-	fl  *os.File
-  pdfFilename string
+	pdf         *gofpdf.Fpdf
+	fl          *os.File
+	pdfFilename string
 }
 
 func (pw *pdfWriter) Write(p []byte) (n int, err error) {
@@ -196,7 +190,7 @@ func (pw *pdfWriter) Close() (err error) {
 
 func docWriter(pdf *gofpdf.Fpdf, fname string) *pdfWriter {
 	pw := new(pdfWriter)
-  pw.pdfFilename = fname
+	pw.pdfFilename = fname
 	pw.pdf = pdf
 	if pdf.Ok() {
 		var err error
@@ -272,6 +266,11 @@ func (g *Calendar) SetFooter(f string) {
 	g.OptFooter = f
 }
 
+func (g *Calendar) AddEvent(day int, month int, text string, image string) {
+	gcd := gDate{time.Month(month), int(day), text, "", image}
+	g.EventList = append(g.EventList, gcd)
+}
+
 func (g *Calendar) SetPaperformat(f string) {
 	g.OptPaperformat = f
 }
@@ -279,7 +278,7 @@ func (g *Calendar) SetPaperformat(f string) {
 func (g *Calendar) CreateCalendar(fn string) {
 
 	var fontTempdir string
-  var fontScale = g.OptFontScale
+	var fontScale = g.OptFontScale
 
 	if g.OptPlain == true {
 		g.SetHideOtherMonth()
@@ -289,7 +288,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	}
 
 	if g.OptSmall == true {
-    fontScale = 0.75
+		fontScale = 0.75
 	}
 
 	testedLanguage := map[string]bool{
@@ -332,10 +331,15 @@ func (g *Calendar) CreateCalendar(fn string) {
 		currentLanguage = "en_US"
 	}
 
-	var eventList = make([]gDate, 10000) // Maximum number of events
+	var fileEventList = make([]gDate, 10000) // Maximum number of events
 
 	if g.OptConfig != "" {
-		eventList = readConfigurationfile(g.OptConfig)
+		fileEventList = readConfigurationfile(g.OptConfig)
+	}
+
+	eventList := fileEventList
+	for _, ev := range g.EventList {
+		eventList = append(eventList, ev)
 	}
 
 	wantyear := g.WantYear
@@ -343,7 +347,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage)
 
-  var calFont string
+	var calFont string
 	if g.OptFont != "" {
 		calFont = g.OptFont
 	}
@@ -362,7 +366,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	cw := (PAGEWIDTH - 2*MARGIN) / COLUMNS // cellwidth w margin
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 
-  var photoList [12]string
+	var photoList [12]string
 	if g.OptPhoto != "" {
 		ch *= 0.5
 		for i := 0; i < 12; i++ {
@@ -387,7 +391,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	}
 
 	calendarTable := func(mymonth int, myyear int) {
-		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE * fontScale)
+		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)
 		for weekday := 1; weekday < 8; weekday++ { // Print weekdays in first row
 			pdf.CellFormat(cw, 7, localizedWeekdayNames[weekday], "0", 0, "C", false, 0, "")
 		}
@@ -418,7 +422,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 					pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 					fill = false // FIXME, do we want fill here?
-				} else if (nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday)  && !g.OptNocolor{
+				} else if (nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday) && !g.OptNocolor {
 					pdf.SetTextColor(255, 0, 0) // RED
 				} else {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)
@@ -436,10 +440,10 @@ func (g *Calendar) CreateCalendar(fn string) {
 					x, y := pdf.GetXY()
 					moonLocX, moonLocY := x+cw*0.82, y+ch*0.2
 
-          moonsize := MOONSIZE
-          if g.OptPhoto != "" || g.OptPhotos != ""  {
-            moonsize *= 0.6
-          }
+					moonsize := MOONSIZE
+					if g.OptPhoto != "" || g.OptPhotos != "" {
+						moonsize *= 0.6
+					}
 					myMoonPDF := myPdf{pdf, moonsize}
 					switch m {
 					case "Full":
@@ -456,14 +460,14 @@ func (g *Calendar) CreateCalendar(fn string) {
 				// Day of year, lower right
 				if g.OptHideDOY == false && int(nd.Month()) == mymonth {
 					doy := julian.DayOfYearGregorian(myyear, mymonth, int(nd.Day()))
-					pdf.SetFont(calFont, "", DOYFONTSIZE * fontScale)
+					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale)
 					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", fill, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
 				}
 
 				// Add week number, lower left
 				if nd.Weekday() == time.Monday && g.OptHideWeek == false {
-					pdf.SetFont(calFont, "", WEEKFONTSIZE * fontScale)
+					pdf.SetFont(calFont, "", WEEKFONTSIZE*fontScale)
 					_, weeknr := nd.ISOWeek()
 					pdf.CellFormat(cw, ch, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", fill, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
@@ -473,19 +477,19 @@ func (g *Calendar) CreateCalendar(fn string) {
 				for _, ev := range eventList {
 					if nd.Day() == ev.Day && nd.Month() == ev.Month {
 						x, y := pdf.GetXY()
-						pdf.SetFont(calFont, "", EVENTFONTSIZE * fontScale)
+						pdf.SetFont(calFont, "", EVENTFONTSIZE*fontScale)
 
 						if ev.Image != "" {
 							pdf.Image(ev.Image, x, y, cw, ch, false, "", 0, "")
 						}
 						for i, j := range strings.Split(ev.Text, "\\n") {
-							pdf.Text(x+0.02*cw, y+0.70*ch+float64(i)*EVENTFONTSIZE * fontScale/4.0, fmt.Sprintf("%s", j))
+							pdf.Text(x+0.02*cw, y+0.70*ch+float64(i)*EVENTFONTSIZE*fontScale/4.0, fmt.Sprintf("%s", j))
 						}
 					}
 				}
 
 				// day of the month, big number
-				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE * fontScale)
+				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
 				pdf.CellFormat(cw, ch, fmt.Sprintf("%d", nd.Day()), "1", 0, "TL", fill, 0, "")
 				day++
 			}
@@ -497,14 +501,14 @@ func (g *Calendar) CreateCalendar(fn string) {
 		//fmt.Printf("Printing page %d\n", page)
 		pdf.AddPage()
 		if g.OptWallpaper != "" {
-      wallpaperFilename := g.OptWallpaper
+			wallpaperFilename := g.OptWallpaper
 			if strings.HasPrefix(wallpaperFilename, "http://") {
 				wallpaperFilename = downloadFile(g.OptWallpaper, fontTempdir)
 			}
 			pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
 		}
 
-    if g.OptPhoto != "" || g.OptPhotos != ""  {
+		if g.OptPhoto != "" || g.OptPhotos != "" {
 			photo := photoList[mo-1] // this list is zero-based.
 			if photo != "" {
 				pdf.Image(photo, 0, PAGEHEIGHT*0.5, PAGEWIDTH, PAGEHEIGHT*0.5, false, "", 0, "")
@@ -512,16 +516,15 @@ func (g *Calendar) CreateCalendar(fn string) {
 		}
 
 		pdf.SetTextColor(BLACK, BLACK, BLACK)
-		pdf.SetFont(calFont, "", HEADERFONTSIZE * fontScale)
+		pdf.SetFont(calFont, "", HEADERFONTSIZE*fontScale)
 		pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, localizedMonthNames[mo]+" "+fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 		pdf.Ln(-1)
 		calendarTable(mo, wantyear)
 
 		pdf.Ln(-1)
-		pdf.SetFont(calFont, "", FOOTERFONTSIZE * fontScale)
+		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 	}
 	pdf.OutputAndClose(docWriter(pdf, fn))
 	removeTempdir(fontTempdir)
 }
-

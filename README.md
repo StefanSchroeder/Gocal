@@ -232,13 +232,11 @@ configuration. The defaultname is gocal.xml.
 		</Gocal>
 
 
-This is a sample of the really primitive configuration file
-for gocal. It has all the supported features. date is 
-in MONTH/DAY format. The text may contain a literal \n newline.
-For the month a * is permitted and it obviously means 'every month'.
-You can use a leading newline symbol to make the text wrap to the next
-line in case of overlap. THe optional image tag will put an image into the
-cell.
+This is a sample of the configuration file for gocal. It has all the supported
+features. date is in MONTH/DAY format. The text may contain a literal \n
+newline.  For the month a * is permitted and it obviously means 'every month'.
+You can use a leading newline symbol to make the text wrap to the next line in
+case of overlap. THe optional image tag will put an image into the cell.
 
 I was considering to allow to configure all the options from the command line
 also as parameters in the XML, but I think it's not really that important.
@@ -326,7 +324,7 @@ Known bugs
 ==========
 
 * The event file must be encoded in UTF-8.
-* When you have multiple events on the same date, they are colliding. I
+* When you have multiple events on the same date, they are overlapping. I
   don't intend to fix that.
 * Not all text will fit into the cells with some settings, because the font size is
   not adapted dynamically to the paper format. It's a feature, not a bug.
