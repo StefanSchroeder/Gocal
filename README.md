@@ -65,7 +65,7 @@ To build the standalone tool, change into the gocalendar directory and run
 
 You create a bunch of sample files (and in passing test gocal) by running
 
-   go test
+   	go test
 
 License
 =======
