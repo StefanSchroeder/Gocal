@@ -1,3 +1,5 @@
+package gocal
+
 // Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 //
 // Use of this source code is governed by a BSD-style
@@ -9,7 +11,6 @@
 //
 // https://github.com/StefanSchroeder/Gocal
 //
-package gocal
 
 import (
 	"bytes"

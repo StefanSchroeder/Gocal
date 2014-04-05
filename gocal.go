@@ -1,5 +1,5 @@
-// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
-//
+package gocal
+
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file
 
@@ -7,24 +7,9 @@
 This is gocal a tool to generate calendars in PDF for printing.
 
 https://github.com/StefanSchroeder/Gocal
-
-See LICENSE for license.
-
-* Inspired by pcal
-* Simplicity: Create a nice calendar with minimum effort.
-* Week number
-* Moonphase
-* Add events from configuration file
-* Set papersize
-* Choose fonts (limited)
-* Several languages
-* Day of year
-* Background image
-* Photo calendar
-* More
+Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 
 */
-package gocal
 
 import (
 	_ "code.google.com/p/go-charset/data"

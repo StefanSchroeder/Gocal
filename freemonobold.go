@@ -1,5 +1,5 @@
-// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
-//
+package gocal
+
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file 
 
@@ -11,9 +11,8 @@ https://www.gnu.org/software/freefont/. See
 gnufreefont-License.txt to learn more about the license of this font.
 
 https://github.com/StefanSchroeder/Gocal
+Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 */
-package gocal
-
 
 func getFreeMonoBold() []byte {
 
