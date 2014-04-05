@@ -7,9 +7,9 @@ package main
 
 import (
 	"flag"
-	"time"
+	"github.com/StefanSchroeder/gocal"
 	"strconv"
-	"Gocal"
+	"time"
 )
 
 var optFont = flag.String("font", "serif", "Font")
@@ -35,7 +35,7 @@ var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, in
 func main() {
 	flag.Parse()
 
-  wantyear := int(time.Now().Year())
+	wantyear := int(time.Now().Year())
 	beginmonth := 1
 	endmonth := 12
 
@@ -52,34 +52,45 @@ func main() {
 		dummymonthBegin, _ := strconv.ParseInt(flag.Arg(0), 10, 32)
 		dummymonthEnd, _ := strconv.ParseInt(flag.Arg(1), 10, 32)
 		dummyyear, _ := strconv.ParseInt(flag.Arg(2), 10, 32)
-    beginmonth = int(dummymonthBegin)
+		beginmonth = int(dummymonthBegin)
 		endmonth = int(dummymonthEnd)
 		wantyear = int(dummyyear)
 	}
 
-  g := gocal.New(beginmonth,endmonth,wantyear)
-  g.SetFont(*optFont)
-  g.SetOrientation(*optOrientation)
-  g.SetPaperformat(*optPaper)
-  g.SetLocale(*optLocale)
-  g.SetConfig(*optConfig)
-  if *optPlain == true { g.SetPlain() }
-  if *optHideDOY == true { g.SetHideDOY() }
-  if *optHideWeek == true { g.SetHideWeek() }
-  if *optHideMoon == true { g.SetHideMoon() }
-  if *optSmall == true { g.SetSmall() }
-  if *optNocolor == true { g.SetNocolor() }
-  g.SetFontScale(*optFontScale)
-  g.SetWallpaper(*optWallpaper)
-  g.SetPhotos(*optPhotos)
-  g.SetPhoto(*optPhoto)
-  g.SetFooter(*optFooter)
-  /*
-  g.AddEvent(31, 1, "HALLO", "")
-  g.AddEvent(28, 2, "HALLO", "")
-  g.AddEvent(31, 3, "HALLO", "")
-  g.AddEvent(30, 4, "HALLO", "")
-  */
-  g.CreateCalendar(*outfilename)
+	g := gocal.New(beginmonth, endmonth, wantyear)
+	g.SetFont(*optFont)
+	g.SetOrientation(*optOrientation)
+	g.SetPaperformat(*optPaper)
+	g.SetLocale(*optLocale)
+	g.SetConfig(*optConfig)
+	if *optPlain == true {
+		g.SetPlain()
+	}
+	if *optHideDOY == true {
+		g.SetHideDOY()
+	}
+	if *optHideWeek == true {
+		g.SetHideWeek()
+	}
+	if *optHideMoon == true {
+		g.SetHideMoon()
+	}
+	if *optSmall == true {
+		g.SetSmall()
+	}
+	if *optNocolor == true {
+		g.SetNocolor()
+	}
+	g.SetFontScale(*optFontScale)
+	g.SetWallpaper(*optWallpaper)
+	g.SetPhotos(*optPhotos)
+	g.SetPhoto(*optPhoto)
+	g.SetFooter(*optFooter)
+	/*
+	  g.AddEvent(31, 1, "HALLO", "")
+	  g.AddEvent(28, 2, "HALLO", "")
+	  g.AddEvent(31, 3, "HALLO", "")
+	  g.AddEvent(30, 4, "HALLO", "")
+	*/
+	g.CreateCalendar(*outfilename)
 }
-
