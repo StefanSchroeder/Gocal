@@ -98,9 +98,14 @@ func Test_Example12(t *testing.T) {
 func Test_Example13(t *testing.T) {
   g := gocal.New(3,4,2013)
   g.SetHideWeek()
+  g.AddEvent(15, 3, "One Event", "")
+  g.AddEvent(16, 3, "Another Event", "")
+  g.AddEvent(17, 4, "Hegdehog\\nvisits", "")
+  g.AddEvent(18, 4, "Day\\nof the\\nDay", "")
   g.SetHideMoon()
   g.CreateCalendar("test-example13.pdf")
 }
+
 func Test_Example14(t *testing.T) {
   g := gocal.New(1,12,2013)
   g.SetConfig("test-gocal.xml")

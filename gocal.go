@@ -19,9 +19,9 @@ See LICENSE for license.
 * Choose fonts (limited)
 * Several languages
 * Day of year
-* background image
+* Background image
 * Photo calendar
-* more
+* More
 
 */
 package gocal
@@ -393,7 +393,8 @@ func (g *Calendar) CreateCalendar(fn string) {
 	calendarTable := func(mymonth int, myyear int) {
 		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)
 		for weekday := 1; weekday < 8; weekday++ { // Print weekdays in first row
-			pdf.CellFormat(cw, 7, localizedWeekdayNames[weekday], "0", 0, "C", false, 0, "")
+      // The week row can be smaller
+			pdf.CellFormat(cw, ch*0.33, localizedWeekdayNames[weekday], "0", 0, "C", false, 0, "")
 		}
 		pdf.Ln(-1)
 
@@ -483,7 +484,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 							pdf.Image(ev.Image, x, y, cw, ch, false, "", 0, "")
 						}
 						for i, j := range strings.Split(ev.Text, "\\n") {
-							pdf.Text(x+0.02*cw, y+0.70*ch+float64(i)*EVENTFONTSIZE*fontScale/4.0, fmt.Sprintf("%s", j))
+							pdf.Text(x+0.02*cw, y+0.50*ch+float64(i)*EVENTFONTSIZE*fontScale/3.0, fmt.Sprintf("%s", j))
 						}
 					}
 				}
