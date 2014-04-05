@@ -12,6 +12,8 @@ it creates a 12-page PDF with one month per page for the current year.
 To avoid confusion, the library is called gocal, while the standalone 
 tool is named gocalendar.
 
+Gocalendar can be built with 'go build' in the gocalendar folder.
+
 Alternatively the following arguments are supported:
 
   gocalendar YEAR => 
@@ -227,7 +229,9 @@ of the many configuration file libraries would have been
 more adequate. Perhaps you are right. The advantage of the
 XML package is, that I knew how to use it and also, the 
 extensibility should I ever choose to allow more complex
-configuration. The defaultname is gocal.xml.
+configuration. The defaultname is gocal.xml. Look at the
+sample file in the repository. Image can be a URL, which
+must start with http://
 
 
     <Gocal>
