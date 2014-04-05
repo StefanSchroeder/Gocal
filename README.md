@@ -10,6 +10,8 @@ Gocal is a simple clone of pcal. It's a standalone tool and a library to create 
 with a no-nonsense attitude. By default it creates a 12-page PDF with one month per page for the current year. 
 To avoid confusion, the library is called gocal, while the standalone tool is named gocalendar.
 
+Gocalendar can be built with 'go build' in the gocalendar folder.
+
 Alternatively the following arguments are supported:
 
   gocalendar YEAR => Create a 12-page calendar for YEAR, e.g. 2014
@@ -245,65 +247,66 @@ also as parameters in the XML, but I think it's not really that important.
 Examples
 ========
 
-Run the samples.bat batch file to create some example calendars.
+Run the samples.sh shell script to create some example calendars.
+
 The blue frames are not part of the Gocal output, but have been
 added for these screenshots.
  
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example01.png?raw=true) 
 
-Gocal -o example01.pdf -p P -photos pics 1 2014
+gocalendar -o example01.pdf -p P -photos pics 1 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example02.png?raw=true) 
 
-Gocal -o example02.pdf -lang fr_FR -font sans 2015
+gocalendar -o example02.pdf -lang fr_FR -font sans 2015
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example03.png?raw=true) 
 
-Gocal -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:/windows/Fonts/cabalett.ttf 
+gocalendar -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:/windows/Fonts/cabalett.ttf 
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example04.png?raw=true) 
 
-Gocal -o example04.pdf -lang de_DE -font mono 2 2014
+gocalendar -o example04.pdf -lang de_DE -font mono 2 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example05.png?raw=true) 
 
-Gocal -o example05.pdf -lang nl_NL -plain 3 2014
+gocalendar -o example05.pdf -lang nl_NL -plain 3 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example06.png?raw=true) 
 
-Gocal -o example06.pdf -font c:/windows/Fonts/cabalett.ttf -lang en_US 4 2014
+gocalendar -o example06.pdf -font c:/windows/Fonts/cabalett.ttf -lang en_US 4 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example07.png?raw=true) 
 
-Gocal -o example07.pdf -p P -lang fr_FR -photo pics\taxi.JPG  4 2014
+gocalendar -o example07.pdf -p P -lang fr_FR -photo pics\taxi.JPG  4 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example08.png?raw=true) 
 
-Gocal -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2014
+gocalendar -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example09.png?raw=true) 
 
-Gocal -o example09.pdf -lang fi_FI -font serif -p L  4 2014
+gocalendar -o example09.pdf -lang fi_FI -font serif -p L  4 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example10.png?raw=true) 
 
-Gocal -o example10.pdf -lang fi_FI -font serif -p L 12 2013
+gocalendar -o example10.pdf -lang fi_FI -font serif -p L 12 2013
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example11.png?raw=true) 
 
-Gocal -o example11.pdf -lang de_DE -font sans -p L 6 9 2014
+gocalendar -o example11.pdf -lang de_DE -font sans -p L 6 9 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example12.png?raw=true) 
 
-Gocal -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2014
+gocalendar -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example13.png?raw=true) 
 
-Gocal -o example13.pdf -font sans -noother 7 2014
+gocalendar -o example13.pdf -font sans -noother 7 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example14.png?raw=true) 
 
-Gocal -o example14.pdf -small 2 2014
+gocalendar -o example14.pdf -small 2 2014
 
 
     
