@@ -330,6 +330,9 @@ Known bugs
   not adapted dynamically to the paper format. It's a feature, not a bug.
 * When using the A5 paper size, the last row of a page wraps to the next page.
 * Some warnings in libraries might irritate the user.
+* The dates and months are not validated. Nothing prevents you from trying to 
+  generate a calendar for "13 2014", which will panic.
+
 
 
 Acknowledgments

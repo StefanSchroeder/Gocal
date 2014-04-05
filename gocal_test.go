@@ -41,7 +41,7 @@ func Test_Example04(t *testing.T) {
 
 func Test_Example05(t *testing.T) {
   g := gocal.New(3,4,2013)
-  g.SetOrientation("P")
+  g.SetOrientation("L")
   g.SetFont("mono")
   g.SetLocale("de_DE")
   g.CreateCalendar("test-example05.pdf")
