@@ -198,13 +198,6 @@ use images with a bright tone so that you do not obstruct the usefulness of the 
 The filename can be a URL, and must start with http:// and must have a valid image extension.
 
 
-### Maintenance
-
-    -noclear
-
-By default the temporary directory where fonts and the codepage are stored is deleted
-at the end. This option let's you keep it. If you don't know what that means you don't care.
-
 
 Event File
 ==================
@@ -215,7 +208,9 @@ of the many configuration file libraries would have been
 more adequate. Perhaps you are right. The advantage of the
 XML package is, that I knew how to use it and also, the 
 extensibility should I ever choose to allow more complex
-configuration. The defaultname is gocal.xml.
+configuration. The defaultname is gocal.xml. Look at the
+sample file in the repository. Image can be a URL, which
+must start with http://
 
 		<Gocal>
 		<Gocaldate date="12/24" text="Heilig Abend" />
