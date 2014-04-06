@@ -1,6 +1,6 @@
 #!/bin/bash	
 C="convert -alpha Opaque "
-C2="convert -bordercolor SkyBlue -border 10x10 "
+C2="convert -antialias -bordercolor SkyBlue -border 10x10 "
 E=./gocalendar.exe
 D=../examples
 $E -o example01.pdf -p P -photos pics 1 2014
@@ -12,7 +12,7 @@ $C2   example02.png  $D/example02.png
 $E -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:/windows/Fonts/cabalett.ttf  1 2015
 $C  example03.pdf  example03.png 
 $C2   example03.png  $D/example03.png 
-$E -o example04.pdf -lang de_DE -font mono 2 2014
+$E -o example04.pdf -fontscale 0.6 -lang de_DE -font mono 2 2014
 $C  example04.pdf  example04.png 
 $C2   example04.png  $D/example04.png 
 $E -o example05.pdf -lang nl_NL -plain 3 2014
