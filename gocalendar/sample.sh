@@ -1,7 +1,7 @@
 #!/bin/bash	
 C="convert -alpha Opaque "
 C2="convert -antialias -bordercolor SkyBlue -border 10x10 "
-E=./gocalendar.exe
+E="go run gocalendar.go"  
 D=../examples
 $E -o example01.pdf -p P -photos pics 1 2014
 $C  example01.pdf example01.png 
