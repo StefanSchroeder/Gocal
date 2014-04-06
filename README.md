@@ -128,8 +128,8 @@ and /usr/share/fonts to see what fonts you have. Gocal comes with three fonts bu
 The Gnu FreeMonoBold, FreeSerifBold and FreeSansBold. They look pretty similar to 
 (in that order) Courier, Times and Arial and should meet all your standard font needs.
 These fonts are licensed under the Gnu FreeFont License which accompanies this README.txt.
-Read more about them at https://www.gnu.org/software/freefont. To use fonts gocal, 
-auxiliary files are created in a temporary directory.
+Read more about them at https://www.gnu.org/software/freefont. 
+Auxiliary files are created in a temporary directory.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
 
@@ -163,11 +163,6 @@ overridden with this parameter. If your LANG is not recognized, we default to en
 
 		-nodoy: Hide day of year
 
-		-noevents: Hide events from config file
-
-Gocal adds events from an XML file in the current directory to dates. This option
-disables this feature.
-
 		-nomoon: Hide moon phases
 
 		-noweek: Hide week number
@@ -176,7 +171,7 @@ The week number according to ISO-8601 is added on every Monday by default.
 
 		-noother: Hide neighbormonth days
 
-This option hides the leading and trailing days of the neighbor month.
+This option hides the leading and trailing days of the neighbor months.
 By default these days are printed in light grey.
 
 		-plain This will hide everything that can be hidden (but not neighbormonth days).
@@ -250,6 +245,8 @@ must start with http://
       <Gocaldate date="12/15"  text="Eþelbriht" />
       <Gocaldate date="*/20" text="Miete" />
     </Gocal>
+
+Please note the cool anglo-saxon letters, thanks to utf-8 support.
 
 This is a sample of the configuration file for gocal. It has all the supported
 features. date is in MONTH/DAY format. The text may contain a literal \n
@@ -343,6 +340,8 @@ to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc
 * some nice origami dodecahedron
 * pocketmod?
 * Allow setting of colors?
+* other calendar formats? yearly? islamic? chinese?
+* allow arbitrary paper format?
 
 Known bugs
 ==========
