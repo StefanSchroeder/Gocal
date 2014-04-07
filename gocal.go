@@ -509,7 +509,8 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 		pdf.Ln(-1)
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
-		pdf.Text(0.50*PAGEWIDTH, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
+
+		pdf.Text(0.50*PAGEWIDTH- pdf.GetStringWidth(g.OptFooter) * 0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 	}
 	pdf.OutputAndClose(docWriter(pdf, fn))
 	removeTempdir(fontTempdir)
