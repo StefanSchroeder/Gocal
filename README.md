@@ -135,8 +135,10 @@ Font sizes relative to the default size can be set with
 
     -fontscale floatingpoint number
 
-The default is 1.0 and typically you shouldn't change the font size. There is a 
-shortcut to reduce the fontsizes globally to 75% of the default size to gain more room for 
+The default is 1.0 and typically you shouldn't need to change the font size. But since weekday names
+in some languages might be a lot longer than in other languages, ugly collisions may occur.
+To avoid that you can rescale the fonts a little by setting -fontscale to 0.9.
+There is a shortcut to reduce the fontsizes globally to 75% of the default size to gain more room for 
 manual notes.
 
     -small
