@@ -43,10 +43,6 @@ Features
 * Page orientation and paper size option
 * Font selection
 
-Why not using pcal? There are several reasons. One, I couldn't build it on 
-Windows, next, I don't care about Postscript, third, a calendar seems to 
-be exactly a kind of project that I am able to handle from a complexity perspective 
-as a single developer. And pcal doesn't support UTF-8.
 
 The main idea of gocal is simplicity. While it is absolutely possible to create
 an application where every single stroke is configurable, I believe that most of
