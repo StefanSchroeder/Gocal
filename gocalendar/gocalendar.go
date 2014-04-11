@@ -31,6 +31,7 @@ var outfilename = flag.String("o", "output.pdf", "Output filename")
 var optSmall = flag.Bool("small", false, "Smaller fonts")
 var optHideOtherMonths = flag.Bool("noother", false, "Hide neighboring month days")
 var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, instead of red.")
+var optYear = flag.Bool("year", false, "Year calendar")
 
 func main() {
 	flag.Parse()
@@ -92,5 +93,9 @@ func main() {
 	  g.AddEvent(31, 3, "HALLO", "")
 	  g.AddEvent(30, 4, "HALLO", "")
 	*/
-	g.CreateCalendar(*outfilename)
+  if *optYear == true {
+    g.CreateYearCalendarInverse(*outfilename)
+  } else {
+	  g.CreateCalendar(*outfilename)
+  }
 }

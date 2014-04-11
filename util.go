@@ -226,11 +226,14 @@ func getLocalizedMonthNames(locale string) (monthnames [13]string) {
 
 /// This function returns an array of weekday names already in the
 // right locale.
-func getLocalizedWeekdayNames(locale string) (wdnames [8]string) {
-	for i := 1; i <= 7; i++ {
+func getLocalizedWeekdayNames(locale string, cutoff int) (wdnames [8]string) {
+	for i := 0; i <= 6; i++ {
 		// Some arbitrary date, that allows us to pickup Weekday-Strings.
-		t := time.Date(2013, 1, 6+i, 0, 0, 0, 0, time.UTC)
+		t := time.Date(2013, 1, 5+i, 0, 0, 0, 0, time.UTC)
 		wdnames[i] = convertCP(monday.Format(t, "Monday", monday.Locale(locale)))
+    if cutoff > 0 {
+      wdnames[i] = wdnames[i][0:cutoff]
+    }
 	}
 	return wdnames
 }
