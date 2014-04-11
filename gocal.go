@@ -97,6 +97,7 @@ type Calendar struct {
 	OptNocolor         bool
 	EventList          []gDate
 	OptCutWeekday      int
+	OptCheckers        bool
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -119,7 +120,8 @@ func New(b int, e int, y int) *Calendar {
 		1.0,     // OptFontScale
 		false,   // OptNocolor
 		nil,
-		0, // OptCutWeekday
+		0,     // OptCutWeekday
+		false, // OptCheckers
 	}
 }
 
@@ -222,6 +224,10 @@ func (g *Calendar) SetPlain() {
 
 func (g *Calendar) SetHideOtherMonth() {
 	g.OptHideOtherMonths = true
+}
+
+func (g *Calendar) SetFillpattern() {
+	g.OptCheckers = true
 }
 
 func (g *Calendar) SetHideDOY() {
@@ -330,7 +336,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 		pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
 	}
 
-	pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
+	pdf.SetFont(calFont, "", HEADERFONTSIZE*fontScale)
 	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
@@ -355,6 +361,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 		pdf.CellFormat(cw, ch, "", "1", 0, "C", false, 0, "")
 		for j := 1; j < 32; j++ {
+			pdf.SetTextColor(BLACK, BLACK, BLACK)
 			pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 
 			tDay := time.Date(myyear, time.Month(mymonth), j, 0, 0, 0, 0, time.UTC)
@@ -370,7 +377,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 			if int(readbackMonth) == mymonth {
 				fillBox := false
 
-				if (j+mymonth)%2 == 0 { //checkers
+				if (j+mymonth)%2 == 0 && g.OptCheckers { //checkers
 					fillBox = true
 				}
 
@@ -383,25 +390,37 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 	pdf.SetTextColor(BLACK, BLACK, BLACK)
 	pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale*0.8)
+	pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 	for mo := 1; mo <= 12; mo++ {
 		pdf.CellFormat(cw, ch*0.75, fmt.Sprintf("%s", localizedMonthNames[mo]), "1", 0, "C", false, 0, "")
 	}
 	pdf.Ln(-1)
 	pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 	for i := 1; i <= 31; i++ {
+		pdf.SetTextColor(BLACK, BLACK, BLACK)
 		pdf.CellFormat(cw*0.5, ch*0.9, fmt.Sprintf("%d", i), "1", 0, "C", false, 0, "")
 		for j := 1; j <= 12; j++ {
 			tDay := time.Date(wantyear, time.Month(j), i, 0, 0, 0, 0, time.UTC)
-			ddd := localizedWeekdayNames[(tDay.Weekday()+1)%7]
+			wd := localizedWeekdayNames[(tDay.Weekday()+1)%7]
+
+			if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
+				pdf.SetTextColor(255, 0, 0) // RED
+			} else {
+				pdf.SetTextColor(BLACK, BLACK, BLACK)
+			}
 
 			_, readbackMonth, _ := tDay.Date()
 			if int(readbackMonth) == int(j) {
-				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", ddd), "1", 0, "TL", false, 0, "")
-			} else {
-        // empty cell to skip ahead
-				pdf.CellFormat(cw, ch*0.9, "", "1", 0, "TL", false, 0, "")
-      }
+				fillBox := false
 
+				if (j+i)%2 == 0 && g.OptCheckers { //checkers
+					fillBox = true
+				}
+				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
+			} else {
+				// empty cell to skip ahead
+				pdf.CellFormat(cw, ch*0.9, "", "1", 0, "TL", false, 0, "")
+			}
 		}
 		pdf.Ln(-1)
 	}
@@ -497,7 +516,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 			if int(readbackMonth) == mymonth {
 				fillBox := false
 
-				if (j+mymonth)%2 == 0 { //checkers
+				if (j+mymonth)%2 == 0 && g.OptCheckers { //checkers
 					fillBox = true
 				}
 

@@ -31,7 +31,9 @@ var outfilename = flag.String("o", "output.pdf", "Output filename")
 var optSmall = flag.Bool("small", false, "Smaller fonts")
 var optHideOtherMonths = flag.Bool("noother", false, "Hide neighboring month days")
 var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, instead of red.")
-var optYear = flag.Bool("year", false, "Year calendar")
+var optYearA = flag.Bool("yearA", false, "Year calendar (design A)")
+var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
+var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
 
 func main() {
 	flag.Parse()
@@ -82,18 +84,22 @@ func main() {
 	if *optNocolor == true {
 		g.SetNocolor()
 	}
+	if *optCheckers == true {
+		g.SetFillpattern()
+	}
 	g.SetFontScale(*optFontScale)
 	g.SetWallpaper(*optWallpaper)
 	g.SetPhotos(*optPhotos)
 	g.SetPhoto(*optPhoto)
 	g.SetFooter(*optFooter)
 	/*
-	  g.AddEvent(31, 1, "HALLO", "")
-	  g.AddEvent(28, 2, "HALLO", "")
-	  g.AddEvent(31, 3, "HALLO", "")
-	  g.AddEvent(30, 4, "HALLO", "")
+	  g.AddEvent(31, 1, "one", "")
+	  g.AddEvent(28, 2, "two", "")
+	  g.AddEvent(31, 3, "three", "")
 	*/
-  if *optYear == true {
+  if *optYearA == true {
+    g.CreateYearCalendar(*outfilename)
+  } else if *optYearB == true {
     g.CreateYearCalendarInverse(*outfilename)
   } else {
 	  g.CreateCalendar(*outfilename)
