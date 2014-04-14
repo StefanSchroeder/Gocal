@@ -1,4 +1,4 @@
-// Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
+// Copyright (c) 2014 Stefan Schroeder, NY, 2014-04-13
 //
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file
@@ -10,7 +10,11 @@ import (
 	"github.com/StefanSchroeder/gocal"
 	"strconv"
 	"time"
+	"os"
+	"fmt"
 )
+
+const VERSION = "0.9 the Unready"
 
 var optFont = flag.String("font", "serif", "Font")
 var optFontScale = flag.Float64("fontscale", 1.0, "Font")
@@ -34,9 +38,15 @@ var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, in
 var optYearA = flag.Bool("yearA", false, "Year calendar (design A)")
 var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
 var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
+var optVersion = flag.Bool("v", false, "Version.")
 
 func main() {
 	flag.Parse()
+
+  if *optVersion {
+    fmt.Printf("# Gocal version %s\n", VERSION)
+    os.Exit(0)
+  }
 
 	wantyear := int(time.Now().Year())
 	beginmonth := 1
@@ -83,6 +93,9 @@ func main() {
 	}
 	if *optNocolor == true {
 		g.SetNocolor()
+	}
+	if *optHideOtherMonths == true {
+		g.SetHideOtherMonth()
 	}
 	if *optCheckers == true {
 		g.SetFillpattern()

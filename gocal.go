@@ -295,21 +295,33 @@ func (g *Calendar) SetPaperformat(f string) {
 	g.OptPaperformat = f
 }
 
+func getLanguage(inLanguage string)(outLanguage string) {
+	// First try Environment
+	outLanguage = os.Getenv("LANG")
+
+	// If set on the cmdline, override
+	if inLanguage != "" {
+		outLanguage = inLanguage
+	}
+
+	// if we don't know that language, fall back to en.
+	if testedLanguage[outLanguage] != true {
+		outLanguage = "en_US"
+	}
+  return
+}
+
 func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 	var fontTempdir string
 	var fontScale = g.OptFontScale
+  var calFont = g.OptFont
 
 	if g.OptSmall == true {
 		fontScale = 0.75
 	}
 
 	wantyear := g.WantYear
-
-	var calFont string
-	if g.OptFont != "" {
-		calFont = g.OptFont
-	}
 
 	calFont, fontTempdir = processFont(calFont)
 
@@ -340,51 +352,12 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
-	// First try Environment
-	currentLanguage := os.Getenv("LANG")
-
-	// If set on the cmdline, override
-	if g.OptLocale != "" {
-		currentLanguage = g.OptLocale
-	}
-
-	// if we don't know that language, fall back to en.
-	if testedLanguage[currentLanguage] != true {
-		currentLanguage = "en_US"
-	}
+  currentLanguage := getLanguage(g.OptLocale)
 
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 
 	pdf.SetTextColor(BLACK, BLACK, BLACK)
-	_ = func(mymonth int, myyear int) {
-
-		pdf.CellFormat(cw, ch, "", "1", 0, "C", false, 0, "")
-		for j := 1; j < 32; j++ {
-			pdf.SetTextColor(BLACK, BLACK, BLACK)
-			pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
-
-			tDay := time.Date(myyear, time.Month(mymonth), j, 0, 0, 0, 0, time.UTC)
-			if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
-				pdf.SetTextColor(255, 0, 0) // RED
-			} else {
-				pdf.SetTextColor(BLACK, BLACK, BLACK)
-			}
-			// if the date is invalid, like 30.2., time.Date will still have a proper date
-			// in this case e.g. the 1.3. We have to check if the month we put in is the
-			// the month that arrived.
-			_, readbackMonth, _ := tDay.Date()
-			if int(readbackMonth) == mymonth {
-				fillBox := false
-
-				if (j+mymonth)%2 == 0 && g.OptCheckers { //checkers
-					fillBox = true
-				}
-
-				pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
-			}
-		}
-	}
 
 	pdf.CellFormat(cw*0.5, ch*0.75, "", "1", 0, "C", false, 0, "")
 
@@ -445,10 +418,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 
 	wantyear := g.WantYear
 
-	var calFont string
-	if g.OptFont != "" {
-		calFont = g.OptFont
-	}
+  var calFont = g.OptFont
 
 	calFont, fontTempdir = processFont(calFont)
 
@@ -479,18 +449,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
-	// First try Environment
-	currentLanguage := os.Getenv("LANG")
-
-	// If set on the cmdline, override
-	if g.OptLocale != "" {
-		currentLanguage = g.OptLocale
-	}
-
-	// if we don't know that language, fall back to en.
-	if testedLanguage[currentLanguage] != true {
-		currentLanguage = "en_US"
-	}
+  currentLanguage := getLanguage(g.OptLocale)
 
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
@@ -558,6 +517,33 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 	removeTempdir(fontTempdir)
 }
 
+func getPhotolist(in string, temp string) (out [12]string){
+	if in != "" {
+		for i := 0; i < 12; i++ {
+			photoname := in
+			if strings.HasPrefix(photoname, "http://") {
+				photoname = downloadFile(photoname, temp)
+			}
+			out[i] = photoname
+		}
+	}
+  return out
+}
+
+func getPhotoslist(in string) (out [12]string){
+	if in != "" {
+		fileList, err := filepath.Glob(in + string(os.PathSeparator) + "*")
+		if err == nil {
+			for i := 0; i < 12; i++ {
+				out[i] = fileList[i%len(fileList)]
+			}
+		} else {
+			fmt.Printf("# There is an error in your path to photos: %v\n", err)
+		}
+	}
+  return out
+}
+
 func (g *Calendar) CreateCalendar(fn string) {
 
 	var fontTempdir string
@@ -574,18 +560,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 		fontScale = 0.75
 	}
 
-	// First try Environment
-	currentLanguage := os.Getenv("LANG")
-
-	// If set on the cmdline, override
-	if g.OptLocale != "" {
-		currentLanguage = g.OptLocale
-	}
-
-	// if we don't know that language, fall back to en.
-	if testedLanguage[currentLanguage] != true {
-		currentLanguage = "en_US"
-	}
+  currentLanguage := getLanguage(g.OptLocale)
 
 	var fileEventList = make([]gDate, 10000) // Maximum number of events
 
@@ -603,10 +578,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 0)
 
-	var calFont string
-	if g.OptFont != "" {
-		calFont = g.OptFont
-	}
+  var calFont = g.OptFont
 
 	calFont, fontTempdir = processFont(calFont)
 
@@ -623,28 +595,13 @@ func (g *Calendar) CreateCalendar(fn string) {
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 
 	var photoList [12]string
-	if g.OptPhoto != "" {
+  photoList = getPhotolist(g.OptPhoto, fontTempdir)
+  if g.OptPhotos != "" {
+    photoList = getPhotoslist(g.OptPhotos)
+  }
+  if g.OptPhoto != "" || g.OptPhotos != ""  {
 		ch *= 0.5
-		for i := 0; i < 12; i++ {
-			photoname := g.OptPhoto
-			if strings.HasPrefix(photoname, "http://") {
-				photoname = downloadFile(photoname, fontTempdir)
-			}
-			photoList[i] = photoname
-		}
-	}
-
-	if g.OptPhotos != "" {
-		ch *= 0.5
-		fileList, err := filepath.Glob(g.OptPhotos + string(os.PathSeparator) + "*")
-		if err == nil {
-			for i := 0; i < 12; i++ {
-				photoList[i] = fileList[i%len(fileList)]
-			}
-		} else {
-			fmt.Printf("# There is an error in your path to photos: %v\n", err)
-		}
-	}
+  }
 
 	calendarTable := func(mymonth int, myyear int) {
 		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)

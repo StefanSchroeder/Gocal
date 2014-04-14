@@ -28,6 +28,10 @@ Alternatively the following arguments are supported:
     
     Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
+There is also an year mode, that shows the entire year on one page.
+Have a look at the examples below to get an idea of gocal's capabilities.
+
+
 
 Features
 ========
@@ -42,11 +46,7 @@ Features
 * Photo calendar option (from single image or directory)
 * Page orientation and paper size option
 * Font selection
-
-Why not using pcal? There are several reasons. One, I couldn't build it on 
-Windows, next, I don't care about Postscript, third, a calendar seems to 
-be exactly a kind of project that I am able to handle from a complexity perspective 
-as a single developer. And pcal doesn't support UTF-8.
+* Year calendar (two layouts)
 
 The main idea of gocal is simplicity. While it is absolutely possible to create
 an application where every single stroke is configurable, I believe that most of
@@ -215,6 +215,17 @@ use images with a bright tone so that you do not obstruct the usefulness of the 
 The filename can be a URL, and must start with http:// and must have a valid image extension.
 
 
+### Year calendar
+
+    -yearA 
+
+    -yearB
+
+Two different layouts are available. One with the month on the top and the days on
+the left and vise versa. Obviously there is less space for the individual day
+in this mode. Still, many of the options are available here.
+
+
 Event File
 ==================
 
@@ -332,15 +343,12 @@ Roadmap
 =======
 
 * It would be really cool to allow gocal to be a drop-in replacement for pcal,
-but the configuration file for pcal is really complex (=pcal allows complicated
+but pcal does really complex things. (pcal allows complicated
 things, like "every second Thursday after the third moon in leap years")
-* I have no plans to put multiple month on a single page (yearly calendar). If
-you need that, create a 12-page calendar and use the plethora of pdf-tools
-to rearrange the PDF that gocal produced. E.g. pdf2ps, psbook, psnup, pdftk, etc. 
 * some nice origami dodecahedron
 * pocketmod?
 * Allow setting of colors?
-* other calendar formats? yearly? islamic? chinese?
+* other calendar formats? islamic? chinese?
 * allow arbitrary paper format?
 
 Known bugs
