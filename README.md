@@ -224,8 +224,8 @@ The filename can be a URL, and must start with http:// and must have a valid ima
 
     -yearB
 
-Two different layouts are available. One with the month on the top and the days on
-the left and vise versa. Obviously there is less space for the individual day
+Two different layouts are available. One with the months on the top and the days on
+the left and vice versa. Obviously there is less space for the individual day
 in this mode. Still, many of the options are available here.
 
 
@@ -364,11 +364,11 @@ Roadmap
 * It would be really cool to allow gocal to be a drop-in replacement for pcal,
 but pcal does really complex things. (pcal allows complicated
 things, like "every second Thursday after the third moon in leap years")
-* some nice origami dodecahedron
-* pocketmod?
+* Some nice origami dodecahedron?
+* Pocketmod?
 * Allow setting of colors?
-* other calendar formats? islamic? chinese?
-* allow arbitrary paper format?
+* Other calendar formats? islamic? chinese?
+* Allow arbitrary paper format?
 
 Known bugs
 ==========
