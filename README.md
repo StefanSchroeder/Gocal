@@ -193,6 +193,38 @@ Typically you want landscape for calendars without image and portrait for calend
 
 		-paper="A4": Paper format (A3 A4 A5 Letter Legal)
 
+
+### Graying out
+
+    -fill configure filled grid
+
+Can be any combination of:
+
+    X even columns filled gray
+
+    x odd columns filled gray
+
+    Y even rows filled gray
+
+    y odd rows filled gray
+
+    S Sundays filled gray
+
+    s Saturdays filled gray
+  
+    c checkerboard odd
+
+    C checkerboard even
+
+Example:
+
+    -fill "xY"
+
+The gray boxes are not transparent; therefore it doesn't make a lot
+of sense to combine gray boxes with a wallpaper image.
+
+
+
 ### Photo / Photos / Wallpaper
 
 		-photo=filename: Show single photo (single image in PNG JPG GIF)

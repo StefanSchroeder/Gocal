@@ -98,6 +98,7 @@ type Calendar struct {
 	EventList          []gDate
 	OptCutWeekday      int
 	OptCheckers        bool
+	OptFillpattern     string
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -122,6 +123,7 @@ func New(b int, e int, y int) *Calendar {
 		nil,
 		0,     // OptCutWeekday
 		false, // OptCheckers
+		"",    // OptFillpattern
 	}
 }
 
@@ -218,16 +220,19 @@ func docWriter(pdf *gofpdf.Fpdf, fname string) *pdfWriter {
 	return pw
 }
 
+func (g *Calendar) WantFillMode(s string) bool {
+	if strings.Index(g.OptFillpattern, s) != -1 {
+		return true
+	}
+	return false
+}
+
 func (g *Calendar) SetPlain() {
 	g.OptPlain = true
 }
 
 func (g *Calendar) SetHideOtherMonth() {
 	g.OptHideOtherMonths = true
-}
-
-func (g *Calendar) SetFillpattern() {
-	g.OptCheckers = true
 }
 
 func (g *Calendar) SetHideDOY() {
@@ -286,6 +291,10 @@ func (g *Calendar) SetFooter(f string) {
 	g.OptFooter = f
 }
 
+func (g *Calendar) SetFillpattern(f string) {
+	g.OptFillpattern = f
+}
+
 func (g *Calendar) AddEvent(day int, month int, text string, image string) {
 	gcd := gDate{time.Month(month), int(day), text, "", image}
 	g.EventList = append(g.EventList, gcd)
@@ -295,7 +304,44 @@ func (g *Calendar) SetPaperformat(f string) {
 	g.OptPaperformat = f
 }
 
-func getLanguage(inLanguage string)(outLanguage string) {
+func (g *Calendar) WantFill(i int, j int, wd time.Weekday) bool {
+
+	if i%2 == 0 && g.WantFillMode("Y") {
+		return true
+	}
+
+	if wd == time.Sunday && g.WantFillMode("S") {
+		return true
+	}
+
+	if wd == time.Saturday && g.WantFillMode("s") {
+		return true
+	}
+
+	if (i+1)%2 == 0 && g.WantFillMode("y") {
+		return true
+	}
+
+	if j%2 == 0 && g.WantFillMode("X") {
+		return true
+	}
+
+	if (j+1)%2 == 0 && g.WantFillMode("x") {
+		return true
+	}
+
+	if (j+i)%2 == 0 && g.WantFillMode("c") {
+		return true
+	}
+
+	if (j+i+1)%2 == 0 && g.WantFillMode("C") {
+		return true
+	}
+
+	return false
+}
+
+func getLanguage(inLanguage string) (outLanguage string) {
 	// First try Environment
 	outLanguage = os.Getenv("LANG")
 
@@ -308,14 +354,14 @@ func getLanguage(inLanguage string)(outLanguage string) {
 	if testedLanguage[outLanguage] != true {
 		outLanguage = "en_US"
 	}
-  return
+	return
 }
 
 func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 	var fontTempdir string
 	var fontScale = g.OptFontScale
-  var calFont = g.OptFont
+	var calFont = g.OptFont
 
 	if g.OptSmall == true {
 		fontScale = 0.75
@@ -352,7 +398,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
-  currentLanguage := getLanguage(g.OptLocale)
+	currentLanguage := getLanguage(g.OptLocale)
 
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
@@ -384,11 +430,9 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 			_, readbackMonth, _ := tDay.Date()
 			if int(readbackMonth) == int(j) {
-				fillBox := false
 
-				if (j+i)%2 == 0 && g.OptCheckers { //checkers
-					fillBox = true
-				}
+				fillBox := g.WantFill(i, j, tDay.Weekday())
+
 				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
 			} else {
 				// empty cell to skip ahead
@@ -418,7 +462,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 
 	wantyear := g.WantYear
 
-  var calFont = g.OptFont
+	var calFont = g.OptFont
 
 	calFont, fontTempdir = processFont(calFont)
 
@@ -449,7 +493,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 	pdf.Ln(-1)
 
-  currentLanguage := getLanguage(g.OptLocale)
+	currentLanguage := getLanguage(g.OptLocale)
 
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
@@ -473,11 +517,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 			// the month that arrived.
 			_, readbackMonth, _ := tDay.Date()
 			if int(readbackMonth) == mymonth {
-				fillBox := false
-
-				if (j+mymonth)%2 == 0 && g.OptCheckers { //checkers
-					fillBox = true
-				}
+				fillBox := g.WantFill(mymonth, j, tDay.Weekday())
 
 				pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
 				day++
@@ -517,7 +557,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 	removeTempdir(fontTempdir)
 }
 
-func getPhotolist(in string, temp string) (out [12]string){
+func getPhotolist(in string, temp string) (out [12]string) {
 	if in != "" {
 		for i := 0; i < 12; i++ {
 			photoname := in
@@ -527,10 +567,10 @@ func getPhotolist(in string, temp string) (out [12]string){
 			out[i] = photoname
 		}
 	}
-  return out
+	return out
 }
 
-func getPhotoslist(in string) (out [12]string){
+func getPhotoslist(in string) (out [12]string) {
 	if in != "" {
 		fileList, err := filepath.Glob(in + string(os.PathSeparator) + "*")
 		if err == nil {
@@ -541,7 +581,7 @@ func getPhotoslist(in string) (out [12]string){
 			fmt.Printf("# There is an error in your path to photos: %v\n", err)
 		}
 	}
-  return out
+	return out
 }
 
 func (g *Calendar) CreateCalendar(fn string) {
@@ -560,7 +600,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 		fontScale = 0.75
 	}
 
-  currentLanguage := getLanguage(g.OptLocale)
+	currentLanguage := getLanguage(g.OptLocale)
 
 	var fileEventList = make([]gDate, 10000) // Maximum number of events
 
@@ -578,7 +618,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 0)
 
-  var calFont = g.OptFont
+	var calFont = g.OptFont
 
 	calFont, fontTempdir = processFont(calFont)
 
@@ -595,19 +635,19 @@ func (g *Calendar) CreateCalendar(fn string) {
 	ch := PAGEHEIGHT / (LINES + 2)         // cellheight
 
 	var photoList [12]string
-  photoList = getPhotolist(g.OptPhoto, fontTempdir)
-  if g.OptPhotos != "" {
-    photoList = getPhotoslist(g.OptPhotos)
-  }
-  if g.OptPhoto != "" || g.OptPhotos != ""  {
+	photoList = getPhotolist(g.OptPhoto, fontTempdir)
+	if g.OptPhotos != "" {
+		photoList = getPhotoslist(g.OptPhotos)
+	}
+	if g.OptPhoto != "" || g.OptPhotos != "" {
 		ch *= 0.5
-  }
+	}
 
 	calendarTable := func(mymonth int, myyear int) {
 		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)
 		for weekday := 0; weekday <= 6; weekday++ { // Print weekdays in first row
 			// The week row can be smaller
-			pdf.CellFormat(cw, ch*0.33, localizedWeekdayNames[(weekday+2) % 7], "0", 0, "C", false, 0, "")
+			pdf.CellFormat(cw, ch*0.33, localizedWeekdayNames[(weekday+2)%7], "0", 0, "C", false, 0, "")
 		}
 		pdf.Ln(-1)
 
@@ -628,8 +668,8 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
-				fill := false
 				nd := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
+        fill := g.WantFill(i, j, nd.Weekday())
 
 				// Determine color
 				if nd.Month() != time.Month(mymonth) { // GREY

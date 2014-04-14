@@ -38,6 +38,7 @@ var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, in
 var optYearA = flag.Bool("yearA", false, "Year calendar (design A)")
 var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
 var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
+var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
 
 func main() {
@@ -97,14 +98,12 @@ func main() {
 	if *optHideOtherMonths == true {
 		g.SetHideOtherMonth()
 	}
-	if *optCheckers == true {
-		g.SetFillpattern()
-	}
 	g.SetFontScale(*optFontScale)
 	g.SetWallpaper(*optWallpaper)
 	g.SetPhotos(*optPhotos)
 	g.SetPhoto(*optPhoto)
 	g.SetFooter(*optFooter)
+	g.SetFillpattern(*optFillpattern)
 	/*
 	  g.AddEvent(31, 1, "one", "")
 	  g.AddEvent(28, 2, "two", "")
