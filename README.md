@@ -28,7 +28,7 @@ Alternatively the following arguments are supported:
     
     Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
-There is also an year mode, that shows the entire year on one page.
+There is also a year mode, that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
 
 
