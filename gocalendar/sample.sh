@@ -4,21 +4,6 @@ C2="convert -antialias -bordercolor SkyBlue -border 10x10 "
 E="go run gocalendar.go"  
 D=../examples
 
-$E -o example15.pdf -yearA 2015
-$C  example15.pdf  example15.png 
-$C2   example15.png  $D/example15.png 
-$E -o example16.pdf -yearB 2016
-$C  example16.pdf  example16.png 
-$C2   example16.png  $D/example16.png 
-$E -o example17.pdf -yearA -checker 2017
-$C  example17.pdf  example17.png 
-$C2   example17.png  $D/example17.png 
-$E -o example18.pdf -yearB -checker 2018
-$C  example18.pdf  example18.png 
-$C2   example18.png  $D/example18.png 
-
-exit
-
 
 $E -o example01.pdf -p P -photos pics 1 2014
 $C  example01.pdf example01.png 
@@ -64,3 +49,15 @@ $C  example14.pdf  example14.png
 $C2   example14.png  $D/example14.png 
 
 
+$E -o example15.pdf -yearA 2015
+$C  example15.pdf  example15.png 
+$C2   example15.png  $D/example15.png 
+$E -o example16.pdf -yearB 2016
+$C  example16.pdf  example16.png 
+$C2   example16.png  $D/example16.png 
+$E -o example17.pdf -yearA -checker 2017
+$C  example17.pdf  example17.png 
+$C2   example17.png  $D/example17.png 
+$E -o example18.pdf -yearB -checker 2018
+$C  example18.pdf  example18.png 
+$C2   example18.png  $D/example18.png 

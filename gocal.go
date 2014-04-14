@@ -605,9 +605,9 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 	calendarTable := func(mymonth int, myyear int) {
 		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)
-		for weekday := 0; weekday < 7; weekday++ { // Print weekdays in first row
+		for weekday := 0; weekday <= 6; weekday++ { // Print weekdays in first row
 			// The week row can be smaller
-			pdf.CellFormat(cw, ch*0.33, localizedWeekdayNames[weekday], "0", 0, "C", false, 0, "")
+			pdf.CellFormat(cw, ch*0.33, localizedWeekdayNames[(weekday+2) % 7], "0", 0, "C", false, 0, "")
 		}
 		pdf.Ln(-1)
 
