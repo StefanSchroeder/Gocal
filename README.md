@@ -341,15 +341,19 @@ gocalendar -o example13.pdf -font sans -noother 7 2014
 gocalendar -o example14.pdf -small 2 2014
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example15.png?raw=true) 
+
 gocalendar -o example15.pdf -yearA 2015
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example16.png?raw=true) 
+
 gocalendar -o example16.pdf -yearB 2016
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example17.png?raw=true) 
+
 gocalendar -o example17.pdf -yearA -checker 2017
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example18.png?raw=true) 
+
 gocalendar -o example18.pdf -yearB -checker 2018
 
 
