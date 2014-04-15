@@ -431,8 +431,24 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 			_, readbackMonth, _ := tDay.Date()
 			if int(readbackMonth) == int(j) {
 
+				// Day of year, lower right
+				if g.OptHideDOY == false && int(tDay.Month()) == j {
+					doy := julian.DayOfYearGregorian(wantyear, int(time.Month(j)), int(tDay.Day()))
+					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
+					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
+					pdf.SetX(pdf.GetX() - cw) // reset
+				}
+        // Add week number, lower left
+				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
+					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
+					_, weeknr := tDay.ISOWeek()
+					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
+					pdf.SetX(pdf.GetX() - cw) // reset
+				}
+
 				fillBox := g.WantFill(i, j, tDay.Weekday())
 
+        pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
 			} else {
 				// empty cell to skip ahead
@@ -517,8 +533,25 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 			// the month that arrived.
 			_, readbackMonth, _ := tDay.Date()
 			if int(readbackMonth) == mymonth {
+
+				// Day of year, lower right
+				if g.OptHideDOY == false && int(tDay.Month()) == mymonth {
+					doy := julian.DayOfYearGregorian(wantyear, int(mymonth), int(tDay.Day()))
+					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
+					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
+					pdf.SetX(pdf.GetX() - cw) // reset
+				}
+        // Add week number, lower left
+				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
+					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
+					_, weeknr := tDay.ISOWeek()
+					pdf.CellFormat(cw, ch, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
+					pdf.SetX(pdf.GetX() - cw) // reset
+				}
+
 				fillBox := g.WantFill(mymonth, j, tDay.Weekday())
 
+        pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 				pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
 				day++
 			}

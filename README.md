@@ -271,9 +271,8 @@ Choosing a format for the configuration file was tough.  You might think that
 XML is overkill and JSON or CSV or one of the many configuration file libraries
 would have been more adequate. Perhaps you are right. The advantage of the XML
 package is, that I knew how to use it and also, the extensibility should I ever
-choose to allow more complex configuration. The defaultname is gocal.xml. Look
-at the sample file in the repository. Image can be a URL, which must start with
-http://
+choose to allow more complex configuration. Look at the sample file in the
+repository. Image can be a URL, which must start with http://
 
 
     <Gocal>
@@ -293,7 +292,7 @@ http://
       <Gocaldate date="*/20" text="Miete" />
     </Gocal>
 
-Please note the cool anglo-saxon letters, thanks to utf-8 support.
+Please note the cool anglo-saxon letters, thanks to UTF-8 support.
 
 This is a sample of the configuration file for gocal. It has all the supported
 features. date is in MONTH/DAY format. The text may contain a literal \n
