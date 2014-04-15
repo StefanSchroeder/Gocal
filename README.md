@@ -6,11 +6,10 @@
 Gocal
 =====
 
-Gocal is a simple clone of pcal. It's a standalone tool and a library to 
-create monthly calendars in PDF with a no-nonsense attitude. By default 
-it creates a 12-page PDF with one month per page for the current year. 
-To avoid confusion, the library is called gocal, while the standalone 
-tool is named gocalendar.
+Gocal is a simple clone of pcal. It's a standalone tool and a library to create
+monthly calendars in PDF with a no-nonsense attitude. By default it creates a
+12-page PDF with one month per page for the current year.  To avoid confusion,
+the library is called gocal, while the standalone tool is named gocalendar.
 
 Gocalendar can be built with 'go build' in the gocalendar folder.
 
@@ -50,15 +49,16 @@ Features
 
 
 The main idea of gocal is simplicity. While it is absolutely possible to create
-an application where every single stroke is configurable, I believe that most of
-you are too busy to play around with lots of options and want a pleasant calendar
-out-of-the-box. That's what gocal provides.
+an application where every single stroke is configurable, I believe that most
+of you are too busy to play around with lots of options and want a pleasant
+calendar out-of-the-box. That's what gocal provides.
 
-The power of gocal is based on the cool libraries that it includes. This implies that
-several of the options are actually options of the libraries, e.g. the paper format (gofpdf) or
-the supported languages (goodsign/monday).
+The power of gocal is based on the cool libraries that it includes. This
+implies that several of the options are actually options of the libraries, e.g.
+the paper format (gofpdf) or the supported languages (goodsign/monday).
 
-It is suggested to hide some of the optional fields or the cells will look crowded.
+It is suggested to hide some of the optional fields or the cells will look
+crowded.
 
 
 Build instructions
@@ -83,22 +83,22 @@ Example
 =======
 
 
-	package main
-	import (
-		"github.com/StefanSchroeder/gocal"
-	)
-	func main() {
-		g := gocal.New(1,12,2010)
-		g.CreateCalendar("test-example01.pdf")
-	}
+    package main
+    import (
+      "github.com/StefanSchroeder/gocal"
+    )
+    func main() {
+      g := gocal.New(1,12,2010)
+      g.CreateCalendar("test-example01.pdf")
+    }
 
 License
 =======
 
 The BSD type license is in the LICENSE file.
 
-For the API documentation of gocal the library visit the 
-auto-generated docs on godoc.org.
+For the API documentation of gocal the library visit the auto-generated docs on
+godoc.org.
 
 Options of gocalendar
 =====================
@@ -111,9 +111,8 @@ Options of gocalendar
 
 		-f="Gocal": Footer note
 
-Change the string at the bottom of the page. To disable the footer, simply set it to the
-empty string. There is a small deficiency, that the footer text is not centered, but starts
-in the middle of the page.
+Change the string at the bottom of the page. To disable the footer, simply set
+it to the empty string. 
 
 ### Font
 
@@ -124,13 +123,14 @@ in the middle of the page.
 		-font sans     (Arial lookalike)
 		-font path/to/font.ttf    (your favorite font)
 
-Set the font. Only truetype fonts are supported. Look into c:\Windows\Fonts on Windows
-and /usr/share/fonts to see what fonts you have. Gocal comes with three fonts built-in:
-The Gnu FreeMonoBold, FreeSerifBold and FreeSansBold. They look pretty similar to 
-(in that order) Courier, Times and Arial and should meet all your standard font needs.
-These fonts are licensed under the Gnu FreeFont License which accompanies this README.txt.
-Read more about them at https://www.gnu.org/software/freefont. 
-Auxiliary files are created in a temporary directory.
+Set the font. Only truetype fonts are supported. Look into c:\Windows\Fonts on
+Windows and /usr/share/fonts to see what fonts you have. Gocal comes with three
+fonts built-in: The Gnu FreeMonoBold, FreeSerifBold and FreeSansBold. They look
+pretty similar to (in that order) Courier, Times and Arial and should meet all
+your standard font needs.  These fonts are licensed under the Gnu FreeFont
+License which accompanies this README.txt.  Read more about them at
+https://www.gnu.org/software/freefont.  Auxiliary files are created in a
+temporary directory.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
 
@@ -140,11 +140,12 @@ Font sizes relative to the default size can be set with
 
     -fontscale floatingpoint number
 
-The default is 1.0 and typically you shouldn't need to change the font size. But since weekday names
-in some languages might be a lot longer than in other languages, ugly collisions may occur.
-To avoid that you can rescale the fonts a little by setting -fontscale to 0.9.
-There is a shortcut to reduce the fontsizes globally to 75% of the default size to gain more room for 
-manual notes.
+The default is 1.0 and typically you shouldn't need to change the font size
+drastically. But since weekday names in some languages might be a lot longer
+than in other languages, ugly collisions may occur.  To avoid that you can
+rescale the fonts a little by setting -fontscale to 0.9.  There is a shortcut
+to reduce the fontsizes globally to 75% of the default size to gain more room
+for manual notes.
 
     -small
 
@@ -157,10 +158,11 @@ Gocal reads the LANG environment variable. If it matches one of
 
 		en_US en_GB nl_BE nl_NL fi_FI fr_FR fr_CA de_DE
 
-the library goodsign/monday is used to translate the weekday names and month names.
-Although this library supports a few other languages, I found that many of the 
-languages do not work with the fonts I tried. The language from the environment can be 
-overridden with this parameter. If your LANG is not recognized, we default to en_US.
+the library goodsign/monday is used to translate the weekday names and month
+names.  Although this library supports a few other languages, I found that many
+of the languages do not work with the fonts I tried. The language from the
+environment can be overridden with this parameter. If your LANG is not
+recognized, we default to en_US.
 
 ### Hiding stuff
 
@@ -230,24 +232,25 @@ of sense to combine gray boxes with a wallpaper image.
 		-photo=filename: Show single photo (single image in PNG JPG GIF)
 
 This option will add this image to every month.
-The filename can be a URL, and must start with http:// and must have a valid image extension.
+The filename can be a URL, qualified with http:// and it must have a valid image extension.
 
 		-photos=directory: Show multiple photos (directory with PNG JPG GIF)
 
 e.g. gocal -photos images/
 
-This option will add the twelve first files as images to the twelve month.
-If less than twelve files are found, the sequence will re-start after the last image.
-This will not work if there are non-image files in the directory (among the first twelve).
-The directory option does NOT support URLs.
+This option will add the twelve first files as images to the twelve month.  If
+less than twelve files are found, the sequence will re-start after the last
+image.  This will not work if there are non-image files in the directory (among
+the first twelve).  The directory option does NOT support URLs.
 
 		-wall=filename: Show wallpaper PNG JPG GIF
 
 e.g. gocal -wall gopher.png
 
-This option will add this image to every month as a background. You should only 
-use images with a bright tone so that you do not obstruct the usefulness of the calendar.
-The filename can be a URL, and must start with http:// and must have a valid image extension.
+This option will add this image to every month as a background. You should only
+use images with a bright tone so that you do not obstruct the usefulness of the
+calendar.  The filename can be a URL, and must start with http:// and must have
+a valid image extension.
 
 
 ### Year calendar
@@ -256,23 +259,21 @@ The filename can be a URL, and must start with http:// and must have a valid ima
 
     -yearB
 
-Two different layouts are available. One with the months on the top and the days on
-the left and vice versa. Obviously there is less space for the individual day
-in this mode. Still, many of the options are available here.
+Two different layouts are available. One with the months on the top and the
+days on the left and vice versa. Obviously there is less space for the
+individual day in this mode. Still, many of the options are available here.
 
 
 Event File
 ==================
 
-Choosing a format for the configuration file was tough.
-You might think that XML is overkill and JSON or CSV or one
-of the many configuration file libraries would have been 
-more adequate. Perhaps you are right. The advantage of the
-XML package is, that I knew how to use it and also, the 
-extensibility should I ever choose to allow more complex
-configuration. The defaultname is gocal.xml. Look at the
-sample file in the repository. Image can be a URL, which
-must start with http://
+Choosing a format for the configuration file was tough.  You might think that
+XML is overkill and JSON or CSV or one of the many configuration file libraries
+would have been more adequate. Perhaps you are right. The advantage of the XML
+package is, that I knew how to use it and also, the extensibility should I ever
+choose to allow more complex configuration. The defaultname is gocal.xml. Look
+at the sample file in the repository. Image can be a URL, which must start with
+http://
 
 
     <Gocal>
@@ -303,9 +304,9 @@ case of overlap. THe optional image tag will put an image into the cell.
 I was considering to allow to configure all the options from the command line
 also as parameters in the XML, but I think it's not really that important.
 
-The image can also be URL, but keep in mind, that every image will be downloaded
-every time, because the files are downloaded to a temporary folder which 
-is deleted after gocalendar is done.
+The image can also be URL, but keep in mind, that every image will be
+downloaded every time, because the files are downloaded to a temporary folder
+which is deleted after gocalendar is done.
 
 
 Examples
@@ -382,11 +383,11 @@ gocalendar -o example16.pdf -yearB 2016
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example17.png?raw=true) 
 
-gocalendar -o example17.pdf -yearA -checker 2017
+gocalendar -o example17.pdf -yearA -fill "c" 2017
 
 ![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example18.png?raw=true) 
 
-gocalendar -o example18.pdf -yearB -checker 2018
+gocalendar -o example18.pdf -yearB -fill "c" 2018
 
 
     

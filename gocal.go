@@ -699,6 +699,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 						moonsize *= 0.6
 					}
 					myMoonPDF := myPdf{pdf, moonsize}
+					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 					switch m {
 					case "Full":
 						myMoonPDF.fullMoon(moonLocX, moonLocY)
