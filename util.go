@@ -33,6 +33,12 @@ import (
 	_ "code.google.com/p/go-charset/data"
 )
 
+// TelegramStore is a container to read XML event-list
+type TelegramStore struct {
+	XMLName   xml.Name `xml:"Gocal"`
+	Gocaldate []Gocaldate
+}
+
 const (
   CLEARTEMP = true
 )
@@ -45,7 +51,6 @@ func removeTempdir(d string) {
 	}
 	os.RemoveAll(d)
 }
-
 
 // computeMoonphases fills a map with moonphase information.
 func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
@@ -102,7 +107,7 @@ func processFont(fontFile string) (fontName, tempDirname string) {
 		ioutil.WriteFile(fontFile, getFreeSansBold(), 0700)
 	}
 	err = ioutil.WriteFile(tempDirname+string(os.PathSeparator)+"cp1252.map", []byte(codepageCP1252), 0700)
-	err = gofpdf.MakeFont(fontFile, tempDirname+string(os.PathSeparator)+"cp1252.map", tempDirname, os.Stderr, true)
+	err = gofpdf.MakeFont(fontFile, tempDirname+string(os.PathSeparator)+"cp1252.map", tempDirname, nil, true)
 	_ = err
 	// FIXME Do some error checking here.
 	fontName = filepath.Base(fontFile)
@@ -110,8 +115,6 @@ func processFont(fontFile string) (fontName, tempDirname string) {
 	// fmt.Printf("Using external font: %v\n", fontName)
 	return fontName, tempDirname
 }
-
-
 
 // downloadFile loads a file via http into the tempDir 
 // and returns the fullpath filename.

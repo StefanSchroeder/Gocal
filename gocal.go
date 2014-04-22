@@ -14,7 +14,6 @@ Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 import (
 	_ "code.google.com/p/go-charset/data"
 	"code.google.com/p/gofpdf"
-	"encoding/xml"
 	"fmt"
 	"github.com/soniakeys/meeus/julian"
 	"os"
@@ -120,10 +119,10 @@ func New(b int, e int, y int) *Calendar {
 		"",      // OptPhotos
 		1.0,     // OptFontScale
 		false,   // OptNocolor
-		nil,
-		0,     // OptCutWeekday
-		false, // OptCheckers
-		"",    // OptFillpattern
+		nil,     // EventList
+		0,       // OptCutWeekday
+		false,   // OptCheckers
+		"",      // OptFillpattern
 	}
 }
 
@@ -146,19 +145,13 @@ type Gocaldate struct {
 	//	Weekday string
 }
 
-// TelegramStore is a container to read XML event-list
-type TelegramStore struct {
-	XMLName   xml.Name `xml:"Gocal"`
-	Gocaldate []Gocaldate
-}
-
 // monthRange stores begin and end month of the year
 type monthRange struct {
 	begin int
 	end   int
 }
 
-// myPdf is an anonymous struct that allows to define methods on non-local type.
+// myPdf is an anonymous struct that allows to define methods on non-local types
 type myPdf struct {
 	*gofpdf.Fpdf
 	moonSize float64
@@ -306,15 +299,15 @@ func (g *Calendar) SetPaperformat(f string) {
 
 func (g *Calendar) WantFill(i int, j int, wd time.Weekday) bool {
 
-	if i%2 == 0 && g.WantFillMode("Y") {
-		return true
-	}
-
 	if wd == time.Sunday && g.WantFillMode("S") {
 		return true
 	}
 
 	if wd == time.Saturday && g.WantFillMode("s") {
+		return true
+	}
+
+	if i%2 == 0 && g.WantFillMode("Y") {
 		return true
 	}
 
@@ -357,6 +350,14 @@ func getLanguage(inLanguage string) (outLanguage string) {
 	return
 }
 
+func (g *Calendar) AddWallpaper(pdf *gofpdf.Fpdf, fontTempdir string, PAGEWIDTH float64, PAGEHEIGHT float64) {
+	wallpaperFilename := g.OptWallpaper
+	if strings.HasPrefix(wallpaperFilename, "http://") {
+		wallpaperFilename = downloadFile(g.OptWallpaper, fontTempdir)
+	}
+	pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
+}
+
 func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 	var fontTempdir string
@@ -372,10 +373,11 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 	calFont, fontTempdir = processFont(calFont)
 
 	pdf := gofpdf.New(g.OptOrientation, "mm", g.OptPaperformat, fontTempdir)
+	pdf.AddFont(calFont, "", calFont+".json")
+
 	pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 	pdf.SetMargins(10.0, 5.0, 10.0)
 	pdf.SetTitle("Created with Gocal", true)
-	pdf.AddFont(calFont, "", calFont+".json")
 
 	PAGEWIDTH, PAGEHEIGHT, _ := pdf.PageSize(0)
 	if g.OptOrientation != "P" {
@@ -387,11 +389,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 	pdf.AddPage()
 
 	if g.OptWallpaper != "" {
-		wallpaperFilename := g.OptWallpaper
-		if strings.HasPrefix(wallpaperFilename, "http://") {
-			wallpaperFilename = downloadFile(g.OptWallpaper, fontTempdir)
-		}
-		pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
+		g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
 	}
 
 	pdf.SetFont(calFont, "", HEADERFONTSIZE*fontScale)
@@ -438,7 +436,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
 				}
-        // Add week number, lower left
+				// Add week number, lower left
 				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
 					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
 					_, weeknr := tDay.ISOWeek()
@@ -448,7 +446,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 				fillBox := g.WantFill(i, j, tDay.Weekday())
 
-        pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
 			} else {
 				// empty cell to skip ahead
@@ -498,11 +496,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 	pdf.AddPage()
 
 	if g.OptWallpaper != "" {
-		wallpaperFilename := g.OptWallpaper
-		if strings.HasPrefix(wallpaperFilename, "http://") {
-			wallpaperFilename = downloadFile(g.OptWallpaper, fontTempdir)
-		}
-		pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
+		g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
 	}
 
 	pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
@@ -541,7 +535,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
 				}
-        // Add week number, lower left
+				// Add week number, lower left
 				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
 					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
 					_, weeknr := tDay.ISOWeek()
@@ -551,7 +545,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 
 				fillBox := g.WantFill(mymonth, j, tDay.Weekday())
 
-        pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
 				pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
 				day++
 			}
@@ -701,21 +695,21 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
-				nd := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
-        fill := g.WantFill(i, j, nd.Weekday())
+				today := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
+				fill := g.WantFill(i, j, today.Weekday())
 
 				// Determine color
-				if nd.Month() != time.Month(mymonth) { // GREY
+				if today.Month() != time.Month(mymonth) { // GREY
 					pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 					fill = false // FIXME, do we want fill here?
-				} else if (nd.Weekday() == time.Saturday || nd.Weekday() == time.Sunday) && !g.OptNocolor {
+				} else if (today.Weekday() == time.Saturday || today.Weekday() == time.Sunday) && !g.OptNocolor {
 					pdf.SetTextColor(255, 0, 0) // RED
 				} else {
 					pdf.SetTextColor(BLACK, BLACK, BLACK)
 				}
 
-				if g.OptHideOtherMonths == true && nd.Month() != time.Month(mymonth) {
+				if g.OptHideOtherMonths == true && today.Month() != time.Month(mymonth) {
 					pdf.SetX(pdf.GetX() + cw)
 					day++
 					continue
@@ -746,24 +740,24 @@ func (g *Calendar) CreateCalendar(fn string) {
 				}
 
 				// Day of year, lower right
-				if g.OptHideDOY == false && int(nd.Month()) == mymonth {
-					doy := julian.DayOfYearGregorian(myyear, mymonth, int(nd.Day()))
+				if g.OptHideDOY == false && int(today.Month()) == mymonth {
+					doy := julian.DayOfYearGregorian(myyear, mymonth, int(today.Day()))
 					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale)
 					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", fill, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
 				}
 
 				// Add week number, lower left
-				if nd.Weekday() == time.Monday && g.OptHideWeek == false {
+				if today.Weekday() == time.Monday && g.OptHideWeek == false {
 					pdf.SetFont(calFont, "", WEEKFONTSIZE*fontScale)
-					_, weeknr := nd.ISOWeek()
+					_, weeknr := today.ISOWeek()
 					pdf.CellFormat(cw, ch, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", fill, 0, "")
 					pdf.SetX(pdf.GetX() - cw) // reset
 				}
 
 				// Add event text
 				for _, ev := range eventList {
-					if nd.Day() == ev.Day && nd.Month() == ev.Month {
+					if today.Day() == ev.Day && today.Month() == ev.Month {
 						x, y := pdf.GetXY()
 						pdf.SetFont(calFont, "", EVENTFONTSIZE*fontScale)
 
@@ -778,7 +772,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 				// day of the month, big number
 				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
-				pdf.CellFormat(cw, ch, fmt.Sprintf("%d", nd.Day()), "1", 0, "TL", fill, 0, "")
+				pdf.CellFormat(cw, ch, fmt.Sprintf("%d", today.Day()), "1", 0, "TL", fill, 0, "")
 				day++
 			}
 			pdf.Ln(-1)
@@ -789,11 +783,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 		//fmt.Printf("Printing page %d\n", page)
 		pdf.AddPage()
 		if g.OptWallpaper != "" {
-			wallpaperFilename := g.OptWallpaper
-			if strings.HasPrefix(wallpaperFilename, "http://") {
-				wallpaperFilename = downloadFile(g.OptWallpaper, fontTempdir)
-			}
-			pdf.Image(wallpaperFilename, 0, 0, PAGEWIDTH, PAGEHEIGHT, false, "", 0, "")
+			g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
 		}
 
 		if g.OptPhoto != "" || g.OptPhotos != "" {
