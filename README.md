@@ -316,7 +316,7 @@ Run the samples.sh shell script to create some example calendars.
 The blue frames are not part of the Gocal output, but have been
 added for these screenshots.
  
-![Logo](http://github.com/StefanSchroeder/Gocal/blob/master/examples/example01.png?raw=true) 
+![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example01.png?raw=true) 
 
 gocalendar -o example01.pdf -p P -photos pics 1 2014
 
