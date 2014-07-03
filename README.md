@@ -1,4 +1,4 @@
-![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example11.png)
+![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example11.png?raw=true)
 
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
 
