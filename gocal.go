@@ -529,7 +529,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 			if int(readbackMonth) == mymonth {
 
 				// Day of year, lower right
-				if g.OptHideDOY == false && int(tDay.Month()) == mymonth {
+				if g.OptHideDOY == false && int(tDay.Month()) == mymonth && tDay.Weekday() != time.Monday  {
 					doy := julian.DayOfYearGregorian(wantyear, int(mymonth), int(tDay.Day()))
 					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
 					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
