@@ -6,7 +6,7 @@
  */
 
 /*
-Package gocal implements a PDF calendar generator. It consists of a 
+Package gocal implements a PDF calendar generator. It consists of a
 library gocal and a standalone tool gocalendar.
 
 * Inspired by pcal
@@ -50,4 +50,3 @@ EXAMPLE
 
 */
 package gocal
-

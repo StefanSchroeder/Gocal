@@ -13,8 +13,8 @@ Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 
 import (
 	_ "code.google.com/p/go-charset/data"
-	"code.google.com/p/gofpdf"
 	"fmt"
+	"github.com/jung-kurt/gofpdf"
 	"github.com/soniakeys/meeus/julian"
 	"os"
 	"path/filepath"
@@ -529,7 +529,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 			if int(readbackMonth) == mymonth {
 
 				// Day of year, lower right
-				if g.OptHideDOY == false && int(tDay.Month()) == mymonth && tDay.Weekday() != time.Monday  {
+				if g.OptHideDOY == false && int(tDay.Month()) == mymonth && tDay.Weekday() != time.Monday {
 					doy := julian.DayOfYearGregorian(wantyear, int(mymonth), int(tDay.Day()))
 					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
 					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")

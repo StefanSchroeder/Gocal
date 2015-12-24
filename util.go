@@ -3,8 +3,8 @@ package gocal
 // Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 //
 // Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file 
-// 
+// license that can be found in the LICENSE file
+//
 // util.go
 //
 // This file is part of gocal, a PDF calendar generator in Go.
@@ -17,8 +17,10 @@ import (
 	"code.google.com/p/go-charset/charset"
 	"encoding/xml"
 	"fmt"
-	"code.google.com/p/gofpdf"
+	//	"code.google.com/p/gofpdf"
+	_ "code.google.com/p/go-charset/data"
 	"github.com/goodsign/monday"
+	"github.com/jung-kurt/gofpdf"
 	"github.com/soniakeys/meeus/julian"
 	"github.com/soniakeys/meeus/moonphase"
 	"io"
@@ -30,7 +32,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	_ "code.google.com/p/go-charset/data"
 )
 
 // TelegramStore is a container to read XML event-list
@@ -40,10 +41,10 @@ type TelegramStore struct {
 }
 
 const (
-  CLEARTEMP = true
+	CLEARTEMP = true
 )
 
-// removeTempdir removes the temoprary directory, 
+// removeTempdir removes the temoprary directory,
 // unless we want to keep it for debugging.
 func removeTempdir(d string) {
 	if CLEARTEMP == false {
@@ -91,7 +92,7 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 }
 
 // processFont creates a font usable by gofpdf from a TTF.
-// It also sets up the temporary directory to store the 
+// It also sets up the temporary directory to store the
 // intermediate files.
 func processFont(fontFile string) (fontName, tempDirname string) {
 	var err error
@@ -116,16 +117,16 @@ func processFont(fontFile string) (fontName, tempDirname string) {
 	return fontName, tempDirname
 }
 
-// downloadFile loads a file via http into the tempDir 
+// downloadFile loads a file via http into the tempDir
 // and returns the fullpath filename.
-func downloadFile(in string, tempDir string)(fileName string) {
-  extension := filepath.Ext(in)
+func downloadFile(in string, tempDir string) (fileName string) {
+	extension := filepath.Ext(in)
 
-  // The filename from the URL might contain colons that are
-  // not valid characters in a filename in Windows. THerefore
-  // we simply call out image 'image'.
-	fileName = "image"  + extension
-  fileName = tempDir+ string(os.PathSeparator) + fileName
+	// The filename from the URL might contain colons that are
+	// not valid characters in a filename in Windows. THerefore
+	// we simply call out image 'image'.
+	fileName = "image" + extension
+	fileName = tempDir + string(os.PathSeparator) + fileName
 
 	output, err := os.Create(fileName)
 	if err != nil {
@@ -147,10 +148,10 @@ func downloadFile(in string, tempDir string)(fileName string) {
 		return
 	}
 
-  return fileName
+	return fileName
 }
 
-// This function converts a string into the required 
+// This function converts a string into the required
 // Codepage.
 func convertCP(in string) (out string) {
 	buf := new(bytes.Buffer)
@@ -234,9 +235,9 @@ func getLocalizedWeekdayNames(locale string, cutoff int) (wdnames [8]string) {
 		// Some arbitrary date, that allows us to pickup Weekday-Strings.
 		t := time.Date(2013, 1, 5+i, 0, 0, 0, 0, time.UTC)
 		wdnames[i] = convertCP(monday.Format(t, "Monday", monday.Locale(locale)))
-    if cutoff > 0 {
-      wdnames[i] = wdnames[i][0:cutoff]
-    }
+		if cutoff > 0 {
+			wdnames[i] = wdnames[i][0:cutoff]
+		}
 	}
 	return wdnames
 }
