@@ -7,11 +7,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/StefanSchroeder/gocal"
+	"os"
 	"strconv"
 	"time"
-	"os"
-	"fmt"
 )
 
 const VERSION = "0.9 the Unready"
@@ -44,10 +44,10 @@ var optVersion = flag.Bool("v", false, "Version.")
 func main() {
 	flag.Parse()
 
-  if *optVersion {
-    fmt.Printf("# Gocal version %s\n", VERSION)
-    os.Exit(0)
-  }
+	if *optVersion {
+		fmt.Printf("# Gocal version %s\n", VERSION)
+		os.Exit(0)
+	}
 
 	wantyear := int(time.Now().Year())
 	beginmonth := 1
@@ -109,11 +109,11 @@ func main() {
 	  g.AddEvent(28, 2, "two", "")
 	  g.AddEvent(31, 3, "three", "")
 	*/
-  if *optYearA == true {
-    g.CreateYearCalendar(*outfilename)
-  } else if *optYearB == true {
-    g.CreateYearCalendarInverse(*outfilename)
-  } else {
-	  g.CreateCalendar(*outfilename)
-  }
+	if *optYearA == true {
+		g.CreateYearCalendar(*outfilename)
+	} else if *optYearB == true {
+		g.CreateYearCalendarInverse(*outfilename)
+	} else {
+		g.CreateCalendar(*outfilename)
+	}
 }
