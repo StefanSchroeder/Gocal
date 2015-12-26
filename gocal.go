@@ -23,17 +23,23 @@ import (
 )
 
 const (
-	// Layout parameters
+	// LINES has to cover the number of weeks in one month.
 	LINES      = 6
+	// COLUMNS equals the number of days in a week.
 	COLUMNS    = 7
+	// MARGIN is the padding around the calendar on the page.
 	MARGIN     = 10.0 // MM
+	// CELLMARGIN is the padding in the cell.
 	CELLMARGIN = 1.0
 
-	// Colors
+	// DARKGREY is the intensity of grey in cell backgrounds.
 	DARKGREY  = 150
+	// LIGHTGREY is the intensity of grey in neighbor month days.
 	LIGHTGREY = 170
+	// BLACK is black.
 	BLACK     = 0
 
+	// MOONSIZE is the size of the moon icon.
 	MOONSIZE = 4.0
 
 	// Font sizes
