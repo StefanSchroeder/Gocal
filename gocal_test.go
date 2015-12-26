@@ -6,7 +6,7 @@
 package gocal_test
 
 import (
-	"gocal"
+	"github.com/StefanSchroeder/Gocal"
 	"os"
 	"runtime"
 	"testing"

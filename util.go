@@ -185,7 +185,7 @@ func readConfigurationfile(filename string) (eL []gDate) {
 	v = TelegramStore{}
 	err2 := xml.Unmarshal([]byte(data), &v)
 	if err2 != nil {
-		log.Fatal("# ERROR: when trying to unmarshal the XML configuration file: %v", err2)
+		log.Fatalf("# ERROR: when trying to unmarshal the XML configuration file: %v", err2)
 		return
 	}
 
