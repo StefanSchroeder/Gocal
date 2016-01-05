@@ -4,7 +4,6 @@ C2="convert -antialias -bordercolor SkyBlue -border 4x4 "
 E="go run gocalendar.go"  
 D=../examples
 
-
 $E -o example01.pdf -p P -photos pics 1 2014
 $C  example01.pdf > example01.ppm 
 $C2  example01.ppm  $D/example01.png 
@@ -49,9 +48,9 @@ $E -o example11.pdf -lang de_DE -font sans -p L 6 2011
 $C  example11.pdf >  example11.ppm 
 $C2   example11.ppm  $D/example11.png 
 
-#$E -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2012
-#$C  example12.pdf >  example12.ppm 
-#$C2   example12.ppm  $D/example12.png 
+$E -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2012
+$C  example12.pdf >  example12.ppm 
+$C2   example12.ppm  $D/example12.png 
 
 $E -o example13.pdf -fontscale 0.9 -font sans -noother 7 2013
 $C  example13.pdf >  example13.ppm 
