@@ -8,7 +8,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/StefanSchroeder/gocal"
+	"github.com/StefanSchroeder/Gocal"
 	"os"
 	"strconv"
 	"time"
