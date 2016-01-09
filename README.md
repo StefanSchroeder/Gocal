@@ -15,11 +15,11 @@ Gocalendar can be built with 'go build' in the gocalendar folder.
 
 The following arguments are supported:
 
-  gocalendar 2014   # Create a 12-page calendar for YEAR, e.g. 2014
+	gocalendar 2014   # Create a 12-page calendar for YEAR, e.g. 2014
 
-  gocalendar 5 2015   # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
+	gocalendar 5 2015   # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
 
-  gocalendar 5 7 2014     # Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
+	gocalendar 5 7 2014     # Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
 There is also a year mode, that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
