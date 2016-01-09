@@ -13,23 +13,19 @@ the library is called gocal, while the standalone tool is named gocalendar.
 
 Gocalendar can be built with 'go build' in the gocalendar folder.
 
-Alternatively the following arguments are supported:
+The following arguments are supported:
 
-  gocalendar YEAR => 
-    
-    Create a 12-page calendar for YEAR, e.g. 2014
+  gocalendar 2014   # Create a 12-page calendar for YEAR, e.g. 2014
 
-  gocalendar MONTH YEAR => 
-    
-    Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
+  gocalendar 5 2015   # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
 
-  gocalendar BEGIN-MONTH END-MONTH YEAR => 
-    
-    Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
+  gocalendar 5 7 2014     # Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
 
 There is also a year mode, that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
 
+Gocal was built because of pcal's lack of support for UTF-8 and because I feel 
+that Postscript is obsolete.
 
 
 Features
@@ -48,7 +44,7 @@ Features
 * Year calendar (two layouts)
 
 
-The main idea of gocal is simplicity. While it is absolutely possible to create
+The main design goal of gocal is simplicity. While it is absolutely possible to create
 an application where every single stroke is configurable, I believe that most
 of you are too busy to play around with lots of options and want a pleasant
 calendar out-of-the-box. That's what gocal provides.
@@ -267,12 +263,8 @@ individual day in this mode. Still, many of the options are available here.
 Event File
 ==================
 
-Choosing a format for the configuration file was tough.  You might think that
-XML is overkill and JSON or CSV or one of the many configuration file libraries
-would have been more adequate. Perhaps you are right. The advantage of the XML
-package is, that I knew how to use it and also, the extensibility should I ever
-choose to allow more complex configuration. Look at the sample file in the
-repository. Image can be a URL, which must start with http://
+This is a sample file event configuration file. 
+Image can be a URL, which must start with http://
 
 
     <Gocal>
@@ -405,7 +397,6 @@ things, like "every second Thursday after the third moon in leap years")
 Known bugs
 ==========
 
-* The event file must be encoded in UTF-8.
 * When you have multiple events on the same date, they are overlapping. I
   don't intend to fix that.
 * Not all text will fit into the cells with some settings, because the font size is
@@ -414,7 +405,6 @@ Known bugs
 * Some warnings in libraries might irritate the user.
 * The dates and months are not validated. Nothing prevents you from trying to 
   generate a calendar for "13 2014", which will panic.
-
 
 
 Acknowledgments
