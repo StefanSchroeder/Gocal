@@ -97,6 +97,7 @@ type Calendar struct {
 	OptPhoto           string
 	OptPlain           bool
 	OptConfig          string
+	OptConfigs         []string
 	OptPhotos          string
 	OptFontScale       float64
 	OptNocolor         bool
@@ -122,6 +123,7 @@ func New(b int, e int, y int) *Calendar {
 		"",      // OptPhoto
 		false,   // OptPlain
 		"",      // OptConfig
+		nil,      // OptConfigs
 		"",      // OptPhotos
 		1.0,     // OptFontScale
 		false,   // OptNocolor
@@ -132,7 +134,7 @@ func New(b int, e int, y int) *Calendar {
 	}
 }
 
-// Gocaldate is a type to store single events
+// gDate is a type to store single events
 type gDate struct {
 	Month   time.Month
 	Day     int
@@ -272,6 +274,10 @@ func (g *Calendar) SetPhoto(f string) {
 
 func (g *Calendar) SetConfig(f string) {
 	g.OptConfig = f
+}
+
+func (g *Calendar) AddConfig(f string) {
+    g.OptConfigs = append(g.OptConfigs, f)
 }
 
 func (g *Calendar) SetLocale(f string) {
@@ -639,6 +645,15 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 	if g.OptConfig != "" {
 		fileEventList = readConfigurationfile(g.OptConfig)
+	}
+
+	if len(g.OptConfigs) > 0  {
+        for _, evfile := range g.OptConfigs {
+            thiseventList := readConfigurationfile(evfile)
+            for _, ev := range thiseventList {
+                fileEventList = append(fileEventList, ev)
+            }
+        }
 	}
 
 	eventList := fileEventList

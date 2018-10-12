@@ -14,6 +14,19 @@ import (
 	"time"
 )
 
+type arrayFlags []string
+
+func (i *arrayFlags) String() string {
+	return "my string representation"
+}
+
+func (i *arrayFlags) Set(value string) error {
+	*i = append(*i, value)
+	return nil
+}
+
+var myFlags arrayFlags
+
 const VERSION = "0.9 the Unready"
 
 var optFont = flag.String("font", "serif", "Font")
@@ -42,12 +55,14 @@ var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
 
 func main() {
+	flag.Var(&myFlags, "list1", "Some description for this param.")
 	flag.Parse()
 
 	if *optVersion {
 		fmt.Printf("# Gocal version %s\n", VERSION)
 		os.Exit(0)
 	}
+    fmt.Printf("%v", myFlags)
 
 	wantyear := int(time.Now().Year())
 	beginmonth := 1
@@ -76,7 +91,11 @@ func main() {
 	g.SetOrientation(*optOrientation)
 	g.SetPaperformat(*optPaper)
 	g.SetLocale(*optLocale)
-	g.SetConfig(*optConfig)
+	//g.SetConfig(*optConfig)
+	g.AddConfig(*optConfig)
+    for _, i := range myFlags {
+        g.AddConfig(i)
+    }
 	if *optPlain == true {
 		g.SetPlain()
 	}
