@@ -14,10 +14,10 @@ package gocal
 
 import (
 	"bytes"
-	"github.com/rogpeppe/go-charset/charset"
+    "github.com/paulrosania/go-charset/charset"
+    _ "github.com/paulrosania/go-charset/data"
 	"encoding/xml"
 	"fmt"
-	_ "github.com/rogpeppe/go-charset/charset/data"
 	"github.com/goodsign/monday"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/soniakeys/meeus/julian"
