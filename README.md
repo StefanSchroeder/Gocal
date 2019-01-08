@@ -8,8 +8,8 @@ Gocal
 
 Gocal is a simple clone of pcal. It's a standalone tool and a library to create
 monthly calendars in PDF with a no-nonsense attitude. By default it creates a
-12-page PDF with one month per page for the current year.  To avoid confusion,
-the library is called gocal, while the standalone tool is named gocalendar.
+12-page PDF with one month per page for the current year.  
+The library is called gocal, while the standalone tool is named gocalendar.
 
 Gocalendar can be built with 'go build' in the gocalendar folder.
 

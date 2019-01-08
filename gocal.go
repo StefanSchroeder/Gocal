@@ -12,7 +12,6 @@ Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 */
 
 import (
-	//	_ "code.google.com/p/go-charset/data"
 	"fmt"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/soniakeys/meeus/julian"
