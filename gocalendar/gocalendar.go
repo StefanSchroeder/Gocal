@@ -31,6 +31,7 @@ const VERSION = "0.9 the Unready"
 
 var optFont = flag.String("font", "serif", "Font")
 var optFontScale = flag.Float64("fontscale", 1.0, "Font")
+var optYearSpread = flag.Int("spread", 1, "Spread year over multiple pages")
 var optFooter = flag.String("footer", "Gocal", "Footer note")
 var optHideDOY = flag.Bool("nodoy", false, "Hide day of year (false)")
 var optPlain = flag.Bool("plain", false, "Hide everything")
@@ -62,7 +63,6 @@ func main() {
 		fmt.Printf("# Gocal version %s\n", VERSION)
 		os.Exit(0)
 	}
-    fmt.Printf("%v", myFlags)
 
 	wantyear := int(time.Now().Year())
 	beginmonth := 1
@@ -91,11 +91,12 @@ func main() {
 	g.SetOrientation(*optOrientation)
 	g.SetPaperformat(*optPaper)
 	g.SetLocale(*optLocale)
+	g.SetYearSpread(*optYearSpread)
 	//g.SetConfig(*optConfig)
 	g.AddConfig(*optConfig)
-    for _, i := range myFlags {
-        g.AddConfig(i)
-    }
+	for _, i := range myFlags {
+		g.AddConfig(i)
+	}
 	if *optPlain == true {
 		g.SetPlain()
 	}

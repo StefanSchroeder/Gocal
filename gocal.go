@@ -24,20 +24,20 @@ import (
 
 const (
 	// LINES has to cover the number of weeks in one month.
-	LINES      = 6
+	LINES = 6
 	// COLUMNS equals the number of days in a week.
-	COLUMNS    = 7
+	COLUMNS = 7
 	// MARGIN is the padding around the calendar on the page.
-	MARGIN     = 10.0 // MM
+	MARGIN = 10.0 // MM
 	// CELLMARGIN is the padding in the cell.
 	CELLMARGIN = 1.0
 
 	// DARKGREY is the intensity of grey in cell backgrounds.
-	DARKGREY  = 150
+	DARKGREY = 150
 	// LIGHTGREY is the intensity of grey in neighbor month days.
 	LIGHTGREY = 170
 	// BLACK is black.
-	BLACK     = 0
+	BLACK = 0
 
 	// MOONSIZE is the size of the moon icon.
 	MOONSIZE = 4.0
@@ -105,6 +105,7 @@ type Calendar struct {
 	OptCutWeekday      int
 	OptCheckers        bool
 	OptFillpattern     string
+	OptYearSpread      int
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -123,7 +124,7 @@ func New(b int, e int, y int) *Calendar {
 		"",      // OptPhoto
 		false,   // OptPlain
 		"",      // OptConfig
-		nil,      // OptConfigs
+		nil,     // OptConfigs
 		"",      // OptPhotos
 		1.0,     // OptFontScale
 		false,   // OptNocolor
@@ -131,6 +132,7 @@ func New(b int, e int, y int) *Calendar {
 		0,       // OptCutWeekday
 		false,   // OptCheckers
 		"",      // OptFillpattern
+		1,       // OptYearSpread
 	}
 }
 
@@ -256,6 +258,23 @@ func (g *Calendar) SetSmall() {
 	g.OptSmall = true
 }
 
+func (g *Calendar) SetYearSpread(frac int) {
+	switch frac {
+	case 1:
+		fallthrough
+	case 2:
+		fallthrough
+	case 3:
+		fallthrough
+	case 4:
+		fallthrough
+	case 6:
+		fallthrough
+	case 12:
+		g.OptYearSpread = frac
+	}
+}
+
 func (g *Calendar) SetFont(f string) {
 	g.OptFont = f
 }
@@ -277,7 +296,7 @@ func (g *Calendar) SetConfig(f string) {
 }
 
 func (g *Calendar) AddConfig(f string) {
-    g.OptConfigs = append(g.OptConfigs, f)
+	g.OptConfigs = append(g.OptConfigs, f)
 }
 
 func (g *Calendar) SetLocale(f string) {
@@ -398,80 +417,86 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 
 	cw := (PAGEWIDTH - 2*MARGIN) / 12.5
 	ch := (PAGEHEIGHT - 2*MARGIN) / 32
-	pdf.AddPage()
-
-	if g.OptWallpaper != "" {
-		g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
-	}
-
-	pdf.SetFont(calFont, "", HEADERFONTSIZE*fontScale)
-	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
-	pdf.Ln(-1)
-
 	currentLanguage := getLanguage(g.OptLocale)
-
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 
-	pdf.SetTextColor(BLACK, BLACK, BLACK)
+	monthFracture := g.OptYearSpread
+	cw = cw * float64(monthFracture)
+	monthOnePage := 12 / monthFracture
 
-	pdf.CellFormat(cw*0.5, ch*0.75, "", "1", 0, "C", false, 0, "")
+	for pageCount := 0; pageCount < monthFracture; pageCount++ {
+		pdf.AddPage()
 
-	pdf.SetTextColor(BLACK, BLACK, BLACK)
-	pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale*0.8)
-	pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
-	for mo := 1; mo <= 12; mo++ {
-		pdf.CellFormat(cw, ch*0.75, fmt.Sprintf("%s", localizedMonthNames[mo]), "1", 0, "C", false, 0, "")
-	}
-	pdf.Ln(-1)
-	pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
-	for i := 1; i <= 31; i++ {
 		pdf.SetTextColor(BLACK, BLACK, BLACK)
-		pdf.CellFormat(cw*0.5, ch*0.9, fmt.Sprintf("%d", i), "1", 0, "C", false, 0, "")
-		for j := 1; j <= 12; j++ {
-			tDay := time.Date(wantyear, time.Month(j), i, 0, 0, 0, 0, time.UTC)
-			wd := localizedWeekdayNames[(tDay.Weekday()+1)%7]
+		pdf.SetFont(calFont, "", HEADERFONTSIZE*fontScale)
+		pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
 
-			if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
-				pdf.SetTextColor(255, 0, 0) // RED
-			} else {
-				pdf.SetTextColor(BLACK, BLACK, BLACK)
-			}
+		if g.OptWallpaper != "" {
+			g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
+		}
 
-			_, readbackMonth, _ := tDay.Date()
-			if int(readbackMonth) == int(j) {
+		pdf.Ln(-1)
 
-				// Day of year, lower right
-				if g.OptHideDOY == false && int(tDay.Month()) == j {
-					doy := julian.DayOfYearGregorian(wantyear, int(time.Month(j)), int(tDay.Day()))
-					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
-					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
-					pdf.SetX(pdf.GetX() - cw) // reset
-				}
-				// Add week number, lower left
-				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
-					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
-					_, weeknr := tDay.ISOWeek()
-					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
-					pdf.SetX(pdf.GetX() - cw) // reset
-				}
+		pdf.SetTextColor(BLACK, BLACK, BLACK)
+		pdf.CellFormat(cw*0.5/float64(monthFracture), ch*0.75, "", "1", 0, "C", false, 0, "")
 
-				fillBox := g.WantFill(i, j, tDay.Weekday())
-
-				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
-				pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
-			} else {
-				// empty cell to skip ahead
-				pdf.CellFormat(cw, ch*0.9, "", "1", 0, "TL", false, 0, "")
-			}
+		pdf.SetTextColor(BLACK, BLACK, BLACK)
+		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale*0.8)
+		pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
+		for mo := pageCount*monthOnePage + 1; mo <= pageCount*monthOnePage+monthOnePage; mo++ {
+			pdf.CellFormat(cw, ch*0.75, fmt.Sprintf("%s", localizedMonthNames[mo]), "1", 0, "C", false, 0, "")
 		}
 		pdf.Ln(-1)
-	}
+		pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+		for i := 1; i <= 31; i++ {
+			pdf.SetTextColor(BLACK, BLACK, BLACK)
+			pdf.CellFormat(cw*0.5/float64(monthFracture), ch*0.9, fmt.Sprintf("%d", i), "1", 0, "C", false, 0, "")
+			for j := pageCount*monthOnePage + 1; j <= pageCount*monthOnePage+monthOnePage; j++ {
+				tDay := time.Date(wantyear, time.Month(j), i, 0, 0, 0, 0, time.UTC)
+				wd := localizedWeekdayNames[(tDay.Weekday()+1)%7]
 
-	pdf.Ln(-1)
-	pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
-	pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
-	pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
+				if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
+					pdf.SetTextColor(255, 0, 0) // RED
+				} else {
+					pdf.SetTextColor(BLACK, BLACK, BLACK)
+				}
+
+				_, readbackMonth, _ := tDay.Date()
+				if int(readbackMonth) == int(j) {
+
+					// Day of year, lower right
+					if g.OptHideDOY == false && int(tDay.Month()) == j {
+						doy := julian.DayOfYearGregorian(wantyear, int(time.Month(j)), int(tDay.Day()))
+						pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
+						pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
+						pdf.SetX(pdf.GetX() - cw) // reset
+					}
+					// Add week number, lower left
+					if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
+						pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
+						_, weeknr := tDay.ISOWeek()
+						pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
+						pdf.SetX(pdf.GetX() - cw) // reset
+					}
+
+					fillBox := g.WantFill(i, j, tDay.Weekday())
+
+					pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+					pdf.CellFormat(cw, ch*0.9, fmt.Sprintf("%s", wd), "1", 0, "TL", fillBox, 0, "")
+				} else {
+					// empty cell to skip ahead
+					pdf.CellFormat(cw, ch*0.9, "", "1", 0, "TL", false, 0, "")
+				}
+			}
+			pdf.Ln(-1)
+		}
+
+		pdf.Ln(-1)
+		pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
+		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
+		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
+	}
 
 	pdf.OutputAndClose(docWriter(pdf, fn))
 	removeTempdir(fontTempdir)
@@ -481,6 +506,7 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 
 	var fontTempdir string
 	var fontScale = g.OptFontScale
+	var calFont = g.OptFont
 
 	if g.OptSmall == true {
 		fontScale = 0.75
@@ -488,109 +514,117 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 
 	wantyear := g.WantYear
 
-	var calFont = g.OptFont
-
 	calFont, fontTempdir = processFont(calFont)
 
 	pdf := gofpdf.New(g.OptOrientation, "mm", g.OptPaperformat, fontTempdir)
+	pdf.AddFont(calFont, "", calFont+".json")
+
 	pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 	pdf.SetMargins(10.0, 5.0, 10.0)
 	pdf.SetTitle("Created with Gocal", true)
-	pdf.AddFont(calFont, "", calFont+".json")
 
 	PAGEWIDTH, PAGEHEIGHT, _ := pdf.PageSize(0)
 	if g.OptOrientation != "P" {
 		PAGEWIDTH, PAGEHEIGHT = PAGEHEIGHT, PAGEWIDTH
 	}
 
-	cw := (PAGEWIDTH - 2*MARGIN) / 32
-	ch := (PAGEHEIGHT - 2*MARGIN) / 14
-	pdf.AddPage()
-
-	if g.OptWallpaper != "" {
-		g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
-	}
-
-	pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
-	pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
-	pdf.Ln(-1)
-
 	currentLanguage := getLanguage(g.OptLocale)
-
 	localizedWeekdayNames := getLocalizedWeekdayNames(currentLanguage, 2)
 	localizedMonthNames := getLocalizedMonthNames(currentLanguage)
 
-	pdf.SetTextColor(BLACK, BLACK, BLACK)
-	monthTable := func(mymonth int, myyear int) {
-		var day int64 = 1
+	monthFracture := g.OptYearSpread
+	monthOnePage := 12 / monthFracture
 
-		pdf.CellFormat(cw, ch, "", "1", 0, "C", false, 0, "")
-		for j := 1; j < 32; j++ {
-			pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+	cw := (PAGEWIDTH - 2*MARGIN) / 32
+	ch := (PAGEHEIGHT - 2*MARGIN) / 14
+	ch = ch * float64(monthFracture)
+	for pageCount := 0; pageCount < monthFracture; pageCount++ {
+		pdf.AddPage()
+		pdf.SetTextColor(BLACK, BLACK, BLACK)
 
-			tDay := time.Date(myyear, time.Month(mymonth), j, 0, 0, 0, 0, time.UTC)
-			if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
-				pdf.SetTextColor(255, 0, 0) // RED
-			} else {
-				pdf.SetTextColor(BLACK, BLACK, BLACK)
-			}
-			// if the date is invalid, like 30.2., time.Date will still have a proper date
-			// in this case e.g. the 1.3. We have to check if the month we put in is the
-			// the month that arrived.
-			_, readbackMonth, _ := tDay.Date()
-			if int(readbackMonth) == mymonth {
+		if g.OptWallpaper != "" {
+			g.AddWallpaper(pdf, fontTempdir, PAGEWIDTH, PAGEHEIGHT)
+		}
 
-				// Day of year, lower right
-				if g.OptHideDOY == false && int(tDay.Month()) == mymonth && tDay.Weekday() != time.Monday {
-					doy := julian.DayOfYearGregorian(wantyear, int(mymonth), int(tDay.Day()))
-					pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
-					pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
-					pdf.SetX(pdf.GetX() - cw) // reset
-				}
-				// Add week number, lower left
-				if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
-					pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
-					_, weeknr := tDay.ISOWeek()
-					pdf.CellFormat(cw, ch, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
-					pdf.SetX(pdf.GetX() - cw) // reset
-				}
+		pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale)
+		pdf.CellFormat(PAGEWIDTH-MARGIN, MARGIN, fmt.Sprintf("%d", wantyear), "", 0, "C", false, 0, "")
+		pdf.Ln(-1)
 
-				fillBox := g.WantFill(mymonth, j, tDay.Weekday())
+		pdf.SetTextColor(BLACK, BLACK, BLACK)
+		monthTable := func(mymonth int, myyear int) {
+			var day int64 = 1
 
+			pdf.CellFormat(cw, ch, "", "1", 0, "C", false, 0, "")
+			for j := 1; j < 32; j++ {
 				pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
-				pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
-				day++
+
+				tDay := time.Date(myyear, time.Month(mymonth), j, 0, 0, 0, 0, time.UTC)
+				if (tDay.Weekday() == time.Saturday || tDay.Weekday() == time.Sunday) && !g.OptNocolor {
+					pdf.SetTextColor(255, 0, 0) // RED
+				} else {
+					pdf.SetTextColor(BLACK, BLACK, BLACK)
+				}
+				// if the date is invalid, like 30.2., time.Date will still have a proper date
+				// in this case e.g. the 1.3. We have to check if the month we put in is the
+				// the month that arrived.
+				_, readbackMonth, _ := tDay.Date()
+				if int(readbackMonth) == mymonth {
+
+					// Day of year, lower right
+					if g.OptHideDOY == false && int(tDay.Month()) == mymonth && tDay.Weekday() != time.Monday {
+						doy := julian.DayOfYearGregorian(wantyear, int(mymonth), int(tDay.Day()))
+						pdf.SetFont(calFont, "", DOYFONTSIZE*fontScale*0.5)
+						pdf.CellFormat(cw, ch, fmt.Sprintf("%d", doy), "1", 0, "BR", false, 0, "")
+						pdf.SetX(pdf.GetX() - cw) // reset
+					}
+					// Add week number, lower left
+					if tDay.Weekday() == time.Monday && g.OptHideWeek == false {
+						pdf.SetFont(calFont, "", WEEKFONTSIZE*0.5*fontScale)
+						_, weeknr := tDay.ISOWeek()
+						pdf.CellFormat(cw, ch, fmt.Sprintf("W %d", weeknr), "1", 0, "BL", false, 0, "")
+						pdf.SetX(pdf.GetX() - cw) // reset
+					}
+
+					fillBox := g.WantFill(mymonth, j, tDay.Weekday())
+
+					pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+					pdf.CellFormat(cw, ch, fmt.Sprintf("%s", localizedWeekdayNames[(tDay.Weekday()+1)%7]), "1", 0, "TL", fillBox, 0, "")
+					day++
+				}
 			}
 		}
-	}
 
-	var day int64 = 1
+		var day int64 = 1
 
-	pdf.CellFormat(cw, ch*0.3, "", "1", 0, "C", false, 0, "")
+		// The header cells shall not scale with the monthFracture. Undo it.
+		var ch_header = ch / float64(monthFracture) * 0.3
+		pdf.CellFormat(cw, ch_header, "", "1", 0, "C", false, 0, "")
 
-	// top row: 1..31
-	for j := 0; j < 31; j++ {
-		pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
-		pdf.CellFormat(cw, ch*0.3, fmt.Sprintf("%d", day), "1", 0, "C", false, 0, "")
-		day++
-	}
-	pdf.Ln(-1)
-
-	for mo := 1; mo <= 12; mo++ {
-		pdf.SetTextColor(BLACK, BLACK, BLACK)
-		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale*0.8)
-		pdf.TransformBegin()
-		x, y := pdf.GetXY()
-		pdf.TransformRotate(90, x+cw-CELLMARGIN, y+ch-CELLMARGIN)
-		pdf.Text(x+cw-CELLMARGIN, y+ch-CELLMARGIN*2, localizedMonthNames[mo])
-		pdf.TransformEnd()
-		monthTable(mo, wantyear)
+		// top row: 1..31
+		for j := 0; j < 31; j++ {
+			pdf.SetFont(calFont, "", MONTHDAYFONTSIZE*fontScale*0.25)
+			pdf.CellFormat(cw, ch_header, fmt.Sprintf("%d", day), "1", 0, "C", false, 0, "")
+			day++
+		}
 		pdf.Ln(-1)
+
+		//for mo := 1; mo <= totalMonth; mo++ {
+		for mo := pageCount*monthOnePage + 1; mo <= pageCount*monthOnePage+monthOnePage; mo++ {
+			pdf.SetTextColor(BLACK, BLACK, BLACK)
+			pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale*0.8)
+			pdf.TransformBegin()
+			x, y := pdf.GetXY()
+			pdf.TransformRotate(90, x+cw-CELLMARGIN, y+ch-CELLMARGIN)
+			pdf.Text(x+cw-CELLMARGIN, y+ch-CELLMARGIN*2, localizedMonthNames[mo])
+			pdf.TransformEnd()
+			monthTable(mo, wantyear)
+			pdf.Ln(-1)
+		}
+		pdf.Ln(-1)
+		pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
+		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
+		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 	}
-	pdf.Ln(-1)
-	pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
-	pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
-	pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 
 	pdf.OutputAndClose(docWriter(pdf, fn))
 	removeTempdir(fontTempdir)
@@ -647,13 +681,13 @@ func (g *Calendar) CreateCalendar(fn string) {
 		fileEventList = readConfigurationfile(g.OptConfig)
 	}
 
-	if len(g.OptConfigs) > 0  {
-        for _, evfile := range g.OptConfigs {
-            thiseventList := readConfigurationfile(evfile)
-            for _, ev := range thiseventList {
-                fileEventList = append(fileEventList, ev)
-            }
-        }
+	if len(g.OptConfigs) > 0 {
+		for _, evfile := range g.OptConfigs {
+			thiseventList := readConfigurationfile(evfile)
+			for _, ev := range thiseventList {
+				fileEventList = append(fileEventList, ev)
+			}
+		}
 	}
 
 	eventList := fileEventList
