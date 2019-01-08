@@ -92,7 +92,6 @@ func main() {
 	g.SetPaperformat(*optPaper)
 	g.SetLocale(*optLocale)
 	g.SetYearSpread(*optYearSpread)
-	//g.SetConfig(*optConfig)
 	g.AddConfig(*optConfig)
 	for _, i := range myFlags {
 		g.AddConfig(i)

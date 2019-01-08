@@ -113,3 +113,36 @@ func Test_Example14(t *testing.T) {
 	g.SetConfig("test-gocal.xml")
 	g.CreateCalendar(outdir + "test-example14.pdf")
 }
+
+func Test_Example15(t *testing.T) {
+	g := gocal.New(1, 12, 2019)
+	g.SetYearSpread(2)
+	g.SetFooter("Spread 2")
+	g.CreateYearCalendar(outdir + "test-example15.pdf")
+}
+
+func Test_Example16(t *testing.T) {
+	g := gocal.New(1, 12, 2019)
+	g.CreateYearCalendarInverse(outdir + "test-example16.pdf")
+}
+
+func Test_Example17(t *testing.T) {
+	g := gocal.New(1, 12, 2019)
+	g.SetYearSpread(4)
+	g.SetFooter("Spread 4")
+	g.CreateYearCalendarInverse(outdir + "test-example17.pdf")
+}
+
+func Test_Example18(t *testing.T) {
+	g := gocal.New(1, 12, 2019)
+	g.SetYearSpread(4)
+	g.SetFooter("Spread 4")
+	g.CreateYearCalendarInverse(outdir + "test-example18.pdf")
+}
+
+func Test_Example19(t *testing.T) {
+	g := gocal.New(1, 12, 2019)
+	g.SetYearSpread(3)
+	g.SetFooter("Spread 3")
+	g.CreateYearCalendarInverse(outdir + "test-example19.pdf")
+}
