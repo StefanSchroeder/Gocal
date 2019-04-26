@@ -62,7 +62,7 @@ Build instructions
 
 Run 
 
-	go get github.com/StefanSchroeder/gocal
+	go get github.com/StefanSchroeder/Gocal
 
 Gocal has a quite a few dependencies that go should resolve automatically.
 
