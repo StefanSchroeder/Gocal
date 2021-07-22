@@ -40,7 +40,7 @@ EXAMPLE
 
 	package main
 	import (
-		"github.com/StefanSchroeder/gocal"
+		"github.com/StefanSchroeder/Gocal"
 	)
 	func main() {
 		g := gocal.New(1,12,2010)
