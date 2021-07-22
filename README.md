@@ -214,13 +214,26 @@ Can be any combination of:
 
     C checkerboard even
 
+    1 Monday
+
+    2 Tuesday
+
+    3 Wednesday
+
+    4 Thursday
+
+    5 Friday
+
+    6 Saturday
+
+    7 Sunday
+
 Example:
 
-    -fill "xY"
+    -fill "x3Y"
 
 The gray boxes are not transparent; therefore it doesn't make a lot
 of sense to combine gray boxes with a wallpaper image.
-
 
 
 ### Photo / Photos / Wallpaper
@@ -258,6 +271,19 @@ a valid image extension.
 Two different layouts are available. One with the months on the top and the
 days on the left and vice versa. Obviously there is less space for the
 individual day in this mode. Still, many of the options are available here.
+
+    -spread NUMBER
+
+In the year calendars, the entire calendar is put on one page. Using the
+spread option, you can spread the year across NUMBER pages. Valid values are
+1 (default), 2, 3, 4, 6 and 12. Using 12 is essentially the same as not using the
+year mode, because it will put every month on its own page.
+
+Example:
+
+   -yearB -spread 4
+
+This will put three month on each page.
 
 
 Event File
