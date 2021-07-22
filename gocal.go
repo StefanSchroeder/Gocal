@@ -329,6 +329,34 @@ func (g *Calendar) SetPaperformat(f string) {
 
 func (g *Calendar) WantFill(i int, j int, wd time.Weekday) bool {
 
+	if wd == time.Monday && g.WantFillMode("1") {
+		return true
+	}
+
+	if wd == time.Tuesday && g.WantFillMode("2") {
+		return true
+	}
+
+	if wd == time.Wednesday && g.WantFillMode("3") {
+		return true
+	}
+
+	if wd == time.Thursday && g.WantFillMode("4") {
+		return true
+	}
+
+	if wd == time.Friday && g.WantFillMode("5") {
+		return true
+	}
+
+	if wd == time.Saturday && g.WantFillMode("6") {
+		return true
+	}
+
+	if wd == time.Sunday && g.WantFillMode("7") {
+		return true
+	}
+
 	if wd == time.Sunday && g.WantFillMode("S") {
 		return true
 	}
