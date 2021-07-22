@@ -92,6 +92,10 @@ func main() {
 	g.SetPaperformat(*optPaper)
 	g.SetLocale(*optLocale)
 	g.SetYearSpread(*optYearSpread)
+	if (*optYearSpread != 1 && (!*optYearA && !*optYearB)) {
+		fmt.Printf("WARN: Option 'spread' ignored. Only valid for year-mode.\n")
+	}
+
 	g.AddConfig(*optConfig)
 	for _, i := range myFlags {
 		g.AddConfig(i)
