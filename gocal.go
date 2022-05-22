@@ -839,7 +839,21 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 				// Add event text
 				for _, ev := range eventList {
-					if today.Day() == ev.Day && today.Month() == ev.Month {
+					if len(ev.Text) == 0 {
+						continue
+					}
+					if today.Weekday().String() == string(ev.Weekday) {
+						x, y := pdf.GetXY()
+						pdf.SetFont(calFont, "", EVENTFONTSIZE*fontScale)
+
+						if ev.Image != "" {
+							pdf.Image(ev.Image, x, y, cw, ch, false, "", 0, "")
+						}
+						for i, j := range strings.Split(ev.Text, "\\n") {
+							pdf.Text(x+0.02*cw, y+0.50*ch+float64(i)*EVENTFONTSIZE*fontScale/3.0, fmt.Sprintf("%s", j))
+						}
+					}
+					if today.Day() == ev.Day && today.Month() == ev.Month  {
 						x, y := pdf.GetXY()
 						pdf.SetFont(calFont, "", EVENTFONTSIZE*fontScale)
 

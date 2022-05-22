@@ -1,8 +1,9 @@
 <Gocal>
-	<Gocaldate date="7/15"  text="Henry" />
-	<Gocaldate date="8/15"  text="Isildur" />
-	<Gocaldate date="9/15"  text="Ethelbert" />
-  <Gocaldate date="10/15"  text="Æþelbyrht" image="golang-gopher.png" />
-	<Gocaldate date="11/15"  text="Eðilberht" />
-	<Gocaldate date="12/15"  text="Eþelbriht" />
+	<Gocaldate date="Monday"  text="PS: P _____ L _____\n\n\nLR: P _____ L _____" />
+	<Gocaldate date="Tuesday"  text="PL: P _____ L _____\n\n\nSQ: P _____ L _____" />
+	<Gocaldate date="Wednesday"  text="BR: P _____ L _____\n\n\nTW: P _____ L _____" />
+	<Gocaldate date="Thursday"  text="PS: P _____ L _____\n\n\nLR: P _____ L _____" />
+	<Gocaldate date="Friday"  text="PL: P _____ L _____\n\n\nSQ: P _____ L _____" />
+	<Gocaldate date="Saturday"  text="BR: P _____ L _____\n\n\nTW: P _____ L _____" />
+	<Gocaldate date="Sunday" text="REST" />
 </Gocal>

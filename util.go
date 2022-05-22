@@ -14,12 +14,12 @@ package gocal
 
 import (
 	"bytes"
-    "github.com/paulrosania/go-charset/charset"
-    _ "github.com/paulrosania/go-charset/data"
 	"encoding/xml"
 	"fmt"
 	"github.com/goodsign/monday"
 	"github.com/jung-kurt/gofpdf"
+	"github.com/paulrosania/go-charset/charset"
+	_ "github.com/paulrosania/go-charset/data"
 	"github.com/soniakeys/meeus/v3/julian"
 	"github.com/soniakeys/meeus/v3/moonphase"
 	"io"
@@ -209,6 +209,11 @@ func readConfigurationfile(filename string) (eL []gDate) {
 				gcd := gDate{time.Month(mo), int(d), eventText, "", m.Image}
 				eL = append(eL, gcd)
 			}
+		} else { // There is no slash, assume weekday
+
+			eventText := convertCP(m.Text)
+			gcd := gDate{time.Month(0), int(0), eventText, string(m.Date), m.Image}
+			eL = append(eL, gcd)
 		}
 	}
 
