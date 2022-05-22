@@ -15,11 +15,11 @@ Gocalendar can be built with 'go build' in the gocalendar folder.
 
 The following arguments are supported:
 
-	gocalendar 2014   # Create a 12-page calendar for YEAR, e.g. 2014
+	gocalendar 2014 # Create a 12-page calendar for YEAR, e.g. 2014
 
-	gocalendar 5 2015   # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
+	gocalendar 5 2015 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
 
-	gocalendar 5 7 2014     # Create a sequence from BEGIN-MONTH to END-MONTH in YEAR, e.g. 5 7 2014
+	gocalendar 5 7 2014 # Create a sequence from BEGIN to END in YEAR
 
 There is also a year mode, that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
@@ -306,7 +306,7 @@ Image can be a URL, which must start with http://
       <Gocaldate date="9/15"  text="Ethelbert" />
       <Gocaldate date="10/15"  text="Æþelbyrht" image="golang-gopher.png" />
       <Gocaldate date="11/15"  text="Eðilberht" />
-      <Gocaldate date="12/15"  text="Eþelbriht" />
+      <Gocaldate date="Monday" text="Run Marathon" />
       <Gocaldate date="*/20" text="Miete" />
     </Gocal>
 
@@ -317,6 +317,9 @@ features. date is in MONTH/DAY format. The text may contain a literal \n
 newline.  For the month a * is permitted and it obviously means 'every month'.
 You can use a leading newline symbol to make the text wrap to the next line in
 case of overlap. THe optional image tag will put an image into the cell.
+
+For the day an English Weekday name is permitted. It means: Every
+matching weekday.
 
 I was considering to allow to configure all the options from the command line
 also as parameters in the XML, but I think it's not really that important.
