@@ -332,7 +332,11 @@ which is deleted after gocalendar is done.
 Examples
 ========
 
-Run the samples.sh shell script to create some example calendars.
+There is more than one way to create some example calendars.
+
+You can use `go test` to validate that the library works 
+or you can run `make` after compilation to check that the standalone
+tool works. Both procedures provide ample suggestions what you can do.
 
 The blue frames are not part of the Gocal output, but have been
 added for these screenshots.
@@ -414,14 +418,9 @@ gocalendar -o example18.pdf -yearB -fill "c" 2018
 Roadmap
 =======
 
-* It would be really cool to allow gocal to be a drop-in replacement for pcal,
-but pcal does really complex things. (pcal allows complicated
-things, like "every second Thursday after the third moon in leap years")
-* Some nice origami dodecahedron?
-* Pocketmod?
-* Allow setting of colors?
-* Other calendar formats? islamic? chinese?
-* Allow arbitrary paper format?
+This is a mature application that I use regularly and that meets all
+my needs. If you are looking for a fancy option, let me know by
+writing an issue. I will consider adding it.
 
 Known bugs
 ==========
@@ -440,6 +439,6 @@ Acknowledgments
 ================
 
 I'd like to thank the developers who wrote the great libraries that **gocal** is 
-relying on, esp. Sonia Keys and Kurt Jung.
+relying on, especially Sonia Keys and Kurt Jung.
 
 
