@@ -1,3 +1,8 @@
+#
+# Run 'make' to create some test PDFs.
+# This Makefile does not build the binaries.
+# Use the go tools for building.
+#
 all:
 	go run gocalendar/gocalendar.go -spread 1 -yearA -o test-output/test-example_ao1.pdf -lang de_DE 2021
 	go run gocalendar/gocalendar.go -spread 2 -yearA -o test-output/test-example_ao2.pdf -lang de_DE 2021

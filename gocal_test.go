@@ -14,6 +14,10 @@ import (
 
 var outdir = "test-output" + string(os.PathSeparator)
 
+func Test_Example00(t *testing.T) {
+	os.Mkdir(outdir, 0777)
+}
+
 func Test_Example01(t *testing.T) {
 	g := gocal.New(1, 12, 2010)
 	g.CreateCalendar(outdir + "test-example01.pdf")
