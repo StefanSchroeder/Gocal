@@ -106,7 +106,7 @@ func Test_Example13(t *testing.T) {
 	g.SetHideWeek()
 	g.AddEvent(15, 3, "One Event", "")
 	g.AddEvent(16, 3, "Another Event", "")
-	g.AddEvent(17, 4, "Hegdehog\\nvisits", "")
+	g.AddEvent(17, 4, "Hedgehog\\nvisits", "")
 	g.AddEvent(18, 4, "Day\\nof the\\nDay", "")
 	g.SetHideMoon()
 	g.CreateCalendar(outdir + "test-example13.pdf")
