@@ -2,7 +2,6 @@
 
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
 
-https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal
 [![Go Report Card](https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal)](https://goreportcard.com/report/github.com/StefanSchroeder/Gocal)
 
 Gocal
