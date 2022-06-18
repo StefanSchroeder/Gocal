@@ -96,6 +96,10 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 func processFont(fontFile string) (fontName, tempDirname string) {
 	var err error
 	tempDirname, err = ioutil.TempDir("", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if fontFile == "mono" {
 		fontFile = tempDirname + string(os.PathSeparator) + "freemonobold.ttf"
 		ioutil.WriteFile(fontFile, getFreeMonoBold(), 0700)
@@ -107,9 +111,13 @@ func processFont(fontFile string) (fontName, tempDirname string) {
 		ioutil.WriteFile(fontFile, getFreeSansBold(), 0700)
 	}
 	err = ioutil.WriteFile(tempDirname+string(os.PathSeparator)+"cp1252.map", []byte(codepageCP1252), 0700)
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = gofpdf.MakeFont(fontFile, tempDirname+string(os.PathSeparator)+"cp1252.map", tempDirname, nil, true)
-	_ = err
-	// FIXME Do some error checking here.
+	if err != nil {
+		log.Fatal(err)
+	}
 	fontName = filepath.Base(fontFile)
 	fontName = strings.TrimSuffix(fontName, filepath.Ext(fontName))
 	// fmt.Printf("Using external font: %v\n", fontName)
