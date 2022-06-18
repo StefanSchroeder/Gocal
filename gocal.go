@@ -853,7 +853,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 							pdf.Text(x+0.02*cw, y+0.50*ch+float64(i)*EVENTFONTSIZE*fontScale/3.0, fmt.Sprintf("%s", j))
 						}
 					}
-					if today.Day() == ev.Day && today.Month() == ev.Month  {
+					if today.Day() == ev.Day && today.Month() == ev.Month {
 						x, y := pdf.GetXY()
 						pdf.SetFont(calFont, "", EVENTFONTSIZE*fontScale)
 
