@@ -1,7 +1,6 @@
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/gocalendar/01-2025.png?raw=true)
 
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
-
 [![Go Report Card](https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal)](https://goreportcard.com/report/github.com/StefanSchroeder/Gocal)
 
 Gocal
