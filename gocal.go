@@ -12,12 +12,16 @@ Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 */
 
 import (
+	"encoding/json"
 	"fmt"
-//	"github.com/jung-kurt/gofpdf"
 	"github.com/phpdave11/gofpdf"
 	"github.com/soniakeys/meeus/v3/julian"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -50,6 +54,9 @@ const (
 	DOYFONTSIZE      = 12.0
 	MONTHDAYFONTSIZE = 32.0
 	FOOTERFONTSIZE   = 12.0
+
+	// Default holiday url
+	HOLIDAY_URL = "https://openholidaysapi.org/PublicHolidays?countryIsoCode=%s&languageIsoCode=%s&validFrom=%s-01-01&validTo=%s-12-31"
 )
 
 var testedLanguage = map[string]bool{
@@ -79,6 +86,24 @@ var testedLanguage = map[string]bool{
 	"zh_HK": true,
 }
 
+type people []struct {
+	Comments []interface{} `json:"comments"`
+	EndDate  string        `json:"endDate"`
+	ID       string        `json:"id"`
+	Names    []struct {
+		Language string `json:"language"`
+		Text     string `json:"text"`
+	} `json:"names"`
+	Nationwide   bool          `json:"nationwide"`
+	OUnits       []interface{} `json:"oUnits"`
+	StartDate    string        `json:"startDate"`
+	Subdivisions []struct {
+		IsoCode   string `json:"isoCode"`
+		ShortName string `json:"shortName"`
+	} `json:"subdivisions"`
+	Type string `json:"type"`
+}
+
 type Calendar struct {
 	WantBeginMonth     int
 	WantEndMonth       int
@@ -106,6 +131,7 @@ type Calendar struct {
 	OptCheckers        bool
 	OptFillpattern     string
 	OptYearSpread      int
+	OptHoliday         bool
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -133,6 +159,7 @@ func New(b int, e int, y int) *Calendar {
 		false,   // OptCheckers
 		"",      // OptFillpattern
 		1,       // OptYearSpread
+		false,   // OptHoliday
 	}
 }
 
@@ -297,6 +324,10 @@ func (g *Calendar) SetConfig(f string) {
 
 func (g *Calendar) AddConfig(f string) {
 	g.OptConfigs = append(g.OptConfigs, f)
+}
+
+func (g *Calendar) SetHoliday(v bool) {
+	g.OptHoliday = v
 }
 
 func (g *Calendar) SetLocale(f string) {
@@ -685,6 +716,71 @@ func getPhotoslist(in string) (out [12]string) {
 	return out
 }
 
+func fetchHolidayEvents(year int) (eL []gDate) {
+
+	yearString := strconv.Itoa(year)
+	fullurl := fmt.Sprintf(HOLIDAY_URL, "DE", "DE", yearString, yearString)
+
+	fmt.Printf("%v\n", fullurl)
+
+	spaceClient := http.Client{
+		Timeout: time.Second * 2, // Timeout after 2 seconds
+	}
+
+	req, err := http.NewRequest(http.MethodGet, fullurl, nil)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+
+	req.Header.Set("accept", "text/json")
+
+	res, getErr := spaceClient.Do(req)
+	if getErr != nil {
+		log.Println(getErr)
+		return nil
+	}
+
+	if res.Body != nil {
+		defer res.Body.Close()
+	}
+
+	body, readErr := ioutil.ReadAll(res.Body)
+	if readErr != nil {
+		log.Println(readErr)
+		return nil
+	}
+
+	people1 := people{}
+	jsonErr := json.Unmarshal(body, &people1)
+	if jsonErr != nil {
+		log.Println(jsonErr)
+		return nil
+	}
+
+	for _, p := range people1 {
+		holidayDay := 0
+		holidayMon := 0
+		holidayText := ""
+		if p.Nationwide { // ignore non-nationwide
+			// TODO: Filter for language
+			holidayText = p.Names[0].Text
+			parts := strings.Split(p.StartDate, "-")
+			if len(parts) == 3 {
+				holidayDay, _ = strconv.Atoi(parts[2])
+				holidayMon, _ = strconv.Atoi(parts[1])
+				fmt.Printf("Creating new event %v.%v. %v\n", holidayDay, holidayMon, holidayText)
+
+				gcd := gDate{time.Month(holidayMon), holidayDay, holidayText, "", ""}
+				eL = append(eL, gcd)
+			} else {
+				log.Fatal("Error parsing date")
+			}
+		}
+	}
+	return eL
+}
+
 func (g *Calendar) CreateCalendar(fn string) {
 
 	var fontTempdir string
@@ -716,6 +812,12 @@ func (g *Calendar) CreateCalendar(fn string) {
 				fileEventList = append(fileEventList, ev)
 			}
 		}
+	}
+
+	if g.OptHoliday {
+		var holidayEventList = make([]gDate, 10000) // Maximum number of events
+		holidayEventList = fetchHolidayEvents(g.WantYear)
+		fileEventList = append(fileEventList, holidayEventList...)
 	}
 
 	eventList := fileEventList
