@@ -13,7 +13,8 @@ Copyright (c) 2014 Stefan Schroeder, NY, 2014-03-10
 
 import (
 	"fmt"
-	"github.com/jung-kurt/gofpdf"
+//	"github.com/jung-kurt/gofpdf"
+	"github.com/phpdave11/gofpdf"
 	"github.com/soniakeys/meeus/v3/julian"
 	"os"
 	"path/filepath"
