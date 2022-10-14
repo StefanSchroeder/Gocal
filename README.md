@@ -3,7 +3,7 @@
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
 [![Go Report Card](https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal)](https://goreportcard.com/report/github.com/StefanSchroeder/Gocal)
 
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/{org}/{repo}/badge)](https://api.securityscorecards.dev/projects/github.com/{org}/{repo})
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal/badge)](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal)
 
 Gocal
 =====
