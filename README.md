@@ -263,6 +263,14 @@ use images with a bright tone so that you do not obstruct the usefulness of the
 calendar.  The filename can be a URL, and must start with http:// and must have
 a valid image extension.
 
+### Holidays
+
+    --holiday
+
+If you select this option the website
+https://www.openholidaysapi.org/de/ will be consulted to download the
+public national holidays for Germany for the particular year.
+This is currently hardcoded.
 
 ### Year calendar
 
@@ -415,7 +423,6 @@ gocalendar -o example17.pdf -yearA -fill "c" 2017
 
 gocalendar -o example18.pdf -yearB -fill "c" 2018
 
-
     
 Roadmap
 =======
@@ -427,6 +434,11 @@ writing an issue. I will consider adding it.
 Known bugs
 ==========
 
+* There is a subtle bug in the holiday function. Should there ever be 
+  a moving holiday in the first or last days of the year, it will be 
+  duplicated in the neighbor years.  As this is unlikely to occur, this
+  will not be addressed.
+* The public holidays should be red.
 * When you have multiple events on the same date, they are overlapping. I
   don't intend to fix that.
 * Not all text will fit into the cells with some settings, because the font size is
@@ -442,5 +454,4 @@ Acknowledgments
 
 I'd like to thank the developers who wrote the great libraries that **gocal** is 
 relying on, especially Sonia Keys and Kurt Jung.
-
 
