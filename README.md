@@ -95,8 +95,8 @@ License
 
 The BSD type license is in the LICENSE file.
 
-For the API documentation of gocal the library visit the auto-generated docs on
-godoc.org.
+For the API documentation of gocal the library [visit the auto-generated docs on
+godoc.org](https://pkg.go.dev/github.com/StefanSchroeder/Gocal).
 
 Options of gocalendar
 =====================
