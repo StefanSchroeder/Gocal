@@ -17,11 +17,11 @@ Gocalendar can be built with 'go build' in the gocalendar folder.
 
 The following arguments are supported:
 
-	gocalendar 2014 # Create a 12-page calendar for YEAR, e.g. 2014
+	gocalendar 2024 # Create a 12-page calendar for YEAR, e.g. 2024
 
-	gocalendar 5 2015 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2014
+	gocalendar 5 2025 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2025
 
-	gocalendar 5 7 2014 # Create a sequence from BEGIN to END in YEAR
+	gocalendar 5 7 2026 # Create a sequence from BEGIN to END in YEAR
 
 There is also a year mode, that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
@@ -63,6 +63,13 @@ Build instructions
 ==================
 
 Run 
+	go install github.com/StefanSchroeder/Gocal/gocalendar@latest
+
+This will install the *gocalendar* executable in your go-bin folder.
+
+Alternative:
+
+Run 
 
 	go get github.com/StefanSchroeder/Gocal
 
@@ -77,8 +84,8 @@ You create a bunch of sample files (and in passing test gocal) by running
 	go test
 
 
-Example
-=======
+Example library use
+===================
 
 
     package main
