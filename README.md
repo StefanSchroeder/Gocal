@@ -63,6 +63,7 @@ Build instructions
 ==================
 
 Run 
+
 	go install github.com/StefanSchroeder/Gocal/gocalendar@latest
 
 This will install the *gocalendar* executable in your go-bin folder.
