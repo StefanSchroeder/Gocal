@@ -150,3 +150,17 @@ func Test_Example19(t *testing.T) {
 	g.SetFooter("Spread 3")
 	g.CreateYearCalendarInverse(outdir + "test-example19.pdf")
 }
+
+func Test_Example20(t *testing.T) {
+	g := gocal.New(1, 12, 2020)
+	g.SetFooter("Fillmode")
+	g.WantFillMode("C")
+	g.CreateCalendar(outdir + "test-example20.pdf")
+}
+
+func Test_Example21(t *testing.T) {
+	g := gocal.New(1, 12, 2021)
+	g.SetFooter("Small")
+	g.SetSmall()
+	g.CreateCalendar(outdir + "test-example21.pdf")
+}
