@@ -105,6 +105,7 @@ type Calendar struct {
 	OptCheckers        bool
 	OptFillpattern     string
 	OptYearSpread      int
+	OptICS             []string
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -132,6 +133,7 @@ func New(b int, e int, y int) *Calendar {
 		false,   // OptCheckers
 		"",      // OptFillpattern
 		1,       // OptYearSpread
+		nil,     // OptICS
 	}
 }
 
@@ -292,6 +294,10 @@ func (g *Calendar) SetPhoto(f string) {
 
 func (g *Calendar) SetConfig(f string) {
 	g.OptConfig = f
+}
+
+func (g *Calendar) AddICS(f string) {
+	g.OptICS = append(g.OptICS, f)
 }
 
 func (g *Calendar) AddConfig(f string) {
@@ -706,6 +712,15 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 	if g.OptConfig != "" {
 		fileEventList = readConfigurationfile(g.OptConfig)
+	}
+
+	if len(g.OptICS) > 0 {
+		for _, evfile := range g.OptICS {
+			thiseventList := readICSfile(evfile, g.WantYear)
+			for _, ev := range thiseventList {
+				fileEventList = append(fileEventList, ev)
+			}
+		}
 	}
 
 	if len(g.OptConfigs) > 0 {

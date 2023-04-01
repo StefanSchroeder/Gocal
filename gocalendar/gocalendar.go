@@ -54,6 +54,7 @@ var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
 var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
 var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
+var optICS = flag.String("ics", "", "ICS-file.")
 
 func main() {
 	flag.Var(&myFlags, "list1", "Some description for this param.")
@@ -94,6 +95,10 @@ func main() {
 	g.SetYearSpread(*optYearSpread)
 	if *optYearSpread != 1 && (!*optYearA && !*optYearB) {
 		fmt.Printf("WARN: Option 'spread' ignored. Only valid for year-mode.\n")
+	}
+
+	if len(*optICS) > 0 {
+		g.AddICS(*optICS)
 	}
 
 	g.AddConfig(*optConfig)

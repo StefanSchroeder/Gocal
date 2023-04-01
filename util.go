@@ -20,6 +20,7 @@ import (
 	"github.com/jung-kurt/gofpdf"
 	"github.com/paulrosania/go-charset/charset"
 	_ "github.com/paulrosania/go-charset/data"
+	"github.com/PuloV/ics-golang"
 	"github.com/soniakeys/meeus/v3/julian"
 	"github.com/soniakeys/meeus/v3/moonphase"
 	"io"
@@ -32,6 +33,8 @@ import (
 	"strings"
 	"time"
 )
+
+const YmdHis = "2006-01-02 15:04:05"
 
 // TelegramStore is a container to read XML event-list
 type TelegramStore struct {
@@ -171,6 +174,45 @@ func convertCP(in string) (out string) {
 
 	out = fmt.Sprintf("%s", buf)
 	return out
+}
+
+// This function reads the events XML file and returns a
+// list of gDate objects.
+func readICSfile(filename string, targetyear int) (eL []gDate) {
+
+	parser := ics.New()
+
+	ics.FilePath = "tmp/new/"
+
+	ics.DeleteTempFiles = true
+
+	inputChan := parser.GetInputChan()
+
+	outputChan := parser.GetOutputChan()
+
+	inputChan <- filename
+
+	go func() {
+		for event := range outputChan {
+			eventText := convertCP(event.GetSummary())
+			year  := event.GetStart().Format("2006")
+			mon  := event.GetStart().Format("01")
+			day  := event.GetStart().Format("02")
+
+			yr, _ := strconv.ParseInt(year, 10, 32)
+			mo, _ := strconv.ParseInt(mon, 10, 32)
+			d, _ := strconv.ParseInt(day, 10, 32)
+			if int(targetyear) == int(yr) {
+				gcd := gDate{time.Month(mo), int(d), eventText, "", ""}
+				log.Println(gcd)
+				eL = append(eL, gcd)
+			}
+
+		}
+	}()
+	parser.Wait()
+
+	return eL
 }
 
 // This function reads the events XML file and returns a
