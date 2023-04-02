@@ -25,7 +25,7 @@ func (i *arrayFlags) Set(value string) error {
 	return nil
 }
 
-var myFlags arrayFlags
+var configFiles arrayFlags
 
 const VERSION = "0.9 the Unready"
 
@@ -42,7 +42,7 @@ var optLocale = flag.String("lang", "", "Language")
 var optOrientation = flag.String("p", "P", "Orientation (L)andscape/(P)ortrait")
 var optPaper = flag.String("paper", "A4", "Paper format (A3 A4 A5 Letter Legal)")
 var optPhoto = flag.String("photo", "", "Show photo (single image PNG JPG GIF)")
-var optConfig = flag.String("config", "gocal.xml", "Configuration file")
+//var optConfig = flag.String("config", "gocal.xml", "Configuration file")
 var optPhotos = flag.String("photos", "", "Show photos (directory PNG JPG GIF)")
 var optWallpaper = flag.String("wall", "", "Show wallpaper PNG JPG GIF")
 var outfilename = flag.String("o", "output.pdf", "Output filename")
@@ -54,10 +54,10 @@ var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
 var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
 var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
-var optICS = flag.String("ics", "", "ICS-file.")
+var optICS = flag.String("ics", "", "ICS-file or URL.")
 
 func main() {
-	flag.Var(&myFlags, "list1", "Some description for this param.")
+	flag.Var(&configFiles, "config", "Configuration XML files.")
 	flag.Parse()
 
 	if *optVersion {
@@ -101,8 +101,8 @@ func main() {
 		g.AddICS(*optICS)
 	}
 
-	g.AddConfig(*optConfig)
-	for _, i := range myFlags {
+	//g.AddConfig(*optConfig)
+	for _, i := range configFiles {
 		g.AddConfig(i)
 	}
 	if *optPlain == true {
