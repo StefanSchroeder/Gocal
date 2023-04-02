@@ -24,7 +24,7 @@ The following arguments are supported:
 
 	gocalendar 5 7 2026 # Create a sequence from BEGIN to END in YEAR
 
-There is also a year mode, that shows the entire year on one page.
+There is also a year mode that shows the entire year on one page.
 Have a look at the examples below to get an idea of gocal's capabilities.
 
 Gocal was built because of pcal's lack of support for UTF-8 and because I feel 
@@ -45,6 +45,7 @@ Features
 * Page orientation and paper size option
 * Font selection
 * Year calendar (two layouts)
+* Import of ICS files (local file or URL)
 
 
 The main design goal of gocal is simplicity. While it is absolutely possible to create
@@ -69,7 +70,7 @@ Run
 
 This will install the *gocalendar* executable in your go-bin folder.
 
-Alternative:
+Or the long haul:
 
 Run 
 
@@ -102,7 +103,7 @@ Example library use
 License
 =======
 
-The license is in the LICENSE file.
+The license is in the LICENSE file. (It's MIT.)
 
 API-documentation
 =================
@@ -392,7 +393,7 @@ added for these screenshots.
 
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example03.png?raw=true) 
 
-	gocalendar -o example03.pdf -wall golang-gopher.png -lang de_DE -font c:/windows/Fonts/cabalett.ttf 2028
+	gocalendar -o example03.pdf -wall golang-gopher.png -lang de_DE -font data/Borel-Regular.ttf 2028
 
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example04.png?raw=true) 
 
@@ -404,7 +405,7 @@ added for these screenshots.
 
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example06.png?raw=true) 
 
-	gocalendar -o example06.pdf -font c:/windows/Fonts/cabalett.ttf -lang en_US 4 2031
+	gocalendar -o example06.pdf -font data/Borel-Regular.ttf -lang en_US 4 2031
 
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example07.png?raw=true) 
 
@@ -454,6 +455,9 @@ added for these screenshots.
 
 	gocalendar -o example18.pdf -yearB -fill "sS" 2043
 
+![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/example19.png?raw=true) 
+
+	gocalendar -o example19.pdf -ics data/german.ics 12 2023
 
     
 Roadmap
@@ -467,7 +471,7 @@ Known bugs
 ==========
 
 * When you have multiple events on the same date, they are overlapping. I
-  don't intend to fix that.
+  don't intend to fix that. Use the Newline to arrange your stuff.
 * Not all text will fit into the cells with some settings, because the font size is
   not adapted dynamically to the paper format. It's a feature, not a bug.
 * When using the A5 paper size, the last row of a page wraps to the next page.
@@ -480,6 +484,6 @@ Acknowledgments
 ================
 
 I'd like to thank the developers who wrote the great libraries that **gocal** is 
-relying on, especially Sonia Keys and Kurt Jung.
+relying on, especially Sonia Keys and Kurt Jung and Йордан Пулов.
 
 
