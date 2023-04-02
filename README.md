@@ -351,6 +351,7 @@ ICS iCalendar files
 ===================
 
 Using
+
 	-ics filename or URL
 
 you can provide one or more ICS calendar objects. The events in
@@ -364,10 +365,12 @@ From the ICS file, the *SUMMARY* attribute is added as text to
 the calendar.
 
 Example:
+
 	gocalendar -ics http://www.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics 
 	Add German holidays to your calendar.
 
 Example:
+
 	gocalendar -ics my.ics
 	Add your own local ICS file.
 
