@@ -142,6 +142,10 @@ License which accompanies this README.txt.  Read more about them at
 https://www.gnu.org/software/freefont.  Auxiliary files are created in a
 temporary directory.
 
+The Borel-font in the sample directory is licensed under the OPL
+and contained here only for illustrative purposes. 
+It was downloaded from https://fontesk.com/borel-font/.
+
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
 
 ### Font size
@@ -342,6 +346,29 @@ The image can also be URL, but keep in mind, that every image will be
 downloaded every time, because the files are downloaded to a temporary folder
 which is deleted after gocalendar is done.
 
+ICS iCalendar files
+===================
+
+Using
+	-ics filename or URL
+
+you can provide one or more ICS calendar objects. The events in
+the calendar will be added on matching dates.
+
+Timezones are ignored. There is still no automatic linebreaking
+and no prevention of overlap with other configuration event
+entries.
+
+From the ICS file, the *SUMMARY* attribute is added as text to
+the calendar.
+
+Example:
+	gocalendar -ics http://www.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics 
+	Add German holidays to your calendar.
+
+Example:
+	gocalendar -ics my.ics
+	Add your own local ICS file.
 
 Examples
 ========
