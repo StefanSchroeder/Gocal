@@ -16,11 +16,11 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"github.com/PuloV/ics-golang"
 	"github.com/goodsign/monday"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/paulrosania/go-charset/charset"
 	_ "github.com/paulrosania/go-charset/data"
-	"github.com/PuloV/ics-golang"
 	"github.com/soniakeys/meeus/v3/julian"
 	"github.com/soniakeys/meeus/v3/moonphase"
 	"io"
@@ -180,6 +180,9 @@ func convertCP(in string) (out string) {
 // list of gDate objects.
 func readICSfile(filename string, targetyear int) (eL []gDate) {
 
+	/* There is an ugly hack lurking here. The events in ICS
+	contain years, but we wanted the configuration to be
+	agnostic of years.*/
 	parser := ics.New()
 
 	ics.FilePath = "tmp/new/"
@@ -195,19 +198,17 @@ func readICSfile(filename string, targetyear int) (eL []gDate) {
 	go func() {
 		for event := range outputChan {
 			eventText := convertCP(event.GetSummary())
-			year  := event.GetStart().Format("2006")
-			mon  := event.GetStart().Format("01")
-			day  := event.GetStart().Format("02")
+			year := event.GetStart().Format("2006")
+			mon := event.GetStart().Format("01")
+			day := event.GetStart().Format("02")
 
 			yr, _ := strconv.ParseInt(year, 10, 32)
 			mo, _ := strconv.ParseInt(mon, 10, 32)
 			d, _ := strconv.ParseInt(day, 10, 32)
 			if int(targetyear) == int(yr) {
 				gcd := gDate{time.Month(mo), int(d), eventText, "", ""}
-				log.Println(gcd)
 				eL = append(eL, gcd)
 			}
-
 		}
 	}()
 	parser.Wait()
@@ -270,7 +271,7 @@ func readConfigurationfile(filename string) (eL []gDate) {
 	return eL
 }
 
-/// This function returns an array of Monthnames already in the
+// / This function returns an array of Monthnames already in the
 // right locale.
 func getLocalizedMonthNames(locale string) (monthnames [13]string) {
 
@@ -282,7 +283,7 @@ func getLocalizedMonthNames(locale string) (monthnames [13]string) {
 	return monthnames
 }
 
-/// This function returns an array of weekday names already in the
+// / This function returns an array of weekday names already in the
 // right locale.
 func getLocalizedWeekdayNames(locale string, cutoff int) (wdnames [8]string) {
 	for i := 0; i <= 6; i++ {

@@ -46,7 +46,5 @@ EXAMPLE
 		g := gocal.New(1,12,2010)
 		g.CreateCalendar("test-example01.pdf")
 	}
-
-
 */
 package gocal

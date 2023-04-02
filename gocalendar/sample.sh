@@ -3,7 +3,7 @@ C="pdftoppm "
 F="convert -antialias -bordercolor SkyBlue -border 4x4 "
 E="go run gocalendar.go"  
 D=../examples
-FONT=../sample-configuration/Borel-Regular.ttf
+FONT=data/Borel-Regular.ttf
 
 $E -o example01.pdf -p P -photos pics 1 2014
 $C  example01.pdf > example01.ppm 
@@ -13,7 +13,7 @@ $E -o example02.pdf -lang fr_FR -font sans 1 2015
 $C  example02.pdf >  example02.ppm 
 $F   example02.ppm  $D/example02.png 
 
-$E -o example03.pdf -wall golang-gopher.png -lang de_DE -font $FONT  1 2015
+$E -o example03.pdf -wall pics/golang-gopher.png -lang de_DE -font $FONT  1 2015
 $C  example03.pdf >  example03.ppm 
 $F   example03.ppm  $D/example03.png 
 
@@ -33,7 +33,7 @@ $E -o example07.pdf -p P -lang fr_FR -photo pics/taxi.JPG  4 2007
 $C  example07.pdf >  example07.ppm 
 $F   example07.ppm  $D/example07.png 
 
-$E -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2008
+$E -o example08.pdf -lang fr_FR -photo pics/golang-gopher.png  4 2008
 $C  example08.pdf >  example08.ppm 
 $F   example08.ppm  $D/example08.png 
 
@@ -76,6 +76,10 @@ $F   example17.ppm  $D/example17.png
 $E -o example18.pdf -yearB -fill sS 2018
 $C  example18.pdf >  example18.ppm 
 $F   example18.ppm  $D/example18.png 
+
+$E -o example19.pdf -ics data/german.ics 12 2023
+$C  example19.pdf >  example19.ppm 
+$F   example19.ppm  $D/example19.png 
 
 rm example*.ppm example*.pdf
 
