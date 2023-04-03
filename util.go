@@ -69,13 +69,13 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 		jdeNew := moonphase.New(decimalYear)
 		y, m, d := julian.JDToCalendar(jdeNew)
 		if (y == yr) && (m == mo) && (int(d) == i) {
-			//fmt.Printf("New moon on %d\n", int(d))
+			fmt.Printf("New moon on %d.%d.%d\n", int(d), int(m), int(y))
 			moon[int(d)] = "New"
 		}
 		jdeNew = moonphase.Full(decimalYear)
 		y, m, d = julian.JDToCalendar(jdeNew)
 		if (y == yr) && (m == mo) && (int(d) == i) {
-			//fmt.Printf("Full moon on %d\n", int(d))
+			fmt.Printf("Full moon on %d.%d.%d\n", int(d), int(m), int(y))
 			moon[int(d)] = "Full"
 		}
 		jdeNew = moonphase.First(decimalYear)

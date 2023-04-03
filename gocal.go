@@ -186,11 +186,11 @@ type myPdf struct {
 }
 
 func (pdf myPdf) fullMoon(x, y float64) {
-	pdf.Circle(x, y, pdf.moonSize, "F")
+	pdf.Circle(x, y, pdf.moonSize, "D")
 }
 
 func (pdf myPdf) newMoon(x, y float64) {
-	pdf.Circle(x, y, pdf.moonSize, "D")
+	pdf.Circle(x, y, pdf.moonSize, "F")
 }
 
 func (pdf myPdf) firstQuarter(x, y float64) {
