@@ -4,7 +4,7 @@
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
 [![Go Report Card](https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal)](https://goreportcard.com/report/github.com/StefanSchroeder/Gocal)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal/badge)](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal)
-
+[![codecov](https://codecov.io/github/StefanSchroeder/Gocal/branch/master/graph/badge.svg?token=SIRJ6HIFJV)](https://codecov.io/github/StefanSchroeder/Gocal)
 
 Gocal
 =====
@@ -367,12 +367,12 @@ the calendar.
 Example:
 
 	gocalendar -ics http://www.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics 
-	Add German holidays to your calendar.
+	# Add German holidays to your calendar (because why wouldn't you).
 
 Example:
 
 	gocalendar -ics my.ics
-	Add your own local ICS file.
+	# Add your own local ICS file.
 
 Examples
 ========
