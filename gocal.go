@@ -52,30 +52,47 @@ const (
 )
 
 var testedLanguage = map[string]bool{
-	"en_US": true,
-	"en_GB": true,
-	"da_DK": true,
-	"nl_BE": true,
-	"nl_NL": true,
-	"fi_FI": true,
-	"fr_FR": true,
-	"fr_CA": true,
-	"de_DE": true,
-	"hu_HU": true,
-	"it_IT": true,
-	"nn_NO": true,
-	"nb_NO": true,
-	"pt_PT": true,
-	"pt_BR": true,
-	"ro_RO": true,
-	"ru_RU": true,
-	"es_ES": true,
-	"sv_SE": true,
-	"tr_TR": true,
-	"bg_BG": true,
-	"zh_CN": true,
-	"zh_TW": true,
-	"zh_HK": true,
+	"en_US": true,  // English (United States)
+	"en_GB": true,  // English (United Kingdom)
+	"da_DK": true,  // Danish (Denmark)
+	"nl_BE": true,  // Dutch (Belgium)
+	"nl_NL": true,  // Dutch (Netherlands)
+	"fi_FI": true,  // Finnish (Finland)
+	"fr_FR": true,  // French (France)
+	"fr_CA": true,  // French (Canada)
+	"de_DE": true,  // German (Germany)
+	"hu_HU": true,  // Hungarian (Hungary)
+	"it_IT": true,  // Italian (Italy)
+	"nn_NO": true,  // Norwegian Nynorsk (Norway)
+	"nb_NO": true,  // Norwegian Bokmål (Norway)
+	"pl_PL": false,  // Polish (Poland)
+	"pt_PT": true,  // Portuguese (Portugal)
+	"pt_BR": true,  // Portuguese (Brazil)
+	"ro_RO": false,  // Romanian (Romania)
+	"ru_RU": false,  // Russian (Russia)
+	"es_ES": true,  // Spanish (Spain)
+	"ca_ES": true,  // Catalan (Spain)
+	"sv_SE": true,  // Swedish (Sweden)
+	"tr_TR": false,  // Turkish (Turkey)
+	"uk_UA": false,  // Ukrainian (Ukraine)
+	"bg_BG": false,  // Bulgarian (Bulgaria)
+	"zh_CN": false,  // Chinese (Mainland)
+	"zh_TW": false,  // Chinese (Taiwan)
+	"zh_HK": false,  // Chinese (Hong Kong)
+	"ko_KR": false,  // Korean (Korea)
+	"ja_JP": false,  // Japanese (Japan)
+	"el_GR": false,  // Greek (Greece)
+	"id_ID": true,  // Indonesian (Indonesia)
+	"fr_GP": true,  // French (Guadeloupe)
+	"fr_LU": true,  // French (Luxembourg)
+	"fr_MQ": true,  // French (Martinique)
+	"fr_RE": true,  // French (Reunion)
+	"fr_GF": true,  // French (French Guiana)
+	"cs_CZ": false,  // Czech (Czech Republic)
+	"sl_SI": false,  // Slovenian (Slovenia)
+	"lt_LT": false,  // Lithuanian (Lithuania)
+	"th_TH": false,  // Thai (Thailand)
+	"uz_UZ": true,  // Uzbek (Uzbekistan)
 }
 
 type Calendar struct {

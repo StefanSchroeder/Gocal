@@ -171,10 +171,12 @@ for manual notes.
 
 Gocal reads the LANG environment variable. If it matches one of 
 
-		en_US en_GB nl_BE nl_NL fi_FI fr_FR fr_CA de_DE
+	"ca_ES" "da_DK" "de_DE" "en_GB" "en_US" "es_ES" "fi_FI" "fr_CA" "fr_FR"
+	"fr_GF" "fr_GP" "fr_LU" "fr_MQ" "fr_RE" "hu_HU" "id_ID" "it_IT" "nb_NO" "nl_BE"
+	"nl_NL" "nn_NO" "pt_BR" "pt_PT" "sv_SE" "uz_UZ"
 
 the library goodsign/monday is used to translate the weekday names and month
-names.  Although this library supports a few other languages, I found that many
+names.  Although this library supports a few other languages, I found that some
 of the languages do not work with the fonts I tried. The language from the
 environment can be overridden with this parameter. If your LANG is not
 recognized, we default to en_US.
