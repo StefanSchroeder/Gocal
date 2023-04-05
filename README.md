@@ -144,7 +144,7 @@ https://www.gnu.org/software/freefont.  Auxiliary files are created in a
 temporary directory.
 
 The Borel-font in the sample directory is licensed under the OPL
-and contained here only for illustrative purposes. 
+and contained here only for testing purposes. 
 It was downloaded from https://fontesk.com/borel-font/.
 
 In addition you can provide your own TTF on the commandline if you prefer something fancy.
