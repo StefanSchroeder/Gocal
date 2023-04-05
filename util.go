@@ -12,6 +12,9 @@ package gocal
 // https://github.com/StefanSchroeder/Gocal
 //
 
+import _ "embed"
+
+
 import (
 	"bytes"
 	"encoding/xml"
@@ -101,13 +104,13 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 		jdeNew := moonphase.New(decimalYear)
 		y, m, d := julian.JDToCalendar(jdeNew)
 		if (y == yr) && (m == mo) && (int(d) == i) {
-			//fmt.Printf("New moon on %d\n", int(d))
+			fmt.Printf("New moon on %d.%d.%d\n", int(d), int(m), int(y))
 			moon[int(d)] = "New"
 		}
 		jdeNew = moonphase.Full(decimalYear)
 		y, m, d = julian.JDToCalendar(jdeNew)
 		if (y == yr) && (m == mo) && (int(d) == i) {
-			//fmt.Printf("Full moon on %d\n", int(d))
+			fmt.Printf("Full moon on %d.%d.%d\n", int(d), int(m), int(y))
 			moon[int(d)] = "Full"
 		}
 		jdeNew = moonphase.First(decimalYear)
@@ -125,7 +128,16 @@ func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 	}
 }
 
-// processFont creates a font usable by gofpdf from a TTF.
+//go:embed fonts/FreeSansBold.ttf
+var freesansbold []byte
+
+//go:embed fonts/FreeMonoBold.ttf
+var freemonobold []byte
+
+//go:embed fonts/FreeSerifBold.ttf
+var freeserifbold []byte
+
+// processFont creates a font usable from a TTF.
 // It also sets up the temporary directory to store the
 // intermediate files.
 func processFont(fontFile string) (fontName, tempDirname string) {
@@ -137,13 +149,13 @@ func processFont(fontFile string) (fontName, tempDirname string) {
 
 	if fontFile == "mono" {
 		fontFile = tempDirname + string(os.PathSeparator) + "freemonobold.ttf"
-		ioutil.WriteFile(fontFile, getFreeMonoBold(), 0700)
+		ioutil.WriteFile(fontFile, freemonobold, 0700)
 	} else if fontFile == "serif" {
 		fontFile = tempDirname + string(os.PathSeparator) + "freeserifbold.ttf"
-		ioutil.WriteFile(fontFile, getFreeSerifBold(), 0700)
+		ioutil.WriteFile(fontFile, freeserifbold, 0700)
 	} else if fontFile == "sans" {
 		fontFile = tempDirname + string(os.PathSeparator) + "freesansbold.ttf"
-		ioutil.WriteFile(fontFile, getFreeSansBold(), 0700)
+		ioutil.WriteFile(fontFile, freesansbold, 0700)
 	}
 	err = ioutil.WriteFile(tempDirname+string(os.PathSeparator)+"cp1252.map", []byte(codepageCP1252), 0700)
 	if err != nil {
