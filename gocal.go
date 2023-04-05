@@ -932,10 +932,10 @@ func (g *Calendar) CreateCalendar(fn string) {
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 
-		fmt.Printf("%s\n", "\u25cf") // prints  👿
+		/*fmt.Printf("%s\n", "\u25cf") // prints  👿
 		fmt.Printf("%s\n", "\u25d0") // prints  👿
 		fmt.Printf("%s\n", "\u25d1") // prints  👿
-		fmt.Printf("%s\n", "\u25cb") // prints  👿
+		fmt.Printf("%s\n", "\u25cb") // prints  👿*/
 
 	}
 	pdf.OutputAndClose(docWriter(pdf, fn))

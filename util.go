@@ -84,7 +84,6 @@ func computeMoonphasesJ(moonJ map[string]string, yr int) {
 			jd := moon_funcs[moonkey](decimalYear)
 			y, m, d := julian.JDToCalendar(jd)
 			moonString := fmt.Sprintf("%04d-%02d-%02d", y, m, int(d))
-			fmt.Printf("i=%d, key=%s, val=%s\n", i, moonkey, moonString)
 			moonJ[moonString] = moonkey
 		}
 	}
