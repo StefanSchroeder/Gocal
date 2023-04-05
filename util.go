@@ -55,6 +55,38 @@ func removeTempdir(d string) {
 	os.RemoveAll(d)
 }
 
+// computeMoonphasesJ populates a map for the entire year.
+// Keys are dates in YYYY-MM-DD format,
+// Values are strings from the list Full, New, First, Last.
+func computeMoonphasesJ(moonJ map[string]string, yr int) {
+	daysInYear := 365
+	if julian.LeapYearGregorian(yr) {
+		daysInYear = 366
+	}
+
+	moon_funcs := map[string]func(float64) float64{
+		"Full":  moonphase.Full,
+		"New":   moonphase.New,
+		"First": moonphase.First,
+		"Last":  moonphase.Last,
+	}
+
+	// For each days of the year we compute the
+	// nearest Full/New/First/Last moonphase.
+	// The dates for each are crammed into the result map.
+	for i := 0; i < daysInYear; i++ {
+		decimalYear := float64(yr) +
+			float64(i-1)/float64(daysInYear)
+		for moonkey, _ := range moon_funcs {
+			jd := moon_funcs[moonkey](decimalYear)
+			y, m, d := julian.JDToCalendar(jd)
+			moonString := fmt.Sprintf("%04d-%02d-%02d", y, m, int(d))
+			fmt.Printf("i=%d, key=%s, val=%s\n", i, moonkey, moonString)
+			moonJ[moonString] = moonkey
+		}
+	}
+}
+
 // computeMoonphases fills a map with moonphase information.
 func computeMoonphases(moon map[int]string, da int, mo int, yr int) {
 	daysInYear := 365

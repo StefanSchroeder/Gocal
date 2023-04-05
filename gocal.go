@@ -65,33 +65,33 @@ var testedLanguage = map[string]bool{
 	"it_IT": true,  // Italian (Italy)
 	"nn_NO": true,  // Norwegian Nynorsk (Norway)
 	"nb_NO": true,  // Norwegian Bokmål (Norway)
-	"pl_PL": false,  // Polish (Poland)
+	"pl_PL": false, // Polish (Poland)
 	"pt_PT": true,  // Portuguese (Portugal)
 	"pt_BR": true,  // Portuguese (Brazil)
-	"ro_RO": false,  // Romanian (Romania)
-	"ru_RU": false,  // Russian (Russia)
+	"ro_RO": false, // Romanian (Romania)
+	"ru_RU": false, // Russian (Russia)
 	"es_ES": true,  // Spanish (Spain)
 	"ca_ES": true,  // Catalan (Spain)
 	"sv_SE": true,  // Swedish (Sweden)
-	"tr_TR": false,  // Turkish (Turkey)
-	"uk_UA": false,  // Ukrainian (Ukraine)
-	"bg_BG": false,  // Bulgarian (Bulgaria)
-	"zh_CN": false,  // Chinese (Mainland)
-	"zh_TW": false,  // Chinese (Taiwan)
-	"zh_HK": false,  // Chinese (Hong Kong)
-	"ko_KR": false,  // Korean (Korea)
-	"ja_JP": false,  // Japanese (Japan)
-	"el_GR": false,  // Greek (Greece)
+	"tr_TR": false, // Turkish (Turkey)
+	"uk_UA": false, // Ukrainian (Ukraine)
+	"bg_BG": false, // Bulgarian (Bulgaria)
+	"zh_CN": false, // Chinese (Mainland)
+	"zh_TW": false, // Chinese (Taiwan)
+	"zh_HK": false, // Chinese (Hong Kong)
+	"ko_KR": false, // Korean (Korea)
+	"ja_JP": false, // Japanese (Japan)
+	"el_GR": false, // Greek (Greece)
 	"id_ID": true,  // Indonesian (Indonesia)
 	"fr_GP": true,  // French (Guadeloupe)
 	"fr_LU": true,  // French (Luxembourg)
 	"fr_MQ": true,  // French (Martinique)
 	"fr_RE": true,  // French (Reunion)
 	"fr_GF": true,  // French (French Guiana)
-	"cs_CZ": false,  // Czech (Czech Republic)
-	"sl_SI": false,  // Slovenian (Slovenia)
-	"lt_LT": false,  // Lithuanian (Lithuania)
-	"th_TH": false,  // Thai (Thailand)
+	"cs_CZ": false, // Czech (Czech Republic)
+	"sl_SI": false, // Slovenian (Slovenia)
+	"lt_LT": false, // Lithuanian (Lithuania)
+	"th_TH": false, // Thai (Thailand)
 	"uz_UZ": true,  // Uzbek (Uzbekistan)
 }
 
@@ -186,11 +186,11 @@ type myPdf struct {
 }
 
 func (pdf myPdf) fullMoon(x, y float64) {
-	pdf.Circle(x, y, pdf.moonSize, "F")
+	pdf.Circle(x, y, pdf.moonSize, "D")
 }
 
 func (pdf myPdf) newMoon(x, y float64) {
-	pdf.Circle(x, y, pdf.moonSize, "D")
+	pdf.Circle(x, y, pdf.moonSize, "F")
 }
 
 func (pdf myPdf) firstQuarter(x, y float64) {
@@ -784,6 +784,10 @@ func (g *Calendar) CreateCalendar(fn string) {
 		ch *= 0.5
 	}
 
+	// Map of date to String for all days in the YEAR.
+	moonj := make(map[string]string)
+	computeMoonphasesJ(moonj, wantyear)
+
 	calendarTable := func(mymonth int, myyear int) {
 		pdf.SetFont(calFont, "", WEEKDAYFONTSIZE*fontScale)
 		for weekday := 0; weekday <= 6; weekday++ { // Print weekdays in first row
@@ -800,11 +804,6 @@ func (g *Calendar) CreateCalendar(fn string) {
 		day -= int64(t.Weekday())
 		if day > 0 { // adjust silly exception where month starts w/ Sunday.
 			day -= 7
-		}
-
-		moon := make(map[int]string)
-		if g.OptHideMoon == false {
-			computeMoonphases(moon, int(day), mymonth, myyear)
 		}
 
 		for i := 0; i < LINES; i++ {
@@ -830,8 +829,9 @@ func (g *Calendar) CreateCalendar(fn string) {
 				}
 				pdf.SetCellMargin(CELLMARGIN)
 
-				// Add moon icon
-				if m, ok := moon[int(day)]; ok == true {
+				// Do we have a relevant moon today?
+				todayString := today.Format("2006-01-02")
+				if m, ok := moonj[todayString]; ok == true {
 					x, y := pdf.GetXY()
 					moonLocX, moonLocY := x+cw*0.82, y+ch*0.2
 
