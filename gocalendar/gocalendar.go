@@ -134,6 +134,7 @@ func main() {
 	g.SetFooter(*optFooter)
 	g.SetFillpattern(*optFillpattern)
 	/*
+	  // How to create an event:
 	  g.AddEvent(31, 1, "one", "")
 	  g.AddEvent(28, 2, "two", "")
 	  g.AddEvent(31, 3, "three", "")
