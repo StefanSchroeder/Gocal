@@ -6,33 +6,35 @@
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal/badge)](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal)
 [![codecov](https://codecov.io/github/StefanSchroeder/Gocal/branch/master/graph/badge.svg?token=SIRJ6HIFJV)](https://codecov.io/github/StefanSchroeder/Gocal)
 
-Gocal
-=====
+# "Gocal and Gocalendar"
 
-Gocal is a simple clone of pcal. It's a standalone tool and a library to create
-monthly calendars in PDF with a no-nonsense attitude. By default it creates a
-12-page PDF with one month per page for the current year.  
-The library is called gocal, while the standalone tool is named gocalendar.
+# Name 
+Gocal is a simple clone of pcal. 
 
-Gocalendar can be built with 'go build' in the gocalendar folder.
-
-The following arguments are supported:
-
+# Synopsis
 	gocalendar 2024 # Create a 12-page calendar for YEAR, e.g. 2024
 
 	gocalendar 5 2025 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2025
 
 	gocalendar 5 7 2026 # Create a sequence from BEGIN to END in YEAR
 
-There is also a year mode that shows the entire year on one page.
-Have a look at the examples below to get an idea of gocal's capabilities.
+# Description
+
+The project includes a cli tool and a library to create
+monthly calendars in PDF. By default it creates a
+12-page PDF with one month per page for the current year.  
+The library is called gocal, while the standalone tool is named gocalendar.
+
+Gocalendar can be built with 'go build' in the gocalendar folder.
+
+There is a year mode that shows the entire year on one page.
+Have a look at the examples to get an idea of Gocal's capabilities.
 
 Gocal was built because of pcal's lack of support for UTF-8 and because I feel 
 that Postscript is obsolete.
 
 
-Features
-========
+# Features
 
 * PDF generation
 * Week number on every Monday
@@ -61,8 +63,7 @@ It is suggested to hide some of the optional fields or the cells will look
 crowded.
 
 
-Build instructions
-==================
+# Build 
 
 Run 
 
@@ -87,9 +88,7 @@ You create a bunch of sample files (and in passing test gocal) by running
 	go test
 
 
-Example library use
-===================
-
+# Example library use
 
     package main
     import (
@@ -100,19 +99,16 @@ Example library use
       g.CreateCalendar("test-example01.pdf")
     }
 
-License
-=======
+# License
 
 The license is in the LICENSE file. (It's MIT.)
 
-API-documentation
-=================
+# API-documentation
 
 For the API documentation of gocal the library [visit the auto-generated docs on
 godoc.org](https://pkg.go.dev/github.com/StefanSchroeder/Gocal).
 
-Options of gocalendar
-=====================
+# Options of gocalendar
 
 ### Help
 
@@ -307,8 +303,7 @@ Example:
 This will put three month on each page.
 
 
-Event File
-==================
+# Event File
 
 This is a sample file event configuration file. 
 Image can be a URL, which must start with http://
@@ -349,8 +344,7 @@ The image can also be URL, but keep in mind, that every image will be
 downloaded every time, because the files are downloaded to a temporary folder
 which is deleted after gocalendar is done.
 
-ICS iCalendar files
-===================
+# ICS iCalendar files
 
 Using
 
@@ -376,8 +370,7 @@ Example:
 	gocalendar -ics my.ics
 	# Add your own local ICS file.
 
-Examples
-========
+# Examples
 
 There is more than one way to create some example calendars.
 
@@ -465,15 +458,13 @@ added for these screenshots.
 	gocalendar -o example19.pdf -ics data/german.ics 12 2023
 
     
-Roadmap
-=======
+# Roadmap
 
 This is a mature application that I use regularly and that meets all
 my needs. If you are looking for a fancy option, let me know by
 writing an issue. I will consider adding it.
 
-Known bugs
-==========
+# Known bugs
 
 * When you have multiple events on the same date, they are overlapping. I
   don't intend to fix that. Use the Newline to arrange your stuff.
@@ -485,10 +476,12 @@ Known bugs
   generate a calendar for "13 2014", which will panic.
 
 
-Acknowledgments
-================
+# Acknowledgments
 
 I'd like to thank the developers who wrote the great libraries that **gocal** is 
 relying on, especially Sonia Keys and Kurt Jung and Йордан Пулов.
 
+# Copyright
+
+(C) Copyright Stefan Schröder
 

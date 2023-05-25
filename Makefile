@@ -17,3 +17,9 @@ all:
 	go run gocalendar/gocalendar.go -spread 6 -yearB -o test-output/test-example_bo6.pdf -lang de_DE 2021
 	go run gocalendar/gocalendar.go -spread 12 -yearB -o test-output/test-example_bo12.pdf -lang de_DE 2021
 	
+man:
+	cat README.md | \
+	sed -n '8,9999p' | \
+	 awk ' /^#/ { print toupper($$0)}; !/^#/{ print $$0} ' > gocalendar_temp.md
+	~/go/bin/go-md2man -in gocalendar_temp.md -out gocalendar.man
+	rm gocalendar_temp.md

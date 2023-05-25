@@ -1,0 +1,709 @@
+.nh
+.TH "GOCAL AND GOCALENDAR"
+
+.SH NAME
+.PP
+Gocal is a simple clone of pcal.
+
+
+.SH SYNOPSIS
+.EX
+gocalendar 2024 # Create a 12-page calendar for YEAR, e.g. 2024
+
+gocalendar 5 2025 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2025
+
+gocalendar 5 7 2026 # Create a sequence from BEGIN to END in YEAR
+
+.EE
+
+
+.SH DESCRIPTION
+.PP
+The project includes a cli tool and a library to create
+monthly calendars in PDF. By default it creates a
+12-page PDF with one month per page for the current year.
+.br
+The library is called gocal, while the standalone tool is named gocalendar.
+
+.PP
+Gocalendar can be built with 'go build' in the gocalendar folder.
+
+.PP
+There is a year mode that shows the entire year on one page.
+Have a look at the examples to get an idea of Gocal's capabilities.
+
+.PP
+Gocal was built because of pcal's lack of support for UTF-8 and because I feel
+that Postscript is obsolete.
+
+
+.SH FEATURES
+.RS
+.IP \(bu 2
+PDF generation
+.IP \(bu 2
+Week number on every Monday
+.IP \(bu 2
+Day of year
+.IP \(bu 2
+Moon phases
+.IP \(bu 2
+Events in XML configuration file
+.IP \(bu 2
+Several languages
+.IP \(bu 2
+Wallpaper option
+.IP \(bu 2
+Photo calendar option (from single image or directory)
+.IP \(bu 2
+Page orientation and paper size option
+.IP \(bu 2
+Font selection
+.IP \(bu 2
+Year calendar (two layouts)
+.IP \(bu 2
+Import of ICS files (local file or URL)
+
+.RE
+
+.PP
+The main design goal of gocal is simplicity. While it is absolutely possible to create
+an application where every single stroke is configurable, I believe that most
+of you are too busy to play around with lots of options and want a pleasant
+calendar out-of-the-box. That's what gocal provides.
+
+.PP
+The power of gocal is based on the cool libraries that it includes. This
+implies that several of the options are actually options of the libraries, e.g.
+the paper format (gofpdf) or the supported languages (goodsign/monday).
+
+.PP
+It is suggested to hide some of the optional fields or the cells will look
+crowded.
+
+
+.SH BUILD
+.PP
+Run
+
+.EX
+go install github.com/StefanSchroeder/Gocal/gocalendar@latest
+
+.EE
+
+.PP
+This will install the \fIgocalendar\fP executable in your go-bin folder.
+
+.PP
+Or the long haul:
+
+.PP
+Run
+
+.EX
+go get github.com/StefanSchroeder/Gocal
+
+.EE
+
+.PP
+Gocal has a quite a few dependencies that go should resolve automatically.
+
+.PP
+To build the standalone tool, change into the gocalendar directory and run
+
+.EX
+go build 
+
+.EE
+
+.PP
+You create a bunch of sample files (and in passing test gocal) by running
+
+.EX
+go test
+
+.EE
+
+
+.SH EXAMPLE LIBRARY USE
+.EX
+package main
+import (
+  "github.com/StefanSchroeder/gocal"
+)
+func main() {
+  g := gocal.New(1,12,2010)
+  g.CreateCalendar("test-example01.pdf")
+}
+
+.EE
+
+
+.SH LICENSE
+.PP
+The license is in the LICENSE file. (It's MIT.)
+
+
+.SH API-DOCUMENTATION
+.PP
+For the API documentation of gocal the library visit the auto-generated docs on
+godoc.org
+\[la]https://pkg.go.dev/github.com/StefanSchroeder/Gocal\[ra]\&.
+
+
+.SH OPTIONS OF GOCALENDAR
+.SS HELP
+.EX
+	-h  Help: Summarizes the options.
+
+.EE
+
+.SS FOOTER
+.EX
+	-f="Gocal": Footer note
+
+.EE
+
+.PP
+Change the string at the bottom of the page. To disable the footer, simply set
+it to the empty string.
+
+.SS FONT
+.EX
+	-font="": font
+
+	-font serif    (Times lookalike)
+	-font mono     (Courier lookalike)
+	-font sans     (Arial lookalike)
+	-font path/to/font.ttf    (your favorite font)
+
+.EE
+
+.PP
+Set the font. Only truetype fonts are supported. Look into c:\\Windows\\Fonts on
+Windows and /usr/share/fonts to see what fonts you have. Gocal comes with three
+fonts built-in: The Gnu FreeMonoBold, FreeSerifBold and FreeSansBold. They look
+pretty similar to (in that order) Courier, Times and Arial and should meet all
+your standard font needs.  These fonts are licensed under the Gnu FreeFont
+License which accompanies this README.txt.  Read more about them at
+https://www.gnu.org/software/freefont.  Auxiliary files are created in a
+temporary directory.
+
+.PP
+The Borel-font in the sample directory is licensed under the OPL
+and contained here only for testing purposes.
+It was downloaded from https://fontesk.com/borel-font/.
+
+.PP
+In addition you can provide your own TTF on the commandline if you prefer something fancy.
+
+.SS FONT SIZE
+.PP
+Font sizes relative to the default size can be set with
+
+.EX
+-fontscale floatingpoint number
+
+.EE
+
+.PP
+The default is 1.0 and typically you shouldn't need to change the font size
+drastically. But since weekday names in some languages might be a lot longer
+than in other languages, ugly collisions may occur.  To avoid that you can
+rescale the fonts a little by setting -fontscale to 0.9.  There is a shortcut
+to reduce the fontsizes globally to 75% of the default size to gain more room
+for manual notes.
+
+.EX
+-small
+
+.EE
+
+.SS LANGUAGE
+.EX
+	-lang="": Language
+
+.EE
+
+.PP
+Gocal reads the LANG environment variable. If it matches one of
+
+.EX
+"ca_ES" "da_DK" "de_DE" "en_GB" "en_US" "es_ES" "fi_FI" "fr_CA" "fr_FR"
+"fr_GF" "fr_GP" "fr_LU" "fr_MQ" "fr_RE" "hu_HU" "id_ID" "it_IT" "nb_NO" "nl_BE"
+"nl_NL" "nn_NO" "pt_BR" "pt_PT" "sv_SE" "uz_UZ"
+
+.EE
+
+.PP
+the library goodsign/monday is used to translate the weekday names and month
+names.  Although this library supports a few other languages, I found that some
+of the languages do not work with the fonts I tried. The language from the
+environment can be overridden with this parameter. If your LANG is not
+recognized, we default to en_US.
+
+.SS HIDING STUFF
+.EX
+	-nodoy: Hide day of year
+
+	-nomoon: Hide moon phases
+
+	-noweek: Hide week number
+
+.EE
+
+.PP
+The week number according to ISO-8601 is added on every Monday by default.
+
+.EX
+	-noother: Hide neighbormonth days
+
+.EE
+
+.PP
+This option hides the leading and trailing days of the neighbor months.
+By default these days are printed in light grey.
+
+.EX
+	-plain This will hide everything that can be hidden (but not neighbormonth days).
+
+.EE
+
+.SS OUTPUT
+.EX
+	-o="output.pdf": Output filename
+
+.EE
+
+.SS PAPER ORIENTATION
+.EX
+	-p="L": Orientation (L)andscape/(P)ortrait
+
+.EE
+
+.PP
+Typically you want landscape for calendars without image and portrait for calendars with image.
+
+.SS PAPER FORMAT
+.EX
+	-paper="A4": Paper format (A3 A4 A5 Letter Legal)
+
+.EE
+
+.SS GRAYING OUT
+.EX
+-fill configure filled grid
+
+.EE
+
+.PP
+Can be any combination of:
+
+.EX
+X even columns filled gray
+
+x odd columns filled gray
+
+Y even rows filled gray
+
+y odd rows filled gray
+
+S Sundays filled gray
+
+s Saturdays filled gray
+
+c checkerboard odd
+
+C checkerboard even
+
+1 Monday
+
+2 Tuesday
+
+3 Wednesday
+
+4 Thursday
+
+5 Friday
+
+6 Saturday
+
+7 Sunday
+
+.EE
+
+.PP
+Example:
+
+.EX
+-fill "x3Y"
+
+.EE
+
+.PP
+The gray boxes are not transparent; therefore it doesn't make a lot
+of sense to combine gray boxes with a wallpaper image.
+
+.SS PHOTO / PHOTOS / WALLPAPER
+.EX
+	-photo=filename: Show single photo (single image in PNG JPG GIF)
+
+.EE
+
+.PP
+This option will add this image to every month.
+The filename can be a URL, qualified with http:// and it must have a valid image extension.
+
+.EX
+	-photos=directory: Show multiple photos (directory with PNG JPG GIF)
+
+.EE
+
+.PP
+e.g. gocal -photos images/
+
+.PP
+This option will add the twelve first files as images to the twelve month.  If
+less than twelve files are found, the sequence will re-start after the last
+image.  This will not work if there are non-image files in the directory (among
+the first twelve).  The directory option does NOT support URLs.
+
+.EX
+	-wall=filename: Show wallpaper PNG JPG GIF
+
+.EE
+
+.PP
+e.g. gocal -wall gopher.png
+
+.PP
+This option will add this image to every month as a background. You should only
+use images with a bright tone so that you do not obstruct the usefulness of the
+calendar.  The filename can be a URL, and must start with http:// and must have
+a valid image extension.
+
+.SS YEAR CALENDAR
+.EX
+-yearA 
+
+-yearB
+
+.EE
+
+.PP
+Two different layouts are available. One with the months on the top and the
+days on the left and vice versa. Obviously there is less space for the
+individual day in this mode. Still, many of the options are available here.
+
+.EX
+-spread NUMBER
+
+.EE
+
+.PP
+In the year calendars, the entire calendar is put on one page. Using the
+spread option, you can spread the year across NUMBER pages. Valid values are
+1 (default), 2, 3, 4, 6 and 12. Using 12 is essentially the same as not using the
+year mode, because it will put every month on its own page.
+
+.PP
+Example:
+
+.PP
+-yearB -spread 4
+
+.PP
+This will put three month on each page.
+
+
+.SH EVENT FILE
+.PP
+This is a sample file event configuration file.
+Image can be a URL, which must start with http://
+
+.EX
+<Gocal>
+  <Gocaldate date="1/15"  text="Alice" />
+  <Gocaldate date="2/15"  text="Bob" />
+  <Gocaldate date="3/15"  text="Charles" />
+  <Gocaldate date="4/15"  text="Daisy" />
+  <Gocaldate date="5/15"  text="Æþelbryht" />
+  <Gocaldate date="6/15"  text="Frank" />
+  <Gocaldate date="6/15"  text="\\nGeorge" />
+  <Gocaldate date="7/15"  text="Henry" />
+  <Gocaldate date="8/15"  text="Isildur" />
+  <Gocaldate date="9/15"  text="Ethelbert" />
+  <Gocaldate date="10/15"  text="Æþelbyrht" image="golang-gopher.png" />
+  <Gocaldate date="11/15"  text="Eðilberht" />
+  <Gocaldate date="Monday" text="Run Marathon" />
+  <Gocaldate date="*/20" text="Pay rent" />
+</Gocal>
+
+.EE
+
+.PP
+Please note the cool Anglo-Saxon/Scandinavian letters, thanks to UTF-8 support.
+
+.PP
+This is a sample of the configuration file for gocal. It has all the supported
+features. date is in MONTH/DAY format. The text may contain a literal \\n
+newline.  For the month a * is permitted and it obviously means 'every month'.
+You can use a leading newline symbol to make the text wrap to the next line in
+case of overlap. THe optional image tag will put an image into the cell.
+
+.PP
+For the day an English Weekday name is permitted. It means: Every
+matching weekday.
+
+.PP
+I was considering to allow to configure all the options from the command line
+also as parameters in the XML, but I think it's not really that important.
+
+.PP
+The image can also be URL, but keep in mind, that every image will be
+downloaded every time, because the files are downloaded to a temporary folder
+which is deleted after gocalendar is done.
+
+
+.SH ICS ICALENDAR FILES
+.PP
+Using
+
+.EX
+-ics filename or URL
+
+.EE
+
+.PP
+you can provide one or more ICS calendar objects. The events in
+the calendar will be added on matching dates.
+
+.PP
+Timezones are ignored. There is still no automatic linebreaking
+and no prevention of overlap with other configuration event
+entries.
+
+.PP
+From the ICS file, the \fISUMMARY\fP attribute is added as text to
+the calendar.
+
+.PP
+Example:
+
+.EX
+gocalendar -ics http://www.google.com/calendar/ical/de.german%23holiday%40group.v.calendar.google.com/public/basic.ics 
+# Add German holidays to your calendar (because why wouldn't you).
+
+.EE
+
+.PP
+Example:
+
+.EX
+gocalendar -ics my.ics
+# Add your own local ICS file.
+
+.EE
+
+
+.SH EXAMPLES
+.PP
+There is more than one way to create some example calendars.
+
+.PP
+You can use \fB\fCgo test\fR to validate that the library works
+or you can run \fB\fCmake\fR after compilation to check that the standalone
+tool works. Both procedures provide ample suggestions what you can do.
+
+.PP
+The blue frames are not part of the Gocal output, but have been
+added for these screenshots.
+
+.PP
+
+
+.EX
+gocalendar -o example01.pdf -p P -photos pics 1 2026
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example02.pdf -lang fr_FR -font sans 2027
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example03.pdf -wall golang-gopher.png -lang de_DE -font data/Borel-Regular.ttf 2028
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example04.pdf -lang de_DE -font mono 2 2029
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example05.pdf -lang nl_NL -plain 3 2030
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example06.pdf -font data/Borel-Regular.ttf -lang en_US 4 2031
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example07.pdf -p P -lang fr_FR -photo pics\\taxi.JPG 4 2032
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example08.pdf -lang fr_FR -photo golang-gopher.png  4 2033
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example09.pdf -lang fi_FI -font serif -p L 4 2034
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example10.pdf -lang fi_FI -font serif -p L 12 2035
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example11.pdf -lang de_DE -font sans -p L 6 9 2036
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example12.pdf -p P -photo http://golang.org/doc/gopher/frontpage.png 7 2037
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example13.pdf -font sans -noother 7 2038
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example14.pdf -small 2 2039
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example15.pdf -yearA 2040
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example16.pdf -yearB 2041
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example17.pdf -yearA -fill "c" 2042
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example18.pdf -yearB -fill "sS" 2043
+
+.EE
+
+.PP
+
+
+.EX
+gocalendar -o example19.pdf -ics data/german.ics 12 2023
+
+.EE
+
+
+.SH ROADMAP
+.PP
+This is a mature application that I use regularly and that meets all
+my needs. If you are looking for a fancy option, let me know by
+writing an issue. I will consider adding it.
+
+
+.SH KNOWN BUGS
+.RS
+.IP \(bu 2
+When you have multiple events on the same date, they are overlapping. I
+don't intend to fix that. Use the Newline to arrange your stuff.
+.IP \(bu 2
+Not all text will fit into the cells with some settings, because the font size is
+not adapted dynamically to the paper format. It's a feature, not a bug.
+.IP \(bu 2
+When using the A5 paper size, the last row of a page wraps to the next page.
+.IP \(bu 2
+Some warnings in libraries might irritate the user.
+.IP \(bu 2
+The dates and months are not validated. Nothing prevents you from trying to
+generate a calendar for "13 2014", which will panic.
+
+.RE
+
+
+.SH ACKNOWLEDGMENTS
+.PP
+I'd like to thank the developers who wrote the great libraries that \fBgocal\fP is
+relying on, especially Sonia Keys and Kurt Jung and Йордан Пулов.
+
+
+.SH COPYRIGHT
+.PP
+(C) Copyright Stefan Schröder
