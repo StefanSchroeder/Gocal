@@ -21,5 +21,5 @@ man:
 	cat README.md | \
 	sed -n '8,9999p' | \
 	 awk ' /^#/ { print toupper($$0)}; !/^#/{ print $$0} ' > gocalendar_temp.md
-	~/go/bin/go-md2man -in gocalendar_temp.md -out gocalendar.man
+	go-md2man -in gocalendar_temp.md -out gocalendar.man
 	rm gocalendar_temp.md
