@@ -54,7 +54,6 @@ var optHideOtherMonths = flag.Bool("noother", false, "Hide neighboring month day
 var optNocolor = flag.Bool("nocolor", false, "Sundays and Saturdays in black, instead of red.")
 var optYearA = flag.Bool("yearA", false, "Year calendar (design A)")
 var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
-var optCheckers = flag.Bool("checker", false, "Fill grid with checkerboard.")
 var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
 

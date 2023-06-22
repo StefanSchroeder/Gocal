@@ -119,7 +119,6 @@ type Calendar struct {
 	OptNocolor         bool
 	EventList          []gDate
 	OptCutWeekday      int
-	OptCheckers        bool
 	OptFillpattern     string
 	OptYearSpread      int
 	OptICS             []string
@@ -147,7 +146,6 @@ func New(b int, e int, y int) *Calendar {
 		false,   // OptNocolor
 		nil,     // EventList
 		0,       // OptCutWeekday
-		false,   // OptCheckers
 		"",      // OptFillpattern
 		1,       // OptYearSpread
 		nil,     // OptICS
@@ -235,7 +233,7 @@ func docWriter(pdf *gofpdf.Fpdf, fname string) *pdfWriter {
 		var err error
 		pw.fl, err = os.Create(pw.pdfFilename)
 		if err != nil {
-			pdf.SetErrorf("# Error opening output file.")
+			pdf.SetErrorf("# Error opening output file '%s'", pw.pdfFilename)
 		}
 	}
 	return pw
