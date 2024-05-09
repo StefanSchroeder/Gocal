@@ -122,6 +122,13 @@ godoc.org](https://pkg.go.dev/github.com/StefanSchroeder/Gocal).
 Change the string at the bottom of the page. To disable the footer, simply set
 it to the empty string. 
 
+### Margin note
+
+		-margin="Some string": A margin note on the right margin.
+
+A note that that can easily be read when flipping through pages.
+E.g. when you have a lot of calendars for staff in a binder.
+
 ### Font
 
 		-font="": font

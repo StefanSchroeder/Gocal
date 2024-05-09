@@ -686,6 +686,12 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 		pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
+		pdf.TransformBegin()
+		ctrX := 210.0 * 0.96
+		ctrY := 297.0 * 0.05
+		pdf.TransformRotate(270, ctrX, ctrY)
+		pdf.Text(ctrX, ctrY, fmt.Sprintf("%s", g.OptMargin))
+		pdf.TransformEnd()
 	}
 
 	pdf.OutputAndClose(docWriter(pdf, fn))
@@ -820,6 +826,7 @@ func (g *Calendar) CreateCalendar(fn string) {
 
 		for i := 0; i < LINES; i++ {
 			for j := 0; j < COLUMNS; j++ {
+				pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
 				today := time.Date(myyear, time.Month(mymonth), 1, 0, 0, 0, 0, time.UTC).Add(time.Duration(day) * 24 * 60 * 60 * time.Second)
 				fill := g.WantFill(i, j, today.Weekday())
 
@@ -946,6 +953,12 @@ func (g *Calendar) CreateCalendar(fn string) {
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 
+		pdf.TransformBegin()
+		ctrX := 210.0 * 0.96
+		ctrY := 297.0 * 0.05
+		pdf.TransformRotate(270, ctrX, ctrY)
+		pdf.Text(ctrX, ctrY, fmt.Sprintf("%s", g.OptMargin))
+		pdf.TransformEnd()
 		/*fmt.Printf("%s\n", "\u25cf") // prints  👿
 		fmt.Printf("%s\n", "\u25d0") // prints  👿
 		fmt.Printf("%s\n", "\u25d1") // prints  👿
