@@ -304,7 +304,7 @@ Example:
 
     -yearB -spread 4
 
-This will put three month on each page.
+This will put three months on each page.
 
 
 # Event File
