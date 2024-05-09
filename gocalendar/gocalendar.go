@@ -56,6 +56,7 @@ var optYearA = flag.Bool("yearA", false, "Year calendar (design A)")
 var optYearB = flag.Bool("yearB", false, "Year calendar (design B)")
 var optFillpattern = flag.String("fill", "", "Set grid fill pattern.")
 var optVersion = flag.Bool("v", false, "Version.")
+var optMargin = flag.String("margin", "", "Margin comment")
 
 func main() {
 	flag.Var(&configFiles, "config", "Configuration XML files.")
@@ -131,6 +132,7 @@ func main() {
 	g.SetPhotos(*optPhotos)
 	g.SetPhoto(*optPhoto)
 	g.SetFooter(*optFooter)
+	g.SetMargin(*optMargin)
 	g.SetFillpattern(*optFillpattern)
 	/*
 	  // How to create an event:

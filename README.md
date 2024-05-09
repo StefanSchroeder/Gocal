@@ -12,6 +12,7 @@
 Gocal is a simple clone of pcal. 
 
 # Synopsis
+
 	gocalendar 2024 # Create a 12-page calendar for YEAR, e.g. 2024
 
 	gocalendar 5 2025 # Create a 1-page calendar for the MONTH in YEAR, e.g. 5 2025
@@ -25,7 +26,7 @@ monthly calendars in PDF. By default it creates a
 12-page PDF with one month per page for the current year.  
 The library is called gocal, while the standalone tool is named gocalendar.
 
-Gocalendar can be built with 'go build' in the gocalendar folder.
+Gocalendar can be built with `go build` in the gocalendar folder.
 
 There is a year mode that shows the entire year on one page.
 Have a look at the examples to get an idea of Gocal's capabilities.
@@ -227,10 +228,6 @@ Can be any combination of:
 
     s Saturdays filled gray
   
-    c checkerboard odd
-
-    C checkerboard even
-
     1 Monday
 
     2 Tuesday
@@ -298,7 +295,7 @@ year mode, because it will put every month on its own page.
 
 Example:
 
-   -yearB -spread 4
+    -yearB -spread 4
 
 This will put three month on each page.
 
@@ -307,6 +304,10 @@ This will put three month on each page.
 
 This is a sample file event configuration file. 
 Image can be a URL, which must start with http://
+
+Load the file with 
+
+    `-config myfile.xml`
 
 
     <Gocal>

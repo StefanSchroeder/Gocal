@@ -122,6 +122,7 @@ type Calendar struct {
 	OptFillpattern     string
 	OptYearSpread      int
 	OptICS             []string
+	OptMargin          string
 }
 
 func New(b int, e int, y int) *Calendar {
@@ -149,6 +150,7 @@ func New(b int, e int, y int) *Calendar {
 		"",      // OptFillpattern
 		1,       // OptYearSpread
 		nil,     // OptICS
+		"",      // OptMargin
 	}
 }
 
@@ -333,6 +335,10 @@ func (g *Calendar) SetWallpaper(f string) {
 
 func (g *Calendar) SetFooter(f string) {
 	g.OptFooter = f
+}
+
+func (g *Calendar) SetMargin(f string) {
+	g.OptMargin = f
 }
 
 func (g *Calendar) SetFillpattern(f string) {
@@ -544,6 +550,14 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 		pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
+
+
+		pdf.TransformBegin()
+		ctrX := 210.0 * 0.96
+		ctrY := 297.0 * 0.05
+		pdf.TransformRotate(270, ctrX, ctrY)
+		pdf.Text(ctrX, ctrY, fmt.Sprintf("%s", g.OptMargin))
+		pdf.TransformEnd()
 	}
 
 	pdf.OutputAndClose(docWriter(pdf, fn))
@@ -827,27 +841,29 @@ func (g *Calendar) CreateCalendar(fn string) {
 				}
 				pdf.SetCellMargin(CELLMARGIN)
 
-				// Do we have a relevant moon today?
-				todayString := today.Format("2006-01-02")
-				if m, ok := moonj[todayString]; ok == true {
-					x, y := pdf.GetXY()
-					moonLocX, moonLocY := x+cw*0.82, y+ch*0.2
+				if g.OptHideMoon == false {
+					// Do we have a relevant moon today?
+					todayString := today.Format("2006-01-02")
+					if m, ok := moonj[todayString]; ok == true {
+						x, y := pdf.GetXY()
+						moonLocX, moonLocY := x+cw*0.82, y+ch*0.2
 
-					moonsize := MOONSIZE
-					if g.OptPhoto != "" || g.OptPhotos != "" {
-						moonsize *= 0.6
-					}
-					myMoonPDF := myPdf{pdf, moonsize}
-					pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
-					switch m {
-					case "Full":
-						myMoonPDF.fullMoon(moonLocX, moonLocY)
-					case "New":
-						myMoonPDF.newMoon(moonLocX, moonLocY)
-					case "First":
-						myMoonPDF.firstQuarter(moonLocX, moonLocY)
-					case "Last":
-						myMoonPDF.lastQuarter(moonLocX, moonLocY)
+						moonsize := MOONSIZE
+						if g.OptPhoto != "" || g.OptPhotos != "" {
+							moonsize *= 0.6
+						}
+						myMoonPDF := myPdf{pdf, moonsize}
+						pdf.SetFillColor(LIGHTGREY, LIGHTGREY, LIGHTGREY)
+						switch m {
+						case "Full":
+							myMoonPDF.fullMoon(moonLocX, moonLocY)
+						case "New":
+							myMoonPDF.newMoon(moonLocX, moonLocY)
+						case "First":
+							myMoonPDF.firstQuarter(moonLocX, moonLocY)
+						case "Last":
+							myMoonPDF.lastQuarter(moonLocX, moonLocY)
+						}
 					}
 				}
 
