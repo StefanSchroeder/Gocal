@@ -552,7 +552,7 @@ func (g *Calendar) CreateYearCalendarInverse(fn string) {
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 
 
-		pdf.TransformBegin()
+		pdf.TransformBegin()// TODO Hardcoded A4 portrait
 		ctrX := 210.0 * 0.96
 		ctrY := 297.0 * 0.05
 		pdf.TransformRotate(270, ctrX, ctrY)
@@ -686,7 +686,8 @@ func (g *Calendar) CreateYearCalendar(fn string) {
 		pdf.SetTextColor(DARKGREY, DARKGREY, DARKGREY)
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
-		pdf.TransformBegin()
+
+		pdf.TransformBegin()// TODO Hardcoded A4 portrait
 		ctrX := 210.0 * 0.96
 		ctrY := 297.0 * 0.05
 		pdf.TransformRotate(270, ctrX, ctrY)
@@ -953,17 +954,12 @@ func (g *Calendar) CreateCalendar(fn string) {
 		pdf.SetFont(calFont, "", FOOTERFONTSIZE*fontScale)
 		pdf.Text(0.50*PAGEWIDTH-pdf.GetStringWidth(g.OptFooter)*0.5, 0.95*PAGEHEIGHT, fmt.Sprintf("%s", g.OptFooter))
 
-		pdf.TransformBegin()
+		pdf.TransformBegin() // TODO Hardcoded A4 portrait
 		ctrX := 210.0 * 0.96
 		ctrY := 297.0 * 0.05
 		pdf.TransformRotate(270, ctrX, ctrY)
 		pdf.Text(ctrX, ctrY, fmt.Sprintf("%s", g.OptMargin))
 		pdf.TransformEnd()
-		/*fmt.Printf("%s\n", "\u25cf") // prints  👿
-		fmt.Printf("%s\n", "\u25d0") // prints  👿
-		fmt.Printf("%s\n", "\u25d1") // prints  👿
-		fmt.Printf("%s\n", "\u25cb") // prints  👿*/
-
 	}
 	pdf.OutputAndClose(docWriter(pdf, fn))
 	removeTempdir(fontTempdir)
