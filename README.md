@@ -1,6 +1,7 @@
 ![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/01-2025.png?raw=true)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Go](https://github.com/StefanSchroeder/Gocal/actions/workflows/go.yml/badge.svg)](https://github.com/StefanSchroeder/Gocal/actions/workflows/go.yml)
 [![GoDoc](https://godoc.org/github.com/StefanSchroeder/Gocal?status.png)](https://godoc.org/github.com/StefanSchroeder/Gocal)
 [![Go Report Card](https://goreportcard.com/badge/github.com/StefanSchroeder/Gocal)](https://goreportcard.com/report/github.com/StefanSchroeder/Gocal)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal/badge)](https://api.securityscorecards.dev/projects/github.com/StefanSchroeder/Gocal)
