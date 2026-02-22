@@ -1,4 +1,4 @@
-![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/01-2025.png?raw=true)
+![Logo](https://github.com/StefanSchroeder/Gocal/blob/master/examples/01-2026.png?raw=true)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Go](https://github.com/StefanSchroeder/Gocal/actions/workflows/go.yml/badge.svg)](https://github.com/StefanSchroeder/Gocal/actions/workflows/go.yml)
