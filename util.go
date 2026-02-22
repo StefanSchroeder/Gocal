@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"github.com/PuloV/ics-golang"
 	"github.com/goodsign/monday"
-	"github.com/jung-kurt/gofpdf"
+	"github.com/phpdave11/gofpdf"
 	"github.com/paulrosania/go-charset/charset"
 	_ "github.com/paulrosania/go-charset/data"
 	"github.com/soniakeys/meeus/v3/julian"
